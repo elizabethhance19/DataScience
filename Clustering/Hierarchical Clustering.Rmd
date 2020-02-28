@@ -1,0 +1,41 @@
+---
+title: "Hierarchical Clustering"
+output: html_document
+---
+Generally agglomerative ("bottom-up"): each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy  
+
+* Put each data point in its own cluster  
+* Identify the closest (using linkage criteria) two clusters and combine them into one cluster  
+* Repeat the above step till all the data points are in a single cluster  
+
+Alternatively divisive ("top-down"): all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Linkage
+Determines the distance between sets of observations as a function of the pairwise distances between observations  
+Complete/single/average = $max/min/mean \{d(a,b) : a \in A, b \in B\}$
+
+## Iris Example
+```{r}
+head(iris)
+iris_dist = dist(iris[,1:2]) #defaults to euclidean distance
+clusters = hclust(iris_dist) #defaults to complete linkage
+plot(clusters)
+```
+```{r}
+iris$cluster = cutree(clusters,k=3)
+library(ggplot2)
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
+```
+
+Here we knew there were 3 species of flower, we could alternatively cut at a height by specifying h in cutree.  With complete linkage this tells us the maximum distance to all other members in a cluster is less than h  
+
+
+
+
+
+
+
+
