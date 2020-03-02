@@ -1,6 +1,8 @@
 ---
 title: "Clustering Overview"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +25,7 @@ Consider calculating the distance between 3 height (inches) and weight (pounds) 
 height_weight = data.frame(height = c(65, 68, 60), weight = c(140, 175, 115))
 dist(height_weight)
 ```
-Now scale the height and weight pairs to be centered at 0 with standard devation 1 and calculate distance
+Now scale the height and weight pairs to be centered at 0 with standard deviation 1 and calculate distance
 ```{r}
 height_weight_scaled = scale(height_weight)
 dist(height_weight_scaled)
@@ -48,4 +50,4 @@ dist(college_gender_dummy, method='binary')
 ```
 
 ## Clustering Techniques
-Heirarchical, K-means, PAM, Prinicial Component Analysis (PCA)
+Hierarchical, K-means, PAM, Principal Component Analysis (PCA)
