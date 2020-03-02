@@ -1,2 +1,2 @@
 # LearningDataScience
-Contains notes/examples of what I've learning so far about data science for future reference
+Contains notes/examples of what I've learned so far about data science
