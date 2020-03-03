@@ -19,6 +19,8 @@ knitr::opts_chunk$set(echo = TRUE)
 Determines the distance between sets of observations as a function of the pairwise distances between observations  
 Complete/single/average = $max/min/mean \{d(a,b) : a \in A, b \in B\}$
 
+* Complete/average tends to produce balanced trees while signle produces less balanced
+
 ## Iris Example
 ```{r}
 head(iris)

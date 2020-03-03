@@ -387,7 +387,7 @@ dist(height_weight)</code></pre>
 <pre><code>##          1        2
 ## 2 35.12834         
 ## 3 25.49510 60.53098</code></pre>
-<p>Now scale the height and weight pairs to be centered at 0 with standard deviation 1 and calculate distance</p>
+<p>Now scale (normalize) the height and weight pairs to be centered at 0 with standard deviation 1 and calculate distance</p>
 <pre class="r"><code>height_weight_scaled = scale(height_weight)
 dist(height_weight_scaled)</code></pre>
 <pre><code>##          1        2
