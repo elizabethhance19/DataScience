@@ -1,9 +1,9 @@
 ---
 title: "Principal Component Analysis"
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +16,7 @@ Finds structure in features and aid in visualization
 * Principal components are uncorrelated -> orthogonal  
   + Resulting vectors are an uncorrelated orthogonal basis set
 
-Same as eigenvalue decomposition of $X^TX$ (covariance matrix) and singular value decomposition of $X$.  Important to normalize data first. 
+Same as eigenvalue decomposition of $X^TX$ (covariance matrix) and singular value decomposition of $X$.  Important to normalize data first, especially if input variables use different units of measurement or the input variables have significantly different variances. 
 
 * First principal component is equal to eigenvector with largest eigenvalue
 
@@ -48,3 +48,10 @@ plot(pve, xlab = 'Principal Component', ylab = 'Proportion of Variance Explained
 ```
 
 First principal component explains the most variance, explained variance decreases for later principal components
+
+
+## Using PCA Before Clustering
+
+
+
+
