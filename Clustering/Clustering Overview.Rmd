@@ -1,8 +1,13 @@
 ---
 title: "Clustering Overview"
 output:
-  pdf_document: default
-  html_document: default
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'ClusteringOverview.html'))})
+  #pdf_document: default
+  #html_document: default
 ---
 
 ```{r setup, include=FALSE}
