@@ -1,0 +1,53 @@
+---
+title: "Principal Component Analysis"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Finds structure in features and aid in visualization
+
+* Find linear combination of variables to create principal components
+* Maintain most variance in the data (first component has largest possible variance)
+* Principal components are uncorrelated -> orthogonal  
+  + Resulting vectors are an uncorrelated orthogonal basis set
+
+Same as eigenvalue decomposition of $X^TX$ (covariance matrix) and singular value decomposition of $X$.  Important to normalize data first, especially if input variables use different units of measurement or the input variables have significantly different variances. 
+
+* First principal component is equal to eigenvector with largest eigenvalue
+
+## Iris Example
+PCA function
+```{r}
+pca.iris = prcomp(x=iris[-5], scale=T, center=T)
+
+```
+Which predictors contribute to which principal components
+```{r}
+pca.iris$rotation
+```
+Sepal.Width has little contribution to PC1 but almost all of PC2
+
+### Visualization
+Visualizing first two components
+```{r}
+biplot(pca.iris)
+```
+
+Petal.Width and Petal.Length are in the same direction indicated they are correlated in the original data
+
+
+```{r}
+pca.iris.var = pca.iris$sdev^2
+pve = pca.iris.var/sum(pca.iris.var) #proportion of variance explained
+plot(pve, xlab = 'Principal Component', ylab = 'Proportion of Variance Explained', main='Scree Plot', ylim=c(0,1), type="b")
+```
+
+First principal component explains the most variance, explained variance decreases for later principal components
+
+
+## Using PCA Before Clustering
+
+
+
+
