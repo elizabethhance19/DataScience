@@ -7,3 +7,11 @@ navbar:
       href: index.html
     - text: "Overview"
       href: Clustering-Overview.html
+    - text: "Hierarchical Clustering"
+      href: Hierarchical-Clustering.html
+    - text: "K-Means Clustering"
+      href: K-Means-Clustering.html      
+    - text: "Principal Component Analysis"
+      href: Prinicipal-Component-Analysis.html      
+output:
+  html_document:
