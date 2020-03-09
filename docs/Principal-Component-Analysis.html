@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -322,12 +322,12 @@ $(document).ready(function () {
 <pre class="r"><code>pca.iris = prcomp(x=iris[-5], scale=T, center=T)</code></pre>
 <p>Which predictors contribute to which principal components</p>
 <pre class="r"><code>pca.iris$rotation</code></pre>
-<pre><code>##                     PC1         PC2       PC3         PC4         PC5
-## Sepal.Length  0.5338256 -0.19269369 0.1591462 -0.75077244  0.29818224
-## Sepal.Width  -0.2100117 -0.69075550 0.6719121  0.12983301 -0.10212486
-## Petal.Length  0.5641321  0.11305340 0.1542496  0.08768809 -0.79843082
-## Petal.Width   0.5515446  0.08050033 0.2130322  0.61932524  0.51026639
-## cluster      -0.2201793  0.68298214 0.6738182 -0.16802134  0.05286116</code></pre>
+<pre><code>##                     PC1        PC2         PC3          PC4         PC5
+## Sepal.Length  0.4339438 -0.4902238  0.29215798 -0.634820119 -0.28813291
+## Sepal.Width  -0.3098553 -0.7032261 -0.63445712  0.001480336  0.08321481
+## Petal.Length  0.5241163 -0.1727258  0.04350378  0.138977369  0.82113373
+## Petal.Width   0.5066432 -0.2043216 -0.08201849  0.683153242 -0.47763999
+## cluster      -0.4292985 -0.4399684  0.70956907  0.333148863  0.08748807</code></pre>
 <p>Sepal.Width has little contribution to PC1 but almost all of PC2</p>
 <div id="visualization" class="section level3">
 <h3>Visualization</h3>
