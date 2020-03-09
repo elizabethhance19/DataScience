@@ -1,10 +1,10 @@
-name: "cars"
+name: "Name"
 output_dir: "docs"
 navbar:
-  title: "Cars"
+  title: "Title"
   left:
   - text: "Home"
-  href: index.html
+  href: ClusteringOverview.html
   - text: "Clustering"
    href: ClusteringOverview.html
 output:
