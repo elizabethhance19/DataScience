@@ -4,7 +4,7 @@ navbar:
   title: "Title"
   left:
   - text: "Home"
-  href: ClusteringOverview.html
+  href: index.html
   - text: "Clustering"
    href: ClusteringOverview.html
 output:
