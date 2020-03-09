@@ -1,2 +1,3 @@
-# LearningDataScience
-Contains notes/examples of what I've learned so far about data science
+# Learning Data Science
+
+https://elizabethhance19.github.io/LearningDataScience/
