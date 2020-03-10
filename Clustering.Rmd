@@ -3,7 +3,7 @@ title: "Clustering"
 ---
 
 # Overview
-Finds observations that are similar to one another and groups them together.  Unsupervised technique: don't have defined/known groups.  Must decide to scale data, choose how to calculate distance between observations, and choose how many groups to have.
+Clustering looks for observations that are *similar* to one another and groups them together.  It's an unsupervised technique i.e. there aren't defined/known groups.  It is import to scale the data before analysis.  There are different ways to calculate distance between observations, and methods to determine how many groups to have.
 
 ## Calculating Distance
 Consider 3 points on a grid: (1,4), (3,2), (7,8) and calculate the distance between them
@@ -44,7 +44,7 @@ dist(college_gender_dummy, method='binary')
 ```
 
 ## Clustering Techniques
-Hierarchical, K-means, PAM, Principal Component Analysis (PCA)
+Some popular clustering techniques are: Hierarchical, K-means, Partition Around Medoids (PAM), and Principal Component Analysis (PCA)
 
 
 # Hierarchical Clustering
@@ -52,25 +52,22 @@ Generally agglomerative ("bottom-up"): each observation starts in its own cluste
 
 * Put each data point in its own cluster  
 * Identify the closest (using linkage criteria) two clusters and combine them into one cluster  
-* Repeat the above step till all the data points are in a single cluster  
+* Repeat the above step until all the data points are in a single cluster  
 
 Alternatively divisive ("top-down"): all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ## Linkage
-Determines the distance between sets of observations as a function of the pairwise distances between observations  
+Linkage determines the distance between sets of observations as a function of the pairwise distances between observations  
 Complete/single/average = $max/min/mean \{d(a,b) : a \in A, b \in B\}$
 
-* Complete/average tends to produce balanced trees while signle produces less balanced
+* Complete/average tends to produce balanced trees while single produces less balanced
 
-## Iris Example
+## Hierarchical Clustering: Iris Example
 ```{r}
 head(iris)
 iris_dist = dist(iris[,1:2]) #defaults to euclidean distance
 clusters = hclust(iris_dist) #defaults to complete linkage
-plot(clusters)
+plot(clusters, hang=-1, cex=0.5)
 ```
 ```{r}
 iris$cluster = cutree(clusters,k=3)
@@ -78,14 +75,16 @@ library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
 ```
 
-Here we knew there were 3 species of flower, we could alternatively cut at a height by specifying h in cutree.  With complete linkage this tells us the maximum distance to all other members in a cluster is less than h  
+Here we knew there were 3 species of flower, so it was easy to choose the number of clusters (k).  We could alternatively cut at a height by specifying h in cutree.  With complete linkage this tells us the maximum distance to all other members in a cluster is less than h  
+
+
 
 # K-Means Clustering
 * Choose number of clusters K 
 * Randomly generate/select K centroids and assign each data point to the nearest centroid
 * Recalculate centroids and reassign data to nearest centroid until the cluster assignments don't change
 
-## Iris Example
+## K-Means: Iris Example
 ```{r}
 model_km = kmeans(iris[,1:2], centers=3)
 iris$cluster = model_km$cluster
@@ -93,10 +92,10 @@ library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
 ```
 
-### Parameters for kmeans
+## Parameters for K-Means and Determining Number of Clusters
 
-* nstart: how many random starts should be done? Run algorithm nstart times and choose the result with the lowest total within sum of squares.  Default = 1
-* iter.max: maximum number of iterations.  Default is 10, change if convergence takes longer/
+* nstart: how many random starts should be done? Run algorithm nstart times and choose the result with the lowest total within sum of squares.  Default = 1 but larger value is generally recommended.
+* iter.max: maximum number of iterations.  Default is 10, change if convergence takes longer.
 
 ### Elbow (Scree) Plot
 Run many models with varying value of k, calculate total within-cluster sum of squares, find where 'elbow' occurs to determine optimal k to use
@@ -145,8 +144,10 @@ ggplot(sil_df, aes(x = k, y = sil_width)) +
 
 K=2 has the largest silhouette score, indicating we should use 2 clusters (though recall we know there are actually 3 species).
 
+
+
 # Principal Component Analysis
-Finds structure in features and aid in visualization
+Finds structure in features and aids in visualization
 
 * Find linear combination of variables to create principal components
 * Maintain most variance in the data (first component has largest possible variance)
