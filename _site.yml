@@ -11,4 +11,9 @@ navbar:
       href: Regression.html
 output:
   html_document:
-    theme: cosmo
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    
+#rmarkdown::render_site()
