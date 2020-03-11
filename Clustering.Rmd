@@ -147,23 +147,29 @@ K=2 has the largest silhouette score, indicating we should use 2 clusters (thoug
 
 
 # Principal Component Analysis
-Finds structure in features and aids in visualization
+PCA finds structure in features and aids in visualization
 
 * Find linear combination of variables to create principal components
 * Maintain most variance in the data (first component has largest possible variance)
 * Principal components are uncorrelated -> orthogonal  
   + Resulting vectors are an uncorrelated orthogonal basis set
 
-Same as eigenvalue decomposition of $X^TX$ (covariance matrix) and singular value decomposition of $X$.  Important to normalize data first, especially if input variables use different units of measurement or the input variables have significantly different variances. 
+Same as eigenvalue decomposition of $X^TX$ (covariance matrix - estimates how each variable relates to another, may differ by a constant) and singular value decomposition of $X$ (note the right singular vectors of $X$ are the eigenvectors of $X^TX$.  
 
-* First principal component is equal to eigenvector with largest eigenvalue
+Important to scale/normalize data first, especially if input variables use different units of measurement or the input variables have significantly different variances.  It seems the general consensus is to center the data as well.
+
+* First principal component is equal to eigenvector with largest eigenvalue.  Eigenvalues tell you how much variance there is in the data in the direction of the eigenvector, so the eigenvector with the largest eigenvalue is the direction the data has the most variation.
 
 ## Iris Example
 PCA function
 ```{r}
+rm(iris)
 pca.iris = prcomp(x=iris[-5], scale=T, center=T)
+summary(pca.iris)
 
 ```
+The first two principal components account for over 95% of the variance.
+
 Which predictors contribute to which principal components
 ```{r}
 pca.iris$rotation
@@ -173,17 +179,27 @@ Sepal.Width has little contribution to PC1 but almost all of PC2
 ### Visualization
 Visualizing first two components
 ```{r}
-biplot(pca.iris)
+library(ggfortify)
+autoplot(pca.iris, data=iris, colour='Species', loadings = TRUE, loadings.colour = 'blue', loadings.label = TRUE, loadings.label.size = 3)
 ```
 
 Petal.Width and Petal.Length are in the same direction indicated they are correlated in the original data
 
 
+Plot how much variation each principal component explains:
 ```{r}
 pca.iris.var = pca.iris$sdev^2
 pve = pca.iris.var/sum(pca.iris.var) #proportion of variance explained
 plot(pve, xlab = 'Principal Component', ylab = 'Proportion of Variance Explained', main='Scree Plot', ylim=c(0,1), type="b")
 ```
 
-
+## PCA and Clustering
+Perform K-Means clustering on the first two components.  This differs from the previous k-means example because we now consider all 4 data columns for clustering (by consider the principal components) instead of just using the first 2 data columns.
+Plot data using first two components
+```{r}
+library(ggfortify)
+iris_scaled = scale(iris[,-5]) #Scale data first for PCA
+iris_scaled = cbind(iris_scaled, iris[,5])
+autoplot(kmeans(iris_scaled[,-5],3), data=iris_scaled, frame=T)
+```
 

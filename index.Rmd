@@ -2,6 +2,4 @@
 title: "Home"
 ---
 
-
-
-Homepage
+Add info on my background

@@ -1,0 +1,10 @@
+---
+title: "R Overview"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+Add overview of R, useful libraries, database connections, links to R cheat sheets, possibly info on statistical tests
