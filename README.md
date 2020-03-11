@@ -1,3 +1,3 @@
-# Learning Data Science
+# Data Science
 
-https://elizabethhance19.github.io/LearningDataScience/
+https://elizabethhance19.github.io/DataScience/
