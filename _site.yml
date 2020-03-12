@@ -5,16 +5,16 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "R Overview"
-      href: R-Overview.html
-    - text: "Regression"
-      href: Regression.html
-    - text: "Classification"
-      href: Classification.html
+    #- text: "R Overview"
+    #  href: R-Overview.html
+    #- text: "Regression"
+    #  href: Regression.html
+    #- text: "Classification"
+    #  href: Classification.html
     - text: "Clustering"
       href: Clustering.html
-    - text: "SQL"
-      href: SQL.html
+    #- text: "SQL"
+    #  href: SQL.html
 output:
   html_document:
     theme: flatly
