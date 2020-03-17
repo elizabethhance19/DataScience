@@ -21,31 +21,25 @@ header-includes:
 </style>
 
 <div class="column-left">
- 
+Hi! I'm Elizabeth Hance and I love data.  After getting my Master's degree in computational mathematics, I joined the team at OSU focused on studying student academic success.  Since graduating, I've expanded my knowledge of the data science world through my job and independent study.  This site serves as a collection of some of the things I have learned.  Feel free to reach out to my at my contact info below.
 </div>
 <div class="column-right">
-```{r, echo=FALSE, fig.cap="My dog, Mia", out.width="50%",fig.align='center'}
-knitr::include_graphics("Mia2.png")
+```{r, echo=FALSE, fig.cap="My dog, Mia", out.width="50%", fig.align='center', out.extra='angle=0',}
+knitr::include_graphics("Mia.png")
 ```
 </div>
-
-
-
-
-
-For more info about me:
 
 * [GitHub](https://github.com/elizabethhance19)
 * [LinkedIn](www.linkedin.com/in/elizabeth-hance)
 * [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
 
 # Topics Covered {-}
-This project is a work in progress and the topics explored here do not display the full extent of my knowledge.  The explainations of the concepts are meant to be brief with simple examples. 
+This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge.  The explainations of the concepts are meant to be brief with simple examples. 
 
-Content for these topics was gathered from a variety of sources including: DataCamp's *Data Scientist with R* Career Track, Springer's book, *An Introduction to Statistical Learning with Applications in R*, various Medium articles and other online blogs, and my graduate coursework.
+Content for these topics was gathered from a variety of sources including: DataCamp's *Data Scientist with R* Career Track, Springer's book, *An Introduction to Statistical Learning with Applications in R*, various Medium articles, other online blogs, and my graduate coursework.
 
-[Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
-[Classification (work in progress)](https://elizabethhance19.github.io/DataScience/Classification.html) 
+* [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
+* [Classification (work in progress)](https://elizabethhance19.github.io/DataScience/Classification.html) 
 <!--[R Overview](https://elizabethhance19.github.io/DataScience/R-Overview.html)  
 [Regression](https://elizabethhance19.github.io/DataScience/Regression.html)  
 [SQL](https://elizabethhance19.github.io/DataScience/SQL.html)  -->
