@@ -296,12 +296,79 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview"><span class="toc-section-number">1</span> Overview</a></li>
+<li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a></li>
+<li><a href="#k-nearest-neighbors-knn"><span class="toc-section-number">3</span> K-Nearest Neighbors (KNN)</a><ul>
+<li><a href="#knn-iris-example"><span class="toc-section-number">3.1</span> KNN: Iris Example</a></li>
+</ul></li>
+<li><a href="#naive-bayes"><span class="toc-section-number">4</span> Naive Bayes</a><ul>
+<li><a href="#naive-bayes-classifier"><span class="toc-section-number">4.1</span> Naive Bayes Classifier</a></li>
+</ul></li>
+<li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a></li>
 </ul>
 </div>
 
 <div id="overview" class="section level1">
 <h1><span class="header-section-number">1</span> Overview</h1>
 <p>Add knn, naive bayes, logistic regression, classification trees</p>
+</div>
+<div id="logistic-regression" class="section level1">
+<h1><span class="header-section-number">2</span> Logistic Regression</h1>
+</div>
+<div id="k-nearest-neighbors-knn" class="section level1">
+<h1><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
+<p>KNN works by considering the K training data points that are closest (typically using Euclidean distance) to the test observation. Then, the test observation is predicted to be in the same class as the majority of the closest training points. In the event of a tie, one of the classes is randomly chosen. It is necessary to normalize (generally min-max normalization instead of standardization) the data first since we will be calculating distances.</p>
+<div id="knn-iris-example" class="section level2">
+<h2><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
+<p>Normalize the iris data and split into a training and test set</p>
+<pre class="r"><code>normalize &lt;- function(x) {
+return((x - min(x)) / (max(x) - min(x)))
+}
+set.seed(123)
+irisNormalized = as.data.frame(lapply(iris[,c(1,2,3,4)], normalize))
+training_ind = sample(1:nrow(iris), 0.75 * nrow(iris))
+train = irisNormalized[training_ind,]
+test = irisNormalized[-training_ind,]
+train_class = iris[training_ind,5]
+test_class = iris[-training_ind,5]</code></pre>
+<p>Now run knn function</p>
+<pre class="r"><code>library(class)
+test_prediction = knn(train, test, cl=train_class, k=3)</code></pre>
+<p>Calculate accuracy of test data</p>
+<pre class="r"><code>table(test_prediction, test_class)</code></pre>
+<pre><code>##                test_class
+## test_prediction setosa versicolor virginica
+##      setosa         12          0         0
+##      versicolor      0         16         1
+##      virginica       0          1         8</code></pre>
+<pre class="r"><code>mean(test_prediction == test_class)*100 #accuracy</code></pre>
+<pre><code>## [1] 94.73684</code></pre>
+<p>Try a larger value of k (consider more neighbors)</p>
+<pre class="r"><code>test_prediction = knn(train, test, cl=train_class, k=11)
+table(test_prediction, test_class)</code></pre>
+<pre><code>##                test_class
+## test_prediction setosa versicolor virginica
+##      setosa         12          0         0
+##      versicolor      0         16         0
+##      virginica       0          1         9</code></pre>
+<pre class="r"><code>mean(test_prediction == test_class)*100 #accuracy</code></pre>
+<pre><code>## [1] 97.36842</code></pre>
+<p>In this case, a larger k increased the accuracy of the model, however this was inconsistent across different splits of the training and test sets. We could use cross-validation to test different values of k (and different train/test sets) to determine the optimal number of neighbors to use.</p>
+<p>In general, a smaller value of k means noise in the data will have a higher influence on the boundary causing the boundary to be more flexible. A larger value of k will have smoother decision boundaries which may not pick up on some boundaries of the data, and is more computationally expensive.</p>
+<p>A general rule is to choose <span class="math inline">\(k=\sqrt{N}\)</span> where N is the number of samples in the training data.</p>
+</div>
+</div>
+<div id="naive-bayes" class="section level1">
+<h1><span class="header-section-number">4</span> Naive Bayes</h1>
+<p>Bayes theorem is given as: <span class="math display">\[p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}\]</span> where  represents the features in the data, <span class="math inline">\(C_k\)</span> is a possible class, and <span class="math inline">\(p(C_k|\textbf{x})\)</span> is the probability of belonging to a class given the independent variables defined by . This is sometimes rewritten as <span class="math display">\[\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}\]</span></p>
+<p>The denominator of the fraction is constant, and the numeriator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
+<p>If we assume all features in  are mutually independent, we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
+<div id="naive-bayes-classifier" class="section level2">
+<h2><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
+<p>Assign a class label <span class="math inline">\(\hat{y} = C_k\)</span> for some k where <span class="math display">\[\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)\]</span></p>
+</div>
+</div>
+<div id="classification-trees" class="section level1">
+<h1><span class="header-section-number">5</span> Classification Trees</h1>
 </div>
 
 

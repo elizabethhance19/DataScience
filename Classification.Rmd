@@ -8,3 +8,74 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 Add knn, naive bayes, logistic regression, classification trees
+
+# Logistic Regression
+# K-Nearest Neighbors (KNN)
+KNN works by considering the K training data points that are closest (typically using Euclidean distance) to the test observation.  Then, the test observation is predicted to be in the same class as the majority of the closest training points.  In the event of a tie, one of the classes is randomly chosen.  It is necessary to normalize (generally min-max normalization instead of standardization) the data first since we will be calculating distances.
+
+## KNN: Iris Example
+Normalize the iris data and split into a training and test set
+```{r}
+normalize <- function(x) {
+return((x - min(x)) / (max(x) - min(x)))
+}
+set.seed(123)
+irisNormalized = as.data.frame(lapply(iris[,c(1,2,3,4)], normalize))
+training_ind = sample(1:nrow(iris), 0.75 * nrow(iris))
+train = irisNormalized[training_ind,]
+test = irisNormalized[-training_ind,]
+train_class = iris[training_ind,5]
+test_class = iris[-training_ind,5]
+```
+
+Now run knn function
+```{r}
+library(class)
+test_prediction = knn(train, test, cl=train_class, k=3)
+```
+
+Calculate accuracy of test data
+```{r}
+table(test_prediction, test_class)
+mean(test_prediction == test_class)*100 #accuracy
+```
+
+Try a larger value of k (consider more neighbors)
+```{r}
+test_prediction = knn(train, test, cl=train_class, k=11)
+table(test_prediction, test_class)
+mean(test_prediction == test_class)*100 #accuracy
+```
+In this case, a larger k increased the accuracy of the model, however this was inconsistent across different splits of the training and test sets.  We could use cross-validation to test different values of k (and different train/test sets) to determine the optimal number of neighbors to use.
+
+In general, a smaller value of k means noise in the data will have a higher influence on the boundary causing the boundary to be more flexible.  A larger value of k will have smoother decision boundaries which may not pick up on some boundaries of the data, and is more computationally expensive.
+
+A general rule is to choose $k=\sqrt{N}$ where N is the number of samples in the training data.
+
+# Naive Bayes
+Bayes theorem is given as:
+$$p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}$$ 
+where \textbf{x} represents the features in the data, $C_k$ is a possible class, and $p(C_k|\textbf{x})$ is the probability of belonging to a class given the independent variables defined by \textbf{x}.  This is sometimes rewritten as 
+$$\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}$$
+
+The denominator of the fraction is constant, and the numeriator is equivalent to the joint probability model $p(C_k,x_1,...,x_n)$.  
+
+If we assume all features in \textbf{x} are mutually independent, we can rewrite Bayes theorem as 
+$$p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)$$ 
+
+## Naive Bayes Classifier
+Assign a class label $\hat{y} = C_k$ for some k where
+$$\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)$$
+
+
+
+
+
+
+
+
+
+
+
+
+# Classification Trees

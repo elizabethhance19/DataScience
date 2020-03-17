@@ -8,12 +8,12 @@ Words about me
 ### Links {-}
 * [GitHub](https://github.com/elizabethhance19)
 * [LinkedIn](www.linkedin.com/in/elizabeth-hance)
-* 
+* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
 
 # Topics Covered {-}
-[R Overview (coming soon)](https://elizabethhance19.github.io/DataScience/R-Overview.html)  
-[Regression (coming soon)](https://elizabethhance19.github.io/DataScience/Regression.html)  
-[Classification (coming soon)](https://elizabethhance19.github.io/DataScience/Classification.html)  
+[R Overview (coming soon)](#https://elizabethhance19.github.io/DataScience/R-Overview.html)  
+[Regression (coming soon)](#https://elizabethhance19.github.io/DataScience/Regression.html)  
+[Classification (coming soon)](#https://elizabethhance19.github.io/DataScience/Classification.html)  
 [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
-[SQL (coming soon)](https://elizabethhance19.github.io/DataScience/SQL.html)  
+[SQL (coming soon)](#https://elizabethhance19.github.io/DataScience/SQL.html)  
 
