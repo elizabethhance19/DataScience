@@ -6,6 +6,10 @@ title: "Classification"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r loading, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+```
+
 # Overview
 Add knn, naive bayes, logistic regression, classification trees
 
@@ -60,16 +64,55 @@ $$\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}
 
 The denominator of the fraction is constant, and the numeriator is equivalent to the joint probability model $p(C_k,x_1,...,x_n)$.  
 
-If we assume all features in \textbf{x} are mutually independent, we can rewrite Bayes theorem as 
+If we assume all features in \textbf{x} are mutually independent (this assumption is what makes it *naive*), we can rewrite Bayes theorem as 
 $$p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)$$ 
 
 ## Naive Bayes Classifier
 Assign a class label $\hat{y} = C_k$ for some k where
 $$\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)$$
 
+## Naive Bayes: Titanic Example  
+Naive Bayes is good to use when all the predictors are categorical, but can also be used on continuous predictors.  It also works well when there are more than 2 classes to predict, unlike other classification methods (e.g. logistic regression).  This example was inspired by [Naive Bayes Blog Post](https://www.r-bloggers.com/understanding-naive-bayes-classifier-using-r/)
 
+We try to predict if a passenger survived on the Titanic given the predictors: Class (1st, 2nd, 3rd, crew), Sex (M,F), and Age (child, adult).
+```{r }
+data("Titanic")
+Titanic = as.data.frame(Titanic)
+#Data currently summary data, expand for analysis
+repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
+Titanic_df=Titanic[repeating_sequence,]
+Titanic_df = Titanic_df %>% select(-Freq)
+```
+Fit Naive Bayes model
+```{r}
+library(e1071)
+mod.NB = naiveBayes(Survived~., data=Titanic_df)
+mod.NB
+```
+Make predictions and check accuracy
+```{r}
+Titanic_df$PredictedSurvived = predict(mod.NB, Titanic_df)
+table(Titanic_df$PredictedSurvived, Titanic_df$Survived)
+mean(Titanic_df$PredictedSurvived==Titanic_df$Survived)
+```
+The model predicts if a passenger survives with about 77.8% accuracy.
 
+## Laplace Correction
+Suppose there was a set of predictors with a 0 probability of one of the outcomes.  For example, suppose none of the crew survived.  Without any correction, our model will always predict a crew member will not survive, leaving no chance for an unforeseen circumstance.
 
+```{r, warning=F}
+missingData = unique(Titanic_df %>% filter(Class=='Crew', Survived=='Yes') %>% select(Class:Survived))
+Titanic_df_Less = Titanic_df %>% select(Class:Survived) %>% anti_join(missingData, by = c('Class', 'Sex', 'Age', 'Survived'))
+mod.NBNoLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=0)
+print(missingData[1,])
+predict(mod.NBNoLaplace, missingData[1,], type="raw", threshold=0)
+```
+ We introduce the Laplace corection, which adds 1 (or whatever defined value) to all the classes.  This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.
+
+```{r, warning=F}
+mod.NBLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=1)
+predict(mod.NBLaplace, missingData[1,], type="raw", threshold=0)
+```
 
 
 

@@ -305,6 +305,8 @@ $(document).ready(function () {
 </ul></li>
 <li><a href="#naive-bayes"><span class="toc-section-number">4</span> Naive Bayes</a><ul>
 <li><a href="#naive-bayes-classifier"><span class="toc-section-number">4.1</span> Naive Bayes Classifier</a></li>
+<li><a href="#naive-bayes-titanic-example"><span class="toc-section-number">4.2</span> Naive Bayes: Titanic Example</a></li>
+<li><a href="#laplace-correction"><span class="toc-section-number">4.3</span> Laplace Correction</a></li>
 </ul></li>
 <li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a></li>
 </ul>
@@ -364,10 +366,79 @@ table(test_prediction, test_class)</code></pre>
 <h1><span class="header-section-number">4</span> Naive Bayes</h1>
 <p>Bayes theorem is given as: <span class="math display">\[p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}\]</span> where  represents the features in the data, <span class="math inline">\(C_k\)</span> is a possible class, and <span class="math inline">\(p(C_k|\textbf{x})\)</span> is the probability of belonging to a class given the independent variables defined by . This is sometimes rewritten as <span class="math display">\[\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}\]</span></p>
 <p>The denominator of the fraction is constant, and the numeriator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
-<p>If we assume all features in  are mutually independent, we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
+<p>If we assume all features in  are mutually independent (this assumption is what makes it <em>naive</em>), we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
 <div id="naive-bayes-classifier" class="section level2">
 <h2><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
 <p>Assign a class label <span class="math inline">\(\hat{y} = C_k\)</span> for some k where <span class="math display">\[\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)\]</span></p>
+</div>
+<div id="naive-bayes-titanic-example" class="section level2">
+<h2><span class="header-section-number">4.2</span> Naive Bayes: Titanic Example</h2>
+<p>Naive Bayes is good to use when all the predictors are categorical, but can also be used on continuous predictors. It also works well when there are more than 2 classes to predict, unlike other classification methods (e.g. logistic regression). This example was inspired by <a href="https://www.r-bloggers.com/understanding-naive-bayes-classifier-using-r/">Naive Bayes Blog Post</a></p>
+<p>We try to predict if a passenger survived on the Titanic given the predictors: Class (1st, 2nd, 3rd, crew), Sex (M,F), and Age (child, adult).</p>
+<pre class="r"><code>data(&quot;Titanic&quot;)
+Titanic = as.data.frame(Titanic)
+#Data currently summary data, expand for analysis
+repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
+Titanic_df=Titanic[repeating_sequence,]
+Titanic_df = Titanic_df %&gt;% select(-Freq)</code></pre>
+<p>Fit Naive Bayes model</p>
+<pre class="r"><code>library(e1071)
+mod.NB = naiveBayes(Survived~., data=Titanic_df)
+mod.NB</code></pre>
+<pre><code>## 
+## Naive Bayes Classifier for Discrete Predictors
+## 
+## Call:
+## naiveBayes.default(x = X, y = Y, laplace = laplace)
+## 
+## A-priori probabilities:
+## Y
+##       No      Yes 
+## 0.676965 0.323035 
+## 
+## Conditional probabilities:
+##      Class
+## Y            1st        2nd        3rd       Crew
+##   No  0.08187919 0.11208054 0.35436242 0.45167785
+##   Yes 0.28551336 0.16596343 0.25035162 0.29817159
+## 
+##      Sex
+## Y           Male     Female
+##   No  0.91543624 0.08456376
+##   Yes 0.51617440 0.48382560
+## 
+##      Age
+## Y          Child      Adult
+##   No  0.03489933 0.96510067
+##   Yes 0.08016878 0.91983122</code></pre>
+<p>Make predictions and check accuracy</p>
+<pre class="r"><code>Titanic_df$PredictedSurvived = predict(mod.NB, Titanic_df)
+table(Titanic_df$PredictedSurvived, Titanic_df$Survived)</code></pre>
+<pre><code>##      
+##         No  Yes
+##   No  1364  362
+##   Yes  126  349</code></pre>
+<pre class="r"><code>mean(Titanic_df$PredictedSurvived==Titanic_df$Survived)</code></pre>
+<pre><code>## [1] 0.7782826</code></pre>
+<p>The model predicts if a passenger survives with about 77.8% accuracy.</p>
+</div>
+<div id="laplace-correction" class="section level2">
+<h2><span class="header-section-number">4.3</span> Laplace Correction</h2>
+<p>Suppose there was a set of predictors with a 0 probability of one of the outcomes. For example, suppose none of the crew survived. Without any correction, our model will always predict a crew member will not survive, leaving no chance for an unforeseen circumstance.</p>
+<pre class="r"><code>missingData = unique(Titanic_df %&gt;% filter(Class==&#39;Crew&#39;, Survived==&#39;Yes&#39;) %&gt;% select(Class:Survived))
+Titanic_df_Less = Titanic_df %&gt;% select(Class:Survived) %&gt;% anti_join(missingData, by = c(&#39;Class&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;Survived&#39;))
+mod.NBNoLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=0)
+print(missingData[1,])</code></pre>
+<pre><code>##   Class  Sex   Age Survived
+## 1  Crew Male Adult      Yes</code></pre>
+<pre class="r"><code>predict(mod.NBNoLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
+<pre><code>##      No Yes
+## [1,]  1 NaN</code></pre>
+<p>We introduce the Laplace corection, which adds 1 (or whatever defined value) to all the classes. This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.</p>
+<pre class="r"><code>mod.NBLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=1)
+predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
+<pre><code>##             No         Yes
+## [1,] 0.9994807 0.000519274</code></pre>
 </div>
 </div>
 <div id="classification-trees" class="section level1">
