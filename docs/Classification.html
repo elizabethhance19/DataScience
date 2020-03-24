@@ -299,7 +299,14 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview"><span class="toc-section-number">1</span> Overview</a></li>
-<li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a></li>
+<li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a><ul>
+<li><a href="#logistic-regression-income-example"><span class="toc-section-number">2.1</span> Logistic Regression: Income Example</a><ul>
+<li><a href="#traintest-set"><span class="toc-section-number">2.1.1</span> Train/Test Set</a></li>
+<li><a href="#fit-and-test-logistic-model"><span class="toc-section-number">2.1.2</span> Fit and Test Logistic Model</a></li>
+<li><a href="#roc-curve"><span class="toc-section-number">2.1.3</span> ROC Curve</a></li>
+<li><a href="#model-assumptions"><span class="toc-section-number">2.1.4</span> Model Assumptions</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#k-nearest-neighbors-knn"><span class="toc-section-number">3</span> K-Nearest Neighbors (KNN)</a><ul>
 <li><a href="#knn-iris-example"><span class="toc-section-number">3.1</span> KNN: Iris Example</a></li>
 </ul></li>
@@ -314,10 +321,145 @@ $(document).ready(function () {
 
 <div id="overview" class="section level1">
 <h1><span class="header-section-number">1</span> Overview</h1>
-<p>Add knn, naive bayes, logistic regression, classification trees</p>
+<p>What is classification, checking model performance - accuracy, ROC, precision/recall, etc., some methods</p>
 </div>
 <div id="logistic-regression" class="section level1">
 <h1><span class="header-section-number">2</span> Logistic Regression</h1>
+<p>Logistic regression is used for binary classification i.e. when there are 2 possible predictor classes.</p>
+<p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
+<p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are generally found with a maxium likelihood estimation that requires an iterative process.</p>
+<p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
+<div id="logistic-regression-income-example" class="section level2">
+<h2><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
+<p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income Data</a></p>
+<div id="traintest-set" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
+<p>Load data:</p>
+<pre class="r"><code>incomeData &lt;- read.table(&#39;https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data&#39;, 
+                    sep = &#39;,&#39;, fill = F, strip.white = T)
+colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, 
+                     &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, 
+                     &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
+incomeData$IncomeAbove50 = as.numeric(incomeData$income == &#39;&gt;50K&#39;)
+table(incomeData$income)</code></pre>
+<pre><code>## 
+## &lt;=50K  &gt;50K 
+## 24720  7841</code></pre>
+<p>We see there are significantly more cases of &lt;=50K than &gt;50K. Because of this class bias, we will select our training data proportionately from each of these classes.</p>
+<pre class="r"><code>dataAbove = incomeData %&gt;% filter(IncomeAbove50 == 1)
+dataBelow = incomeData %&gt;% filter(IncomeAbove50 == 0)
+set.seed(123)
+dataAbove_trainingRows = sample(1:nrow(dataAbove), 0.75*nrow(dataAbove))
+dataBelow_trainingRows = sample(1:nrow(dataBelow), 0.75*nrow(dataBelow))
+trainAbove = dataAbove[dataAbove_trainingRows,]
+trainBelow = dataBelow[dataBelow_trainingRows,]
+train = rbind(trainAbove, trainBelow)
+
+testAbove = dataAbove[-dataAbove_trainingRows,]
+testBelow = dataBelow[-dataBelow_trainingRows,]
+test = rbind(testAbove, testBelow)
+
+table(train$income)</code></pre>
+<pre><code>## 
+## &lt;=50K  &gt;50K 
+## 18540  5880</code></pre>
+<pre class="r"><code>rm(dataAbove, dataBelow, dataAbove_trainingRows, dataBelow_trainingRows, trainAbove, trainBelow, testAbove, testBelow)</code></pre>
+<p>We have a similar proportion of &gt;50K to &lt;=50K in our training data as in the full data set.</p>
+</div>
+<div id="fit-and-test-logistic-model" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Fit and Test Logistic Model</h3>
+<p>I chose variables I thought would predict <em>income</em>, however different variable choices or variable selection methods could be used.</p>
+<pre class="r"><code>mod.logit = glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data=train, family=&#39;binomial&#39;)
+summary(mod.logit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = IncomeAbove50 ~ age + workclass + education_num + 
+##     sex + hours_per_week, family = &quot;binomial&quot;, data = train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7015  -0.6631  -0.4058  -0.1008   3.2307  
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                -9.999517   0.173092 -57.770  &lt; 2e-16 ***
+## age                         0.048093   0.001439  33.422  &lt; 2e-16 ***
+## workclassFederal-gov        1.238134   0.133968   9.242  &lt; 2e-16 ***
+## workclassLocal-gov          0.815840   0.119628   6.820 9.12e-12 ***
+## workclassNever-worked      -9.351303 201.406410  -0.046 0.962968    
+## workclassPrivate            0.871994   0.104582   8.338  &lt; 2e-16 ***
+## workclassSelf-emp-inc       1.374228   0.130409  10.538  &lt; 2e-16 ***
+## workclassSelf-emp-not-inc   0.431777   0.117644   3.670 0.000242 ***
+## workclassState-gov          0.656341   0.132591   4.950 7.42e-07 ***
+## workclassWithout-pay      -11.954790 148.161877  -0.081 0.935691    
+## education_num               0.353197   0.007808  45.233  &lt; 2e-16 ***
+## sexMale                     1.192198   0.044124  27.019  &lt; 2e-16 ***
+## hours_per_week              0.034253   0.001552  22.077  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 26959  on 24419  degrees of freedom
+## Residual deviance: 20733  on 24407  degrees of freedom
+## AIC: 20759
+## 
+## Number of Fisher Scoring iterations: 12</code></pre>
+<p>Predict for the test data</p>
+<pre class="r"><code>predictedProbability = predict(mod.logit, test, type=&#39;response&#39;)
+test$PredictedIncomeAbove50 = ifelse(predictedProbability &gt; 0.5,1,0)
+confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    0    1
+##          0 5768 1152
+##          1  412  809
+##                                           
+##                Accuracy : 0.8079          
+##                  95% CI : (0.7992, 0.8164)
+##     No Information Rate : 0.7591          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.397           
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2.2e-16       
+##                                           
+##             Sensitivity : 0.9333          
+##             Specificity : 0.4125          
+##          Pos Pred Value : 0.8335          
+##          Neg Pred Value : 0.6626          
+##              Prevalence : 0.7591          
+##          Detection Rate : 0.7085          
+##    Detection Prevalence : 0.8500          
+##       Balanced Accuracy : 0.6729          
+##                                           
+##        &#39;Positive&#39; Class : 0               
+## </code></pre>
+<p>Our model predicts our test data with 81% accuracy. Some other interesting metrics:</p>
+<ul>
+<li>Sensitivity: also called recall or true positive rate. Equal to <span class="math inline">\(\frac{TP}{TP + FN}\)</span> where <span class="math inline">\(FN\)</span> (Type II error) occurs when the model predicts a true value to be false<br />
+</li>
+<li>Specificity: also called true negative rate. Equal to <span class="math inline">\(\frac{TN}{TN + FP}\)</span> where <span class="math inline">\(FP\)</span> (Type I error) occurs when the model predicts a false value to be true</li>
+</ul>
+<p>Generally raising one of the metrics lowers the other (trade-off), depending on the context of the data will determine which is more important.</p>
+<p>The model prediction returns a probability of each observation having an income greater than 50K. Here, we classified observations with a probability &gt; 0.5 to have an income greater than 50K, however different threshold values are possible.</p>
+</div>
+<div id="roc-curve" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> ROC Curve</h3>
+</div>
+<div id="model-assumptions" class="section level3">
+<h3><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
+<p>We can check for multicollinearity among our independent variables by computing the variance inflation factor (VIF). All the variables should have a VIF less than 10 but ideally less than 5.</p>
+<pre class="r"><code>vif(mod.logit)</code></pre>
+<pre><code>##                    GVIF Df GVIF^(1/(2*Df))
+## age            1.102818  1        1.050151
+## workclass      1.157198  8        1.009167
+## education_num  1.047505  1        1.023477
+## sex            1.039897  1        1.019753
+## hours_per_week 1.074034  1        1.036356</code></pre>
+</div>
+</div>
 </div>
 <div id="k-nearest-neighbors-knn" class="section level1">
 <h1><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
@@ -365,7 +507,7 @@ table(test_prediction, test_class)</code></pre>
 <div id="naive-bayes" class="section level1">
 <h1><span class="header-section-number">4</span> Naive Bayes</h1>
 <p>Bayes theorem is given as: <span class="math display">\[p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}\]</span> where  represents the features in the data, <span class="math inline">\(C_k\)</span> is a possible class, and <span class="math inline">\(p(C_k|\textbf{x})\)</span> is the probability of belonging to a class given the independent variables defined by . This is sometimes rewritten as <span class="math display">\[\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}\]</span></p>
-<p>The denominator of the fraction is constant, and the numeriator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
+<p>The denominator of the fraction is constant, and the numerator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
 <p>If we assume all features in  are mutually independent (this assumption is what makes it <em>naive</em>), we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
 <div id="naive-bayes-classifier" class="section level2">
 <h2><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
@@ -434,7 +576,7 @@ print(missingData[1,])</code></pre>
 <pre class="r"><code>predict(mod.NBNoLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
 <pre><code>##      No Yes
 ## [1,]  1 NaN</code></pre>
-<p>We introduce the Laplace corection, which adds 1 (or whatever defined value) to all the classes. This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.</p>
+<p>We introduce the Laplace correction, which adds 1 (or whatever defined value) to all the classes. This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.</p>
 <pre class="r"><code>mod.NBLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=1)
 predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
 <pre><code>##             No         Yes
