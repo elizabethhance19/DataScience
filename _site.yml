@@ -19,7 +19,7 @@ output:
   html_document:
     theme: flatly
     toc: true
-    toc_depth: 3
+    toc_depth: 2
     number_sections: true
     
 #rmarkdown::render_site()

@@ -16,29 +16,27 @@ library(car)
 What is classification, checking model performance - accuracy, ROC, precision/recall, etc., some methods
 
 # Logistic Regression
-Logistic regression is used for binary classification i.e. when there are 2 possible predictor classes.
+Logistic regression is used for binary classification - when there are 2 possible predictor classes.
 
 Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1:
 $$log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2$$
 where $p = P(Y=1).$  We can solve for $p$:
 $$p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}$$
 
-Generally $e$ is chosen for the base $b$, though other bases are possible.  The regression coefficients are generally found with a maxium likelihood estimation that requires an iterative process.
+Generally $e$ is chosen for the base $b$, though other bases are possible.  The regression coefficients are often found with a maxium likelihood estimation that requires an iterative process.
 
 **Assumptions:** logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.
 
 
 ## Logistic Regression: Income Example
-We want to predict if an individual will earn more than $50K using various predictors.  This example was inspired by [Logistic Regression Income Data](http://r-statistics.co/Logistic-Regression-With-R.html)
+We want to predict if an individual will earn more than $50K using various predictors.  This example was inspired by [Logistic Regression Income](http://r-statistics.co/Logistic-Regression-With-R.html)
 
 ### Train/Test Set
 Load data:
 ```{r}
 incomeData <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data', 
                     sep = ',', fill = F, strip.white = T)
-colnames(incomeData) <- c('age', 'workclass', 'fnlwgt', 'education', 
-                     'education_num', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 
-                     'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income')
+colnames(incomeData) <- c('age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income')
 incomeData$IncomeAbove50 = as.numeric(incomeData$income == '>50K')
 table(incomeData$income)
 ```
@@ -74,18 +72,36 @@ Predict for the test data
 ```{r}
 predictedProbability = predict(mod.logit, test, type='response')
 test$PredictedIncomeAbove50 = ifelse(predictedProbability > 0.5,1,0)
-confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50))
+confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = '1')
 ```
-Our model predicts our test data with 81% accuracy.  Some other interesting metrics: 
+Our model predicts our test data with 81% accuracy where accuracy = $\frac{TP + FN}{Total}$  Some other interesting metrics: 
 
 * Sensitivity: also called recall or true positive rate.  Equal to $\frac{TP}{TP + FN}$ where $FN$ (Type II error) occurs when the model predicts a true value to be false  
 * Specificity: also called true negative rate.  Equal to $\frac{TN}{TN + FP}$ where $FP$ (Type I error) occurs when the model predicts a false value to be true  
 
-Generally raising one of the metrics lowers the other (trade-off), depending on the context of the data will determine which is more important.
+Generally raising one of the metrics lowers the other (trade-off), the context of the data will determine which is more important.
 
 The model prediction returns a probability of each observation having an income greater than 50K.  Here, we classified observations with a probability > 0.5 to have an income greater than 50K, however different threshold values are possible.  
 
 ### ROC Curve
+A receiver operating characteristic (ROC) curve plots the true positive rate (sensitivity) against the false positive rate (1 - specificity).  This can also be viewed as the percent of positive outcomes versus the percent of other outcomes.
+
+```{r warning = FALSE, message=FALSE}
+library(ROCR)
+pred = prediction(predictedProbability, test$IncomeAbove50)
+perf = performance(pred, measure = 'tpr', x.measure = 'fpr')
+plot(perf)
+```
+
+The curve will generally be above the line $y=x$ and curves of "better" models are typically close to the upper left corner.
+
+We can also calculate the area under the ROC curve (AUC)
+```{r}
+auc = performance(pred, measure = "auc")
+auc = auc@y.values[[1]]
+auc
+```
+"Better" models generally have AUC close to 1, though it's important to consider many metrics when evaluating a model.
 
 ### Model Assumptions
 We can check for multicollinearity among our independent variables by computing the variance inflation factor (VIF).  All the variables should have a VIF less than 10 but ideally less than 5.

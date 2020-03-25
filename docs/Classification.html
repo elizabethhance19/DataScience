@@ -300,12 +300,7 @@ $(document).ready(function () {
 <ul>
 <li><a href="#overview"><span class="toc-section-number">1</span> Overview</a></li>
 <li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a><ul>
-<li><a href="#logistic-regression-income-example"><span class="toc-section-number">2.1</span> Logistic Regression: Income Example</a><ul>
-<li><a href="#traintest-set"><span class="toc-section-number">2.1.1</span> Train/Test Set</a></li>
-<li><a href="#fit-and-test-logistic-model"><span class="toc-section-number">2.1.2</span> Fit and Test Logistic Model</a></li>
-<li><a href="#roc-curve"><span class="toc-section-number">2.1.3</span> ROC Curve</a></li>
-<li><a href="#model-assumptions"><span class="toc-section-number">2.1.4</span> Model Assumptions</a></li>
-</ul></li>
+<li><a href="#logistic-regression-income-example"><span class="toc-section-number">2.1</span> Logistic Regression: Income Example</a></li>
 </ul></li>
 <li><a href="#k-nearest-neighbors-knn"><span class="toc-section-number">3</span> K-Nearest Neighbors (KNN)</a><ul>
 <li><a href="#knn-iris-example"><span class="toc-section-number">3.1</span> KNN: Iris Example</a></li>
@@ -325,21 +320,19 @@ $(document).ready(function () {
 </div>
 <div id="logistic-regression" class="section level1">
 <h1><span class="header-section-number">2</span> Logistic Regression</h1>
-<p>Logistic regression is used for binary classification i.e. when there are 2 possible predictor classes.</p>
+<p>Logistic regression is used for binary classification - when there are 2 possible predictor classes.</p>
 <p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
-<p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are generally found with a maxium likelihood estimation that requires an iterative process.</p>
+<p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maxium likelihood estimation that requires an iterative process.</p>
 <p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
 <div id="logistic-regression-income-example" class="section level2">
 <h2><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
-<p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income Data</a></p>
+<p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income</a></p>
 <div id="traintest-set" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
 <p>Load data:</p>
 <pre class="r"><code>incomeData &lt;- read.table(&#39;https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data&#39;, 
                     sep = &#39;,&#39;, fill = F, strip.white = T)
-colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, 
-                     &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, 
-                     &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
+colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
 incomeData$IncomeAbove50 = as.numeric(incomeData$income == &#39;&gt;50K&#39;)
 table(incomeData$income)</code></pre>
 <pre><code>## 
@@ -408,7 +401,7 @@ summary(mod.logit)</code></pre>
 <p>Predict for the test data</p>
 <pre class="r"><code>predictedProbability = predict(mod.logit, test, type=&#39;response&#39;)
 test$PredictedIncomeAbove50 = ifelse(predictedProbability &gt; 0.5,1,0)
-confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50))</code></pre>
+confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = &#39;1&#39;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -425,28 +418,41 @@ confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50))
 ##                                           
 ##  Mcnemar&#39;s Test P-Value : &lt; 2.2e-16       
 ##                                           
-##             Sensitivity : 0.9333          
-##             Specificity : 0.4125          
-##          Pos Pred Value : 0.8335          
-##          Neg Pred Value : 0.6626          
-##              Prevalence : 0.7591          
-##          Detection Rate : 0.7085          
-##    Detection Prevalence : 0.8500          
-##       Balanced Accuracy : 0.6729          
+##             Sensitivity : 0.41254         
+##             Specificity : 0.93333         
+##          Pos Pred Value : 0.66257         
+##          Neg Pred Value : 0.83353         
+##              Prevalence : 0.24088         
+##          Detection Rate : 0.09937         
+##    Detection Prevalence : 0.14998         
+##       Balanced Accuracy : 0.67294         
 ##                                           
-##        &#39;Positive&#39; Class : 0               
+##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
-<p>Our model predicts our test data with 81% accuracy. Some other interesting metrics:</p>
+<p>Our model predicts our test data with 81% accuracy where accuracy = <span class="math inline">\(\frac{TP + FN}{Total}\)</span> Some other interesting metrics:</p>
 <ul>
 <li>Sensitivity: also called recall or true positive rate. Equal to <span class="math inline">\(\frac{TP}{TP + FN}\)</span> where <span class="math inline">\(FN\)</span> (Type II error) occurs when the model predicts a true value to be false<br />
 </li>
 <li>Specificity: also called true negative rate. Equal to <span class="math inline">\(\frac{TN}{TN + FP}\)</span> where <span class="math inline">\(FP\)</span> (Type I error) occurs when the model predicts a false value to be true</li>
 </ul>
-<p>Generally raising one of the metrics lowers the other (trade-off), depending on the context of the data will determine which is more important.</p>
+<p>Generally raising one of the metrics lowers the other (trade-off), the context of the data will determine which is more important.</p>
 <p>The model prediction returns a probability of each observation having an income greater than 50K. Here, we classified observations with a probability &gt; 0.5 to have an income greater than 50K, however different threshold values are possible.</p>
 </div>
 <div id="roc-curve" class="section level3">
 <h3><span class="header-section-number">2.1.3</span> ROC Curve</h3>
+<p>A receiver operating characteristic (ROC) curve plots the true positive rate (sensitivity) against the false positive rate (1 - specificity). This can also be viewed as the percent of positive outcomes versus the percent of other outcomes.</p>
+<pre class="r"><code>library(ROCR)
+pred = prediction(predictedProbability, test$IncomeAbove50)
+perf = performance(pred, measure = &#39;tpr&#39;, x.measure = &#39;fpr&#39;)
+plot(perf)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The curve will generally be above the line <span class="math inline">\(y=x\)</span> and curves of “better” models are typically close to the upper left corner.</p>
+<p>We can also calculate the area under the ROC curve (AUC)</p>
+<pre class="r"><code>auc = performance(pred, measure = &quot;auc&quot;)
+auc = auc@y.values[[1]]
+auc</code></pre>
+<pre><code>## [1] 0.8195055</code></pre>
+<p>“Better” models generally have AUC close to 1, though it’s important to consider many metrics when evaluating a model.</p>
 </div>
 <div id="model-assumptions" class="section level3">
 <h3><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
