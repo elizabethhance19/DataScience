@@ -9,10 +9,10 @@ navbar:
     #  href: R-Overview.html
     #- text: "Regression"
     #  href: Regression.html
+    - text: "Classification"
+      href: Classification.html    
     - text: "Clustering"
       href: Clustering.html
-    - text: "Classification"
-      href: Classification.html
     #- text: "SQL"
     #  href: SQL.html
 output:

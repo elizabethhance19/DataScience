@@ -275,10 +275,10 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="Clustering.html">Clustering</a>
+  <a href="Classification.html">Classification</a>
 </li>
 <li>
-  <a href="Classification.html">Classification</a>
+  <a href="Clustering.html">Clustering</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -310,19 +310,26 @@ $(document).ready(function () {
 <li><a href="#naive-bayes-titanic-example"><span class="toc-section-number">4.2</span> Naive Bayes: Titanic Example</a></li>
 <li><a href="#laplace-correction"><span class="toc-section-number">4.3</span> Laplace Correction</a></li>
 </ul></li>
-<li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a></li>
+<li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a><ul>
+<li><a href="#how-to-grow-trees"><span class="toc-section-number">5.1</span> How to Grow Trees</a></li>
+<li><a href="#other-tree-based-methods"><span class="toc-section-number">5.2</span> Other Tree-Based Methods</a></li>
+<li><a href="#classification-tree-carseat-sales-example"><span class="toc-section-number">5.3</span> Classification Tree: Carseat Sales Example</a></li>
+<li><a href="#regression-tree-random-forest-housing-example"><span class="toc-section-number">5.4</span> Regression Tree: Random Forest Housing Example</a></li>
+</ul></li>
 </ul>
 </div>
 
 <div id="overview" class="section level1">
 <h1><span class="header-section-number">1</span> Overview</h1>
-<p>What is classification, checking model performance - accuracy, ROC, precision/recall, etc., some methods</p>
+<p>Classification is used on data where the response variable is qualitative (categorical), unlike regression which has a quantitative (continuous) response variable. The response categories are known making this a supervised learning technique, unlike clustering where the categories are unknown.</p>
+<p>A common method to evaluate classification models is to calculate the accuracy: the proportion of correctly classified responses to the total number of classifications made. Other performance metrics are also useful, including sensitivity and specificity (explored with logistic regression).</p>
+<p>Some common classification techniques include: logistic regression, Naive Bayes classifier, k-nearest neighbor, decision trees, linear/quadratic discriminant analysis (not explored here), and support vector machines (not explored here).</p>
 </div>
 <div id="logistic-regression" class="section level1">
 <h1><span class="header-section-number">2</span> Logistic Regression</h1>
 <p>Logistic regression is used for binary classification - when there are 2 possible predictor classes.</p>
 <p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
-<p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maxium likelihood estimation that requires an iterative process.</p>
+<p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maximum likelihood estimation that requires an iterative process.</p>
 <p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
 <div id="logistic-regression-income-example" class="section level2">
 <h2><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
@@ -472,7 +479,7 @@ auc</code></pre>
 <p>KNN works by considering the K training data points that are closest (typically using Euclidean distance) to the test observation. Then, the test observation is predicted to be in the same class as the majority of the closest training points. In the event of a tie, one of the classes is randomly chosen. It is necessary to normalize (generally min-max normalization instead of standardization) the data first since we will be calculating distances.</p>
 <div id="knn-iris-example" class="section level2">
 <h2><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
-<p>Normalize the iris data and split into a training and test set</p>
+<p>This example was inspired by <a href="https://towardsdatascience.com/k-nearest-neighbors-algorithm-with-examples-in-r-simply-explained-knn-1f2c88da405c">KNN Example</a>. Normalize the iris data and split into a training and test set</p>
 <pre class="r"><code>normalize &lt;- function(x) {
 return((x - min(x)) / (max(x) - min(x)))
 }
@@ -530,8 +537,9 @@ repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
 Titanic_df=Titanic[repeating_sequence,]
 Titanic_df = Titanic_df %&gt;% select(-Freq)</code></pre>
 <p>Fit Naive Bayes model</p>
-<pre class="r"><code>library(e1071)
-mod.NB = naiveBayes(Survived~., data=Titanic_df)
+<pre class="r"><code>library(e1071)</code></pre>
+<pre><code>## Warning: package &#39;e1071&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>mod.NB = naiveBayes(Survived~., data=Titanic_df)
 mod.NB</code></pre>
 <pre><code>## 
 ## Naive Bayes Classifier for Discrete Predictors
@@ -591,6 +599,167 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 </div>
 <div id="classification-trees" class="section level1">
 <h1><span class="header-section-number">5</span> Classification Trees</h1>
+<p>Decision trees create a set of ‘questions’ to partition the data set. The questions are chosen to provide the ‘best split’, and result in a flow chart to determine the category. Content and examples for this section were taken from <a href="https://www.datacamp.com/community/tutorials/decision-trees-R">DataCamp Decision Tree Example</a></p>
+<p>Terms:</p>
+<ul>
+<li>root node: starting node representing the entire population/sample</li>
+<li>decision node: a sub-node that splits into more sub-nodes</li>
+<li>terminal node/leaf: a sub-node that does not split</li>
+</ul>
+<p>Decision trees are intuitive and easy to explain and visualize, but are not very robust as a small change in the data can drastically change the final tree.</p>
+<div id="how-to-grow-trees" class="section level2">
+<h2><span class="header-section-number">5.1</span> How to Grow Trees</h2>
+<div id="classification" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Classification</h3>
+<p>Classification trees use divide and conquer to create the most pure (homogeneous) partitions. A common way to build these trees is to use the Gini index. This is defined as <span class="math display">\[G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})\]</span> where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training observations in the <em>m</em>th region that are from the <em>k</em>th class. The Gini index is a measure of total variance across the classes and is referred to as the nodes purity. The index will be small if the <span class="math inline">\(\hat{p}_{mk}\)</span> are close to 0 or 1, and the split that produces the purest (largest <em>G</em>) will be chosen.</p>
+<p>Other methods of growing classification decision trees include cross-entropy (similar to Gini index) and classification error rate (generally not sensitive enough for growing trees)</p>
+</div>
+<div id="regression" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Regression</h3>
+<p>If our outcome variable were continuous, we could grow a regression tree. This uses Recursive Binary Splitting to minimize the Residual Sum of Squares (RSS), defined as <span class="math display">\[\sum_{m=1}^M\sum_{i\in R_m}(y_i-\hat{y}_{R_m})^2\]</span> where <span class="math inline">\(\hat{y}_{R_m}\)</span> is the mean response for the training observations in the <em>m</em>th region/box. In short, this is a top-down greedy approach that starts at the top of the tree and successively splits the predictor space to minimize the RSS at each split. (More details could be added but this section is focused on classification trees).</p>
+</div>
+<div id="pruning-trees" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Pruning Trees</h3>
+<p>We can pre-prune the trees by defining a maximum depth/number of levels, or by defining a minimum number of observations needed in a sub-node to continue partitioning.</p>
+<p>We can also post-prune overly complicated branches when their reduction in error does not outweigh their added complexity.</p>
+</div>
+</div>
+<div id="other-tree-based-methods" class="section level2">
+<h2><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
+<p>The current methods of fitting our trees suffer from high variance, so different splits for the training/test sets can result in very different models. We briefly introduce 3 other methods of growing decision trees: Bagging, Random Forests, and Boosting.</p>
+<div id="bagging-bootstrap-aggregation" class="section level3 unnumbered">
+<h3>Bagging (bootstrap aggregation)</h3>
+<p>Bagging randomly sample from the training data (with replacement) to split into multiple data sets, builds a decision tree classifier on each of them, then averages the resulting predictions.</p>
+<p>While each tree has high variance but low bias, averaging multiple trees together reduces the variance.</p>
+</div>
+<div id="random-forests" class="section level3 unnumbered">
+<h3>Random Forests</h3>
+<p>This methods starts the same as bagging by splitting the training data. However, at each split a random subset of <em>m</em> predictors is chosen as a split candidate. If <em>m</em> equals the total number of predictors <em>p</em>, this method is equivalent to bagging.</p>
+<p>Generally for classification problems <span class="math inline">\(m = \sqrt{p}\)</span> and for regression problems <span class="math inline">\(m = p/3\)</span> (rounded down).</p>
+</div>
+<div id="boosting" class="section level3 unnumbered">
+<h3>Boosting</h3>
+<p>Boosting grows trees sequentially, where each tree is grown using information from previous trees. Given a current model, we fit a decision tree to the residuals from the model. This new trees is added into the fitted function to update the residuals. Boosting has three parameters: the number of tree, the shrinkage parameter (the rate at which boosting learns), and the number of splits in each tree.</p>
+</div>
+</div>
+<div id="classification-tree-carseat-sales-example" class="section level2">
+<h2><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
+<p>Our goal is to predict if the carseat sales are greater than 8000 units or not.</p>
+<pre class="r"><code>library(ISLR)
+library(rpart)
+set.seed(123) #rpart performs cross validation so we set our random number seed
+carseats = Carseats
+carseats$High = factor(ifelse(carseats$Sales&lt;=8, &quot;No&quot;, &quot;Yes&quot;))
+mod.tree = rpart(High~.-Sales, data=carseats) #could alternatively use tree
+#summary(mod.tree)
+mod.tree$cptable</code></pre>
+<pre><code>##           CP nsplit rel error    xerror       xstd
+## 1 0.28658537      0 1.0000000 1.0000000 0.05997967
+## 2 0.10975610      1 0.7134146 0.7134146 0.05547692
+## 3 0.04573171      2 0.6036585 0.6524390 0.05398236
+## 4 0.03658537      4 0.5121951 0.6402439 0.05365767
+## 5 0.02743902      5 0.4756098 0.6341463 0.05349198
+## 6 0.02439024      7 0.4207317 0.6524390 0.05398236
+## 7 0.01219512      8 0.3963415 0.6341463 0.05349198
+## 8 0.01000000     10 0.3719512 0.5609756 0.05132104</code></pre>
+<pre class="r"><code>mod.tree$variable.importance</code></pre>
+<pre><code>##       Price   ShelveLoc         Age Advertising   CompPrice      Income  Population   Education          US 
+##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750   3.1669718   0.9670985   0.1411614</code></pre>
+<p>We can also visualize this tree:</p>
+<pre class="r"><code>library(rpart.plot)
+rpart.plot(mod.tree, type=4, extra=1)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<div id="making-predictions" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Making Predictions</h3>
+<p>Split into a training and test set and calculate accuracy</p>
+<pre class="r"><code>set.seed(123)
+train = sample(1:nrow(carseats), 250)
+mod.treeTrain = rpart(High~.-Sales, carseats, subset=train)
+rpart.plot(mod.treeTrain)</code></pre>
+<p><img src="Classification_files/figure-html/train-1.png" width="672" /></p>
+<p>Now predict the class for the test set</p>
+<pre class="r"><code>test = carseats[-train,]
+test$predicted = predict(mod.treeTrain, test, type=&#39;class&#39;)
+table(test$High, test$predicted)</code></pre>
+<pre><code>##      
+##       No Yes
+##   No  63  26
+##   Yes 17  44</code></pre>
+<pre class="r"><code>mean(test$High == test$predicted) #accuracy</code></pre>
+<pre><code>## [1] 0.7133333</code></pre>
+<div id="pruning-tree" class="section level4 unnumbered">
+<h4>Pruning Tree</h4>
+<p><strong>Pre-Pruning:</strong> This stops the growth of a tree depending on a given maximum size of the tree or a minimum number of observations needed in a sub-node to split.</p>
+<p>Make a tree with maximum depth = 3</p>
+<pre class="r"><code>mod.treeDepth = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(maxdepth=3))
+rpart.plot(mod.treeDepth)</code></pre>
+<p><img src="Classification_files/figure-html/depth-1.png" width="672" /></p>
+<pre class="r"><code>test$predicted = predict(mod.treeDepth, test, type=&#39;class&#39;)
+mean(test$High == test$predicted) #accuracy</code></pre>
+<pre><code>## [1] 0.7066667</code></pre>
+<p>There is a small reduction in accuracy for this simpler model compared to the previous model.</p>
+<p>Only split a sub-node if it contains at least 30 observations</p>
+<pre class="r"><code>mod.treeObserve = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(minsplit=30))
+rpart.plot(mod.treeObserve)</code></pre>
+<p><img src="Classification_files/figure-html/observe-1.png" width="672" /></p>
+<pre class="r"><code>test$predicted = predict(mod.treeObserve, test, type=&#39;class&#39;)
+mean(test$High == test$predicted) #accuracy</code></pre>
+<pre><code>## [1] 0.7333333</code></pre>
+<p>This model has similar accuracy to the un-pruned model, but is a less complicated tree.</p>
+<p><strong>Post-Pruning:</strong> Here we grow a large tree then prune to balance error and complexity. Choose the left most value of complexity plot that lies below the line for the cp cutoff.</p>
+<pre class="r"><code>set.seed(123)
+mod.treeComplex = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(cp=0))
+rpart.plot(mod.treeComplex)</code></pre>
+<p><img src="Classification_files/figure-html/post-1.png" width="672" /></p>
+<pre class="r"><code>plotcp(mod.treeComplex)</code></pre>
+<p><img src="Classification_files/figure-html/post-2.png" width="672" /></p>
+<pre class="r"><code>mod.treeComplexPruned = prune(mod.treeComplex, cp=0.044)
+rpart.plot(mod.treeComplexPruned)</code></pre>
+<p><img src="Classification_files/figure-html/post-3.png" width="672" /></p>
+<pre class="r"><code>test$predicted = predict(mod.treeComplexPruned, test, type=&#39;class&#39;)
+mean(test$High == test$predicted) #accuracy</code></pre>
+<pre><code>## [1] 0.7133333</code></pre>
+<p>Despite being a simpler tree, this model still has similar accuracy to the full model.</p>
+</div>
+</div>
+</div>
+<div id="regression-tree-random-forest-housing-example" class="section level2">
+<h2><span class="header-section-number">5.4</span> Regression Tree: Random Forest Housing Example</h2>
+<pre class="r"><code>library(MASS)
+library(randomForest)
+boston = Boston
+set.seed(101)
+train = sample(1:nrow(boston), 300)
+mod.rf = randomForest(medv~., data = boston, subset = train)
+mod.rf</code></pre>
+<pre><code>## 
+## Call:
+##  randomForest(formula = medv ~ ., data = boston, subset = train) 
+##                Type of random forest: regression
+##                      Number of trees: 500
+## No. of variables tried at each split: 4
+## 
+##           Mean of squared residuals: 12.68651
+##                     % Var explained: 83.45</code></pre>
+<p>The <em>randomForest</em> function defaults to growing 500 trees (ntree) and using <em>floor(ncol(data)/3)</em> variables (mtry) at each split.</p>
+<div id="varying-the-number-of-variables" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Varying the Number of Variables</h3>
+<p>Fit a random forest model with a variable mtry, calculate the out-of-bag error (based on training set) and the test error:</p>
+<pre class="r"><code>oob.err = double(13)
+test.err = double(13)
+for (mtry in 1:13){
+  mod.fit = randomForest(medv~., data=boston, subset=train, mtry=mtry, ntree=350)
+  oob.err[mtry] = mod.fit$mse[350]
+  pred = predict(mod.fit, boston[-train,])
+  test.err[mtry] = with(boston[-train,], mean( (medv-pred)^2 ))
+}</code></pre>
+<pre class="r"><code>library(ggplot2)
+mtryData = data.frame(mtry = 1:mtry, test.err, oob.err) %&gt;% pivot_longer(-mtry, names_to = &#39;ErrorType&#39;, values_to = &#39;Error&#39;)
+ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line() + theme(legend.position = c(0.9, 0.8))</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Mtry around 4 seems to be the most optimal choice, which is equivalent to <em>floor(13/3)</em>, the default choice for mtry.</p>
+</div>
+</div>
 </div>
 
 

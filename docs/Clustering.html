@@ -275,10 +275,10 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="Clustering.html">Clustering</a>
+  <a href="Classification.html">Classification</a>
 </li>
 <li>
-  <a href="Classification.html">Classification</a>
+  <a href="Clustering.html">Clustering</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -535,8 +535,9 @@ summary(pca.iris)</code></pre>
 <div id="visualization" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Visualization</h3>
 <p>Visualizing first two components</p>
-<pre class="r"><code>library(ggfortify)
-autoplot(pca.iris, data=iris, colour=&#39;Species&#39;, loadings = TRUE, loadings.colour = &#39;blue&#39;, loadings.label = TRUE, loadings.label.size = 3)</code></pre>
+<pre class="r"><code>library(ggfortify)</code></pre>
+<pre><code>## Warning: package &#39;ggfortify&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>autoplot(pca.iris, data=iris, colour=&#39;Species&#39;, loadings = TRUE, loadings.colour = &#39;blue&#39;, loadings.label = TRUE, loadings.label.size = 3)</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Petal.Width and Petal.Length are in the same direction indicated they are correlated in the original data</p>
 <p>Plot how much variation each principal component explains:</p>
