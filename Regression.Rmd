@@ -8,3 +8,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 
+Model performance: RMSE, R^2
+Leverage: 
+library(broom)
+mod <- lm(HR ~ SB, data = regulars)
+mod %>%
+augment() %>%
+arrange(desc(.hat)) %>% # or .cooksd
+select(HR, SB, .fitted, .resid, .hat) %>%
+head()

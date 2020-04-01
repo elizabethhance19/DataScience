@@ -8,3 +8,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview
 Add overview of R, useful libraries, database connections, links to R cheat sheets, possibly info on statistical tests
+
+
+Packages: lubridate
