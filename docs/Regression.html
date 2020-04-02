@@ -298,12 +298,84 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a></li>
+<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a><ul>
+<li><a href="#correlation"><span class="toc-section-number">1.1</span> Correlation</a></li>
+</ul></li>
+<li><a href="#simple-linear-regression"><span class="toc-section-number">2</span> Simple Linear Regression</a><ul>
+<li><a href="#assumptions"><span class="toc-section-number">2.1</span> Assumptions</a></li>
+<li><a href="#fitting-the-model"><span class="toc-section-number">2.2</span> Fitting the Model</a></li>
+<li><a href="#simple-linear-regression-____-example"><span class="toc-section-number">2.3</span> Simple Linear Regression: ____ Example</a></li>
+</ul></li>
+<li><a href="#multiple-linear-regression"><span class="toc-section-number">3</span> Multiple Linear Regression</a><ul>
+<li><a href="#multiple-linear-regression-____-example"><span class="toc-section-number">3.1</span> Multiple Linear Regression: ____ Example</a></li>
+<li><a href="#assessing-model-fit"><span class="toc-section-number">3.2</span> Assessing Model Fit</a></li>
+</ul></li>
+<li><a href="#categorical-response-anova-model"><span class="toc-section-number">4</span> Categorical Response (ANOVA model)</a><ul>
+<li><a href="#confidence-intervals"><span class="toc-section-number">4.1</span> Confidence Intervals</a></li>
+<li><a href="#anova-____-example"><span class="toc-section-number">4.2</span> ANOVA: ____ Example</a></li>
+</ul></li>
+<li><a href="#other-related-topics"><span class="toc-section-number">5</span> Other Related Topics</a></li>
 </ul>
 </div>
 
 <div id="overview" class="section level1">
 <h1><span class="header-section-number">1</span> Overview</h1>
+<p>Regression typically refers to identifying a (linear) relationship between a set of explanatory variables and response variables. If the response variable is categorical, this typically refers to an ANOVA model.</p>
+<div id="correlation" class="section level2">
+<h2><span class="header-section-number">1.1</span> Correlation</h2>
+<p>Correlation describes the strength and direction of a straight-line (linear) relationship between pair of variables. The Pearson correlation coefficient is defined as <span class="math display">\[r = \frac{cov(X,Y)}{s_X s_Y}\]</span> where <span class="math inline">\(s_X\)</span> is the standard deviation of X, or equivalently, <span class="math display">\[r = \frac{1}{n-1} \sum z_xz_y\]</span> where <span class="math inline">\(z_x = \frac{x-\bar{x}}{s_x}\)</span>. We can think of each <span class="math inline">\(z_x\)</span> as the number of standard deviations the data is above the mean.</p>
+<p>Correlation ranges from -1 to 1, values with a larger magnitude indicate a stronger correlation, and the sign designates the direction. If the correlation is 0 we can conclude the variables are not linearly dependent. However, even if the correlation is small (in magnitude), there may exist a non-linear relationship between them. Correlation is unit free, unit invariant, and sensitive to outliers.</p>
+</div>
+</div>
+<div id="simple-linear-regression" class="section level1">
+<h1><span class="header-section-number">2</span> Simple Linear Regression</h1>
+<p>Simple linear regression occurs when there is one independent variable and one dependent variable (typically both continuous).</p>
+<div id="assumptions" class="section level2">
+<h2><span class="header-section-number">2.1</span> Assumptions</h2>
+<p>Simple linear regression assumes a model of the form: <span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \epsilon_i\]</span></p>
+<p>We also make various assumptions when fitting a linear regression model:</p>
+<ol style="list-style-type: decimal">
+<li></li>
+<li></li>
+<li></li>
+</ol>
+</div>
+<div id="fitting-the-model" class="section level2">
+<h2><span class="header-section-number">2.2</span> Fitting the Model</h2>
+</div>
+<div id="simple-linear-regression-____-example" class="section level2">
+<h2><span class="header-section-number">2.3</span> Simple Linear Regression: ____ Example</h2>
+<p>Simple example, include CI for coefficients, prediction vs confidence interval, checking model assumptions</p>
+</div>
+</div>
+<div id="multiple-linear-regression" class="section level1">
+<h1><span class="header-section-number">3</span> Multiple Linear Regression</h1>
+<p>Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables. For example, we could have two independent variables (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_i\)</span>), a quadratic term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \epsilon_i\)</span>), or including an interaction term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \epsilon_i\)</span>). There can be non-linearity in x as long as the coefficients (<span class="math inline">\(\beta_i\)</span>) maintain a linear relationship.</p>
+<div id="multiple-linear-regression-____-example" class="section level2">
+<h2><span class="header-section-number">3.1</span> Multiple Linear Regression: ____ Example</h2>
+<p>model assumptions, test coefficients, multicolinearity</p>
+</div>
+<div id="assessing-model-fit" class="section level2">
+<h2><span class="header-section-number">3.2</span> Assessing Model Fit</h2>
+<p>leverage, influence, cp, pressp, bic, aic -&gt; just some of these</p>
+</div>
+</div>
+<div id="categorical-response-anova-model" class="section level1">
+<h1><span class="header-section-number">4</span> Categorical Response (ANOVA model)</h1>
+<div id="confidence-intervals" class="section level2">
+<h2><span class="header-section-number">4.1</span> Confidence Intervals</h2>
+</div>
+<div id="anova-____-example" class="section level2">
+<h2><span class="header-section-number">4.2</span> ANOVA: ____ Example</h2>
+</div>
+</div>
+<div id="other-related-topics" class="section level1">
+<h1><span class="header-section-number">5</span> Other Related Topics</h1>
+<ul>
+<li>Kruskal-Wallis Test</li>
+<li>Dunn Test</li>
+</ul>
+<p>Model performance: RMSE, R^2 Leverage: library(broom) mod &lt;- lm(HR ~ SB, data = regulars) mod %&gt;% augment() %&gt;% arrange(desc(.hat)) %&gt;% # or .cooksd select(HR, SB, .fitted, .resid, .hat) %&gt;% head()</p>
 </div>
 
 

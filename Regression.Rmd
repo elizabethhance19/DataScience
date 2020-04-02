@@ -7,6 +7,61 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Overview
+Regression typically refers to identifying a (linear) relationship between a set of explanatory variables and response variables.  If the response variable is categorical, this typically refers to an ANOVA model.
+
+## Correlation
+Correlation describes the strength and direction of a straight-line (linear) relationship between pair of variables.  The Pearson correlation coefficient is defined as 
+$$r = \frac{cov(X,Y)}{s_X s_Y}$$ where $s_X$ is the standard deviation of X, or equivalently, 
+$$r = \frac{1}{n-1} \sum z_xz_y$$ where $z_x = \frac{x-\bar{x}}{s_x}$.  We can think of each $z_x$ as the number of standard deviations the data is above the mean.
+
+Correlation ranges from -1 to 1, values with a larger magnitude indicate a stronger correlation, and the sign designates the direction.  If the correlation is 0 we can conclude the variables are not linearly dependent.  However, even if the correlation is small (in magnitude), there may exist a non-linear relationship between them.  Correlation is unit free, unit invariant, and sensitive to outliers.
+
+# Simple Linear Regression
+Simple linear regression occurs when there is one independent variable and one dependent variable (typically both continuous).
+
+## Assumptions
+Simple linear regression assumes a model of the form:
+$$y_i = \beta_0 + \beta_1 x_i + \epsilon_i$$
+
+We also make various assumptions when fitting a linear regression model:
+
+1.
+2.
+3.
+
+
+
+## Fitting the Model
+
+
+## Simple Linear Regression: ____ Example
+Simple example, include CI for coefficients, prediction vs confidence interval, checking model assumptions
+
+
+
+# Multiple Linear Regression
+Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables.  For example, we could have two independent variables ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_i$), a quadratic term ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \epsilon_i$), or including an interaction term ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \epsilon_i$).  There can be non-linearity in x as long as the coefficients ($\beta_i$) maintain a linear relationship.
+
+
+## Multiple Linear Regression: ____ Example
+model assumptions, test coefficients, multicolinearity
+
+## Assessing Model Fit
+leverage, influence, cp, pressp, bic, aic -> just some of these
+
+
+# Categorical Response (ANOVA model)
+## Confidence Intervals
+## ANOVA: ____ Example
+
+
+# Other Related Topics
+
+* Kruskal-Wallis Test
+* Dunn Test
+
+
+
 
 Model performance: RMSE, R^2
 Leverage: 
