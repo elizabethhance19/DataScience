@@ -38,8 +38,7 @@ We want to predict if an individual will earn more than $50K using various predi
 ### Train/Test Set
 Load data:
 ```{r}
-incomeData <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data', 
-                    sep = ',', fill = F, strip.white = T)
+incomeData <- read.table('adult.data', sep = ',', fill = F, strip.white = T)
 colnames(incomeData) <- c('age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income')
 incomeData$IncomeAbove50 = as.numeric(incomeData$income == '>50K')
 table(incomeData$income)

@@ -275,6 +275,9 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
+  <a href="Regression.html">Regression</a>
+</li>
+<li>
   <a href="Classification.html">Classification</a>
 </li>
 <li>
@@ -337,8 +340,7 @@ $(document).ready(function () {
 <div id="traintest-set" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
 <p>Load data:</p>
-<pre class="r"><code>incomeData &lt;- read.table(&#39;https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data&#39;, 
-                    sep = &#39;,&#39;, fill = F, strip.white = T)
+<pre class="r"><code>incomeData &lt;- read.table(&#39;adult.data&#39;, sep = &#39;,&#39;, fill = F, strip.white = T)
 colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
 incomeData$IncomeAbove50 = as.numeric(incomeData$income == &#39;&gt;50K&#39;)
 table(incomeData$income)</code></pre>
@@ -452,7 +454,7 @@ confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50),
 pred = prediction(predictedProbability, test$IncomeAbove50)
 perf = performance(pred, measure = &#39;tpr&#39;, x.measure = &#39;fpr&#39;)
 plot(perf)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The curve will generally be above the line <span class="math inline">\(y=x\)</span> and curves of “better” models are typically close to the upper left corner.</p>
 <p>We can also calculate the area under the ROC curve (AUC)</p>
 <pre class="r"><code>auc = performance(pred, measure = &quot;auc&quot;)
@@ -668,7 +670,7 @@ mod.tree$cptable</code></pre>
 <p>We can also visualize this tree:</p>
 <pre class="r"><code>library(rpart.plot)
 rpart.plot(mod.tree, type=4, extra=1)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <div id="making-predictions" class="section level3">
 <h3><span class="header-section-number">5.3.1</span> Making Predictions</h3>
 <p>Split into a training and test set and calculate accuracy</p>
@@ -756,7 +758,7 @@ for (mtry in 1:13){
 <pre class="r"><code>library(ggplot2)
 mtryData = data.frame(mtry = 1:mtry, test.err, oob.err) %&gt;% pivot_longer(-mtry, names_to = &#39;ErrorType&#39;, values_to = &#39;Error&#39;)
 ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line() + theme(legend.position = c(0.9, 0.8))</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Mtry around 4 seems to be the most optimal choice, which is equivalent to <em>floor(13/3)</em>, the default choice for mtry.</p>
 </div>
 </div>

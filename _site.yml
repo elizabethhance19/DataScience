@@ -7,8 +7,8 @@ navbar:
       href: index.html
     #- text: "R Overview"
     #  href: R-Overview.html
-    #- text: "Regression"
-    #  href: Regression.html
+    - text: "Regression"
+      href: Regression.html
     - text: "Classification"
       href: Classification.html    
     - text: "Clustering"

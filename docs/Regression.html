@@ -275,6 +275,9 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
+  <a href="Regression.html">Regression</a>
+</li>
+<li>
   <a href="Classification.html">Classification</a>
 </li>
 <li>
@@ -304,7 +307,7 @@ $(document).ready(function () {
 <li><a href="#simple-linear-regression"><span class="toc-section-number">2</span> Simple Linear Regression</a><ul>
 <li><a href="#assumptions"><span class="toc-section-number">2.1</span> Assumptions</a></li>
 <li><a href="#fitting-the-model"><span class="toc-section-number">2.2</span> Fitting the Model</a></li>
-<li><a href="#simple-linear-regression-____-example"><span class="toc-section-number">2.3</span> Simple Linear Regression: ____ Example</a></li>
+<li><a href="#simple-linear-regression-cars-example"><span class="toc-section-number">2.3</span> Simple Linear Regression: Cars Example</a></li>
 </ul></li>
 <li><a href="#multiple-linear-regression"><span class="toc-section-number">3</span> Multiple Linear Regression</a><ul>
 <li><a href="#multiple-linear-regression-____-example"><span class="toc-section-number">3.1</span> Multiple Linear Regression: ____ Example</a></li>
@@ -332,25 +335,113 @@ $(document).ready(function () {
 <p>Simple linear regression occurs when there is one independent variable and one dependent variable (typically both continuous).</p>
 <div id="assumptions" class="section level2">
 <h2><span class="header-section-number">2.1</span> Assumptions</h2>
-<p>Simple linear regression assumes a model of the form: <span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \epsilon_i\]</span></p>
+<p>Simple linear regression assumes a model of the form: <span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \varepsilon_i\]</span></p>
 <p>We also make various assumptions when fitting a linear regression model:</p>
 <ol style="list-style-type: decimal">
-<li></li>
-<li></li>
-<li></li>
+<li>All errors (<span class="math inline">\(\varepsilon_i\)</span>’s) are independent</li>
+<li>Mean of <span class="math inline">\(\varepsilon\)</span> at any fixed x is 0, so average of all <span class="math inline">\(\varepsilon\)</span> is 0</li>
+<li>At any value of x, the spread of the y’s is the same as any other value of x <span class="math inline">\(\rightarrow\)</span> Homoscedasticity
+<ul>
+<li><span class="math inline">\(Var(\varepsilon_{ij}) = \sigma^2 = MSE\)</span></li>
+</ul></li>
+<li>At any fixed x, the distribution of <span class="math inline">\(\varepsilon\)</span> is normal</li>
 </ol>
+<p>We generally assume assumptions 1 and 2 are true, and have methods of verifying assumptions 3 and 4 (explored with examples).</p>
 </div>
 <div id="fitting-the-model" class="section level2">
 <h2><span class="header-section-number">2.2</span> Fitting the Model</h2>
+<p>To fit a linear regression model, we want to minimize the sum of squares residuals or sum of squared estimate of errors: <span class="math inline">\(SSE = \sum_{i=1}^n e_i^2 = \sum\limits_{i=1}^n(y_i-\hat{y}_i)^2\)</span> where <span class="math inline">\(\hat{y}_i\)</span> are the fitted values. Using calculus, it can be shown the solution to this criteria is:</p>
+<p><span class="math display">\[\hat{\beta_1} = \frac{\sum\limits_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})}{\sum\limits_{i=1}^n(X_i-\bar{X})^2}, \beta_0 = \bar{Y}-\hat{\beta}_1\bar{X}\]</span></p>
+<p>Alternatively, we can use a linear algebra approach and look for a least squares solution to <span class="math inline">\(A\bar{x} = \bar{b}\)</span> where <span class="math display">\[A = \begin{bmatrix}
+1 &amp; x_1\\
+1 &amp; x_2\\
+\vdots &amp; \vdots\\
+1 &amp; x_n
+\end{bmatrix}, x = \begin{bmatrix}
+\beta_0 \\
+\beta_1
+\end{bmatrix}, b = \begin{bmatrix}
+y_1\\
+y_2\\
+ \vdots\\
+y_n
+\end{bmatrix}\]</span>.</p>
+<p>However, <span class="math inline">\(\bar{b}\)</span> is not in the column space of <span class="math inline">\(A\)</span>, so we must search for a solution for <span class="math inline">\(A\bar{x} = \bar{b}_{||} = \bar{b}-\bar{b}_\perp\)</span>. Multiplying by the transpose of <span class="math inline">\(A\)</span> we have: <span class="math inline">\(A^TA\bar{x} = A^T\bar{b} - A^T\bar{b}_\perp = A^T\bar{b} + 0\)</span>. Finally, solving for <span class="math inline">\(\bar{x}\)</span> we have: <span class="math inline">\(\bar{x} = (A^TA)^{-1}A^T\bar{b}\)</span>.</p>
 </div>
-<div id="simple-linear-regression-____-example" class="section level2">
-<h2><span class="header-section-number">2.3</span> Simple Linear Regression: ____ Example</h2>
-<p>Simple example, include CI for coefficients, prediction vs confidence interval, checking model assumptions</p>
+<div id="simple-linear-regression-cars-example" class="section level2">
+<h2><span class="header-section-number">2.3</span> Simple Linear Regression: Cars Example</h2>
+<p>We will use the <em>cars</em> data to predict the stopping distance of a car given it’s speed. Begin by plotting the data and calculating the correlation:</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(cars, aes(speed, dist)) + geom_point()</code></pre>
+<p><img src="Regression_files/figure-html/carplot-1.png" width="672" /></p>
+<pre class="r"><code>cor(cars)</code></pre>
+<pre><code>##           speed      dist
+## speed 1.0000000 0.8068949
+## dist  0.8068949 1.0000000</code></pre>
+<p>The relationship appears linear and the correlation is sufficiently large (0.807), so we proceed with fitting a model.</p>
+<pre class="r"><code>mod.LinearCar = lm(dist~speed, data=cars)
+summary(mod.LinearCar)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.069  -9.525  -2.272   9.215  43.201 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+## speed         3.9324     0.4155   9.464 1.49e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.38 on 48 degrees of freedom
+## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
+<p>The coefficients, as well as their standard error and <code>importance</code> measure are given. We are also given the <em>Residual standard error</em> = <span class="math inline">\(\hat{\sigma}\)</span> and <em>Multiple R-squared</em> which in this case (since it’s a simple linear model) is equal to the square of the correlation.</p>
+<div id="making-predictions" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Making Predictions</h3>
+<p>If we wanted to predicted the <em>average</em> stopping distance for a car with speed = 15, we can construct a <em>confidence</em> interval with:</p>
+<pre class="r"><code>predict(mod.LinearCar, data.frame(speed=15), se.fit=T, interval=&#39;confidence&#39;,level=0.95)$fit</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 41.40704 37.02115 45.79292</code></pre>
+<p>However, we could also predict the stopping distance for a <em>particular</em> car with speed = 15 by constructing a <em>prediction</em> interval:</p>
+<pre class="r"><code>predict(mod.LinearCar, data.frame(speed=15), se.fit=T, interval=&#39;prediction&#39;,level=0.95)$fit</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 41.40704 10.17482 72.63925</code></pre>
+<p>The estimates in both cases are the same, however the <em>confidence</em> interval only considers variation from repeated experiments while a <em>prediction</em> interval considers this variance <strong>and</strong> the variation of an individual. For either case, the prediction will be more reliable near the center of the data.</p>
+<div id="adding-line-to-plot" class="section level4">
+<h4><span class="header-section-number">2.3.1.1</span> Adding Line to Plot</h4>
+<p>We can easily add a linear model to our plot in the ggplot2 package. This also defaults to drawing a 95% confidence interval.</p>
+<pre class="r"><code>ggplot(cars, aes(speed, dist)) + geom_point() + geom_smooth(method=&#39;lm&#39;)</code></pre>
+<p><img src="Regression_files/figure-html/carplot2-1.png" width="672" /></p>
+</div>
+</div>
+<div id="checking-model-assumptions" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Checking Model Assumptions</h3>
+<div id="homoscedasticity" class="section level4">
+<h4><span class="header-section-number">2.3.2.1</span> Homoscedasticity</h4>
+<p>We assumed the spread of y’s is the same at any value of x. To check this,</p>
+<pre class="r"><code>plot(fitted.values(mod.LinearCar), residuals(mod.LinearCar), pch=16, xlab=&#39;Predicted Value&#39;, ylab=&#39;Residual&#39;)
+abline(h=0, lty=2)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The residuals should be close to 0 and not have any pattern. If a pattern does exist (e.g. a funnel/triangle shape), we have evidence of non-homoscedasticity which could potentially be fixed by a data transformation.</p>
+</div>
+<div id="normality-of-residuals" class="section level4">
+<h4><span class="header-section-number">2.3.2.2</span> Normality of Residuals</h4>
+<p>We also assumed our errors were normally distributed. To check this we will construct a QQ-plot:</p>
+<pre class="r"><code>qqnorm(residuals(mod.LinearCar), pch=16)
+qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
+<p><img src="Regression_files/figure-html/carqq-1.png" width="672" /></p>
+<p>In this plot, <em>Sample Quantiles</em> refer to the actual value of the residuals, while <em>Theoretical Quantiles</em> are the z-scores of the residuals. If the residuals are normally distributed, the points should fall on/close to the reference line.</p>
+</div>
+</div>
 </div>
 </div>
 <div id="multiple-linear-regression" class="section level1">
 <h1><span class="header-section-number">3</span> Multiple Linear Regression</h1>
-<p>Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables. For example, we could have two independent variables (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \epsilon_i\)</span>), a quadratic term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \epsilon_i\)</span>), or including an interaction term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \epsilon_i\)</span>). There can be non-linearity in x as long as the coefficients (<span class="math inline">\(\beta_i\)</span>) maintain a linear relationship.</p>
+<p>Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables. For example, we could have two independent variables (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \varepsilon_i\)</span>), a quadratic term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \varepsilon_i\)</span>), or including an interaction term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \varepsilon_i\)</span>). There can be non-linearity in x as long as the coefficients (<span class="math inline">\(\beta_i\)</span>) maintain a linear relationship.</p>
 <div id="multiple-linear-regression-____-example" class="section level2">
 <h2><span class="header-section-number">3.1</span> Multiple Linear Regression: ____ Example</h2>
 <p>model assumptions, test coefficients, multicolinearity</p>

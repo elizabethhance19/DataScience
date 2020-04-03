@@ -38,9 +38,9 @@ This site is a work in progress and the topics explored here do not display the 
 
 Content for these topics was gathered from a variety of sources including: DataCamp's *Data Scientist with R* Career Track, Springer's book: *An Introduction to Statistical Learning with Applications in R*, Wikipedia, various Medium articles, other online blogs, and my graduate coursework.
 
+* [Regression (work in progress)](https://elizabethhance19.github.io/DataScience/Regression.html)
 * [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
-* [Classification (work in progress)](https://elizabethhance19.github.io/DataScience/Classification.html) 
+* [Classification](https://elizabethhance19.github.io/DataScience/Classification.html) 
 <!--[R Overview](https://elizabethhance19.github.io/DataScience/R-Overview.html)  
-[Regression](https://elizabethhance19.github.io/DataScience/Regression.html)  
 [SQL](https://elizabethhance19.github.io/DataScience/SQL.html)  -->
 
