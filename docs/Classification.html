@@ -334,7 +334,7 @@ $(document).ready(function () {
 <p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
 <p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maximum likelihood estimation that requires an iterative process.</p>
 <p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
-<div id="logistic-regression-income-example" class="section level2">
+<div id="logistic-regression-income-example" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
 <p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income</a></p>
 <div id="traintest-set" class="section level3">
@@ -454,7 +454,7 @@ confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50),
 pred = prediction(predictedProbability, test$IncomeAbove50)
 perf = performance(pred, measure = &#39;tpr&#39;, x.measure = &#39;fpr&#39;)
 plot(perf)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The curve will generally be above the line <span class="math inline">\(y=x\)</span> and curves of “better” models are typically close to the upper left corner.</p>
 <p>We can also calculate the area under the ROC curve (AUC)</p>
 <pre class="r"><code>auc = performance(pred, measure = &quot;auc&quot;)
@@ -609,7 +609,7 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 <li>terminal node/leaf: a sub-node that does not split</li>
 </ul>
 <p>Decision trees are intuitive and easy to explain and visualize, but are not very robust as a small change in the data can drastically change the final tree.</p>
-<div id="how-to-grow-trees" class="section level2">
+<div id="how-to-grow-trees" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">5.1</span> How to Grow Trees</h2>
 <div id="classification" class="section level3">
 <h3><span class="header-section-number">5.1.1</span> Classification</h3>
@@ -626,7 +626,7 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 <p>We can also post-prune overly complicated branches when their reduction in error does not outweigh their added complexity.</p>
 </div>
 </div>
-<div id="other-tree-based-methods" class="section level2">
+<div id="other-tree-based-methods" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
 <p>The current methods of fitting our trees suffer from high variance, so different splits for the training/test sets can result in very different models. We briefly introduce 3 other methods of growing decision trees: Bagging, Random Forests, and Boosting.</p>
 <div id="bagging-bootstrap-aggregation" class="section level3 unnumbered">
@@ -644,7 +644,7 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 <p>Boosting grows trees sequentially, where each tree is grown using information from previous trees. Given a current model, we fit a decision tree to the residuals from the model. This new trees is added into the fitted function to update the residuals. Boosting has three parameters: the number of tree, the shrinkage parameter (the rate at which boosting learns), and the number of splits in each tree.</p>
 </div>
 </div>
-<div id="classification-tree-carseat-sales-example" class="section level2">
+<div id="classification-tree-carseat-sales-example" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
 <p>Our goal is to predict if the carseat sales are greater than 8000 units or not.</p>
 <pre class="r"><code>library(ISLR)
@@ -670,7 +670,7 @@ mod.tree$cptable</code></pre>
 <p>We can also visualize this tree:</p>
 <pre class="r"><code>library(rpart.plot)
 rpart.plot(mod.tree, type=4, extra=1)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <div id="making-predictions" class="section level3">
 <h3><span class="header-section-number">5.3.1</span> Making Predictions</h3>
 <p>Split into a training and test set and calculate accuracy</p>
@@ -689,8 +689,9 @@ table(test$High, test$predicted)</code></pre>
 ##   Yes 17  44</code></pre>
 <pre class="r"><code>mean(test$High == test$predicted) #accuracy</code></pre>
 <pre><code>## [1] 0.7133333</code></pre>
-<div id="pruning-tree" class="section level4 unnumbered">
-<h4>Pruning Tree</h4>
+</div>
+<div id="pruning-tree" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> Pruning Tree</h3>
 <p><strong>Pre-Pruning:</strong> This stops the growth of a tree depending on a given maximum size of the tree or a minimum number of observations needed in a sub-node to split.</p>
 <p>Make a tree with maximum depth = 3</p>
 <pre class="r"><code>mod.treeDepth = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(maxdepth=3))
@@ -722,7 +723,6 @@ rpart.plot(mod.treeComplexPruned)</code></pre>
 mean(test$High == test$predicted) #accuracy</code></pre>
 <pre><code>## [1] 0.7133333</code></pre>
 <p>Despite being a simpler tree, this model still has similar accuracy to the full model.</p>
-</div>
 </div>
 </div>
 <div id="regression-tree-random-forest-housing-example" class="section level2">
@@ -758,7 +758,7 @@ for (mtry in 1:13){
 <pre class="r"><code>library(ggplot2)
 mtryData = data.frame(mtry = 1:mtry, test.err, oob.err) %&gt;% pivot_longer(-mtry, names_to = &#39;ErrorType&#39;, values_to = &#39;Error&#39;)
 ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line() + theme(legend.position = c(0.9, 0.8))</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Mtry around 4 seems to be the most optimal choice, which is equivalent to <em>floor(13/3)</em>, the default choice for mtry.</p>
 </div>
 </div>

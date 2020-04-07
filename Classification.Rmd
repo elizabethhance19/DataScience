@@ -19,7 +19,7 @@ A common method to evaluate classification models is to calculate the accuracy: 
 
 Some common classification techniques include: logistic regression, Naive Bayes classifier, k-nearest neighbor, decision trees, linear/quadratic discriminant analysis (not explored here), and support vector machines (not explored here).
 
-# Logistic Regression
+# Logistic Regression 
 Logistic regression is used for binary classification - when there are 2 possible predictor classes.
 
 Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1:
@@ -32,7 +32,7 @@ Generally $e$ is chosen for the base $b$, though other bases are possible.  The 
 **Assumptions:** logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.
 
 
-## Logistic Regression: Income Example
+## Logistic Regression: Income Example {.tabset .tabset-fade .tabset-pills}
 We want to predict if an individual will earn more than $50K using various predictors.  This example was inspired by [Logistic Regression Income](http://r-statistics.co/Logistic-Regression-With-R.html)
 
 ### Train/Test Set
@@ -233,7 +233,7 @@ Terms:
 
 Decision trees are intuitive and easy to explain and visualize, but are not very robust as a small change in the data can drastically change the final tree.
 
-## How to Grow Trees
+## How to Grow Trees {.tabset .tabset-fade .tabset-pills}
 ### Classification
 Classification trees use divide and conquer to create the most pure (homogeneous) partitions.  A common way to build these trees is to use the Gini index.  This is defined as 
 $$G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})$$
@@ -251,7 +251,7 @@ We can pre-prune the trees by defining a maximum depth/number of levels, or by d
 
 We can also post-prune overly complicated branches when their reduction in error does not outweigh their added complexity.
 
-## Other Tree-Based Methods
+## Other Tree-Based Methods {.tabset .tabset-fade .tabset-pills}
 The current methods of fitting our trees suffer from high variance, so different splits for the training/test sets can result in very different models.  We briefly introduce 3 other methods of growing decision trees: Bagging, Random Forests, and Boosting.
 
 ### Bagging (bootstrap aggregation) {-}
@@ -268,7 +268,7 @@ Generally for classification problems $m = \sqrt{p}$ and for regression problems
 Boosting grows trees sequentially, where each tree is grown using information from previous trees.  Given a current model, we fit a decision tree to the residuals from the model.  This new trees is added into the fitted function to update the residuals.  Boosting has three parameters: the number of tree, the shrinkage parameter (the rate at which boosting learns), and the number of splits in each tree.
 
 
-## Classification Tree: Carseat Sales Example
+## Classification Tree: Carseat Sales Example {.tabset .tabset-fade .tabset-pills}
 Our goal is to predict if the carseat sales are greater than 8000 units or not.
 ```{r classification tree example, warning=F}
 library(ISLR)
@@ -305,7 +305,7 @@ table(test$High, test$predicted)
 mean(test$High == test$predicted) #accuracy
 ```
 
-#### Pruning Tree {-}
+### Pruning Tree
 **Pre-Pruning:** This stops the growth of a tree depending on a given maximum size of the tree or a minimum number of observations needed in a sub-node to split.
 
 Make a tree with maximum depth = 3

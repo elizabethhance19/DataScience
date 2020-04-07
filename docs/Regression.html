@@ -310,14 +310,14 @@ $(document).ready(function () {
 <li><a href="#simple-linear-regression-cars-example"><span class="toc-section-number">2.3</span> Simple Linear Regression: Cars Example</a></li>
 </ul></li>
 <li><a href="#multiple-linear-regression"><span class="toc-section-number">3</span> Multiple Linear Regression</a><ul>
-<li><a href="#multiple-linear-regression-____-example"><span class="toc-section-number">3.1</span> Multiple Linear Regression: ____ Example</a></li>
-<li><a href="#assessing-model-fit"><span class="toc-section-number">3.2</span> Assessing Model Fit</a></li>
+<li><a href="#multiple-linear-regression-credit-example"><span class="toc-section-number">3.1</span> Multiple Linear Regression: Credit Example</a></li>
+<li><a href="#adding-an-interaction-cars-example"><span class="toc-section-number">3.2</span> Adding an Interaction: Cars Example</a></li>
+<li><a href="#some-other-regression-topics"><span class="toc-section-number">3.3</span> Some Other Regression Topics</a></li>
 </ul></li>
 <li><a href="#categorical-response-anova-model"><span class="toc-section-number">4</span> Categorical Response (ANOVA model)</a><ul>
 <li><a href="#confidence-intervals"><span class="toc-section-number">4.1</span> Confidence Intervals</a></li>
 <li><a href="#anova-____-example"><span class="toc-section-number">4.2</span> ANOVA: ____ Example</a></li>
 </ul></li>
-<li><a href="#other-related-topics"><span class="toc-section-number">5</span> Other Related Topics</a></li>
 </ul>
 </div>
 
@@ -368,7 +368,7 @@ y_n
 \end{bmatrix}\]</span>.</p>
 <p>However, <span class="math inline">\(\bar{b}\)</span> is not in the column space of <span class="math inline">\(A\)</span>, so we must search for a solution for <span class="math inline">\(A\bar{x} = \bar{b}_{||} = \bar{b}-\bar{b}_\perp\)</span>. Multiplying by the transpose of <span class="math inline">\(A\)</span> we have: <span class="math inline">\(A^TA\bar{x} = A^T\bar{b} - A^T\bar{b}_\perp = A^T\bar{b} + 0\)</span>. Finally, solving for <span class="math inline">\(\bar{x}\)</span> we have: <span class="math inline">\(\bar{x} = (A^TA)^{-1}A^T\bar{b}\)</span>.</p>
 </div>
-<div id="simple-linear-regression-cars-example" class="section level2">
+<div id="simple-linear-regression-cars-example" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">2.3</span> Simple Linear Regression: Cars Example</h2>
 <p>We will use the <em>cars</em> data to predict the stopping distance of a car given it’s speed. Begin by plotting the data and calculating the correlation:</p>
 <pre class="r"><code>library(ggplot2)
@@ -399,7 +399,18 @@ summary(mod.LinearCar)</code></pre>
 ## Residual standard error: 15.38 on 48 degrees of freedom
 ## Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
 ## F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12</code></pre>
-<p>The coefficients, as well as their standard error and <code>importance</code> measure are given. We are also given the <em>Residual standard error</em> = <span class="math inline">\(\hat{\sigma}\)</span> and <em>Multiple R-squared</em> which in this case (since it’s a simple linear model) is equal to the square of the correlation.</p>
+<p>The coefficients, as well as their standard error and <code>importance</code> measure are given. We are also given the <em>Residual standard error</em> = <span class="math inline">\(\hat{\sigma}\)</span> and <em>Multiple R-squared</em> which in this case (since it’s a simple linear model) is equal to the square of the correlation. The p-value associated with the variables test if we can drop the variable from the model, a large p-value indicates we can drop.</p>
+<p>Additionally, we can view the ANOVA table of the model.</p>
+<pre class="r"><code>anova(mod.LinearCar)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: dist
+##           Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## speed      1  21186 21185.5  89.567 1.49e-12 ***
+## Residuals 48  11354   236.5                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>We see the model sum of squares (SSM) = <span class="math inline">\(\sum\limits_{i=1}^n(\hat{y}_i-\bar{y})^2\)</span> (in this case SSM = 21186). We are also shown SSE = <span class="math inline">\(\sum\limits_{i=1}^n(y_i-\hat{y})^2\)</span> (in this case SSE = 11354). We could calculate the sum of squares total as SST = SSM + SSE.</p>
 <div id="making-predictions" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Making Predictions</h3>
 <p>If we wanted to predicted the <em>average</em> stopping distance for a car with speed = 15, we can construct a <em>confidence</em> interval with:</p>
@@ -411,25 +422,20 @@ summary(mod.LinearCar)</code></pre>
 <pre><code>##        fit      lwr      upr
 ## 1 41.40704 10.17482 72.63925</code></pre>
 <p>The estimates in both cases are the same, however the <em>confidence</em> interval only considers variation from repeated experiments while a <em>prediction</em> interval considers this variance <strong>and</strong> the variation of an individual. For either case, the prediction will be more reliable near the center of the data.</p>
-<div id="adding-line-to-plot" class="section level4">
-<h4><span class="header-section-number">2.3.1.1</span> Adding Line to Plot</h4>
+<p><strong>Adding Line to Plot</strong></p>
 <p>We can easily add a linear model to our plot in the ggplot2 package. This also defaults to drawing a 95% confidence interval.</p>
 <pre class="r"><code>ggplot(cars, aes(speed, dist)) + geom_point() + geom_smooth(method=&#39;lm&#39;)</code></pre>
 <p><img src="Regression_files/figure-html/carplot2-1.png" width="672" /></p>
 </div>
-</div>
 <div id="checking-model-assumptions" class="section level3">
 <h3><span class="header-section-number">2.3.2</span> Checking Model Assumptions</h3>
-<div id="homoscedasticity" class="section level4">
-<h4><span class="header-section-number">2.3.2.1</span> Homoscedasticity</h4>
+<p><strong>Homoscedasticity</strong></p>
 <p>We assumed the spread of y’s is the same at any value of x. To check this,</p>
 <pre class="r"><code>plot(fitted.values(mod.LinearCar), residuals(mod.LinearCar), pch=16, xlab=&#39;Predicted Value&#39;, ylab=&#39;Residual&#39;)
 abline(h=0, lty=2)</code></pre>
 <p><img src="Regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>The residuals should be close to 0 and not have any pattern. If a pattern does exist (e.g. a funnel/triangle shape), we have evidence of non-homoscedasticity which could potentially be fixed by a data transformation.</p>
-</div>
-<div id="normality-of-residuals" class="section level4">
-<h4><span class="header-section-number">2.3.2.2</span> Normality of Residuals</h4>
+<p><strong>Normality of Residuals</strong></p>
 <p>We also assumed our errors were normally distributed. To check this we will construct a QQ-plot:</p>
 <pre class="r"><code>qqnorm(residuals(mod.LinearCar), pch=16)
 qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
@@ -438,17 +444,254 @@ qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
 </div>
 </div>
 </div>
-</div>
 <div id="multiple-linear-regression" class="section level1">
 <h1><span class="header-section-number">3</span> Multiple Linear Regression</h1>
 <p>Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables. For example, we could have two independent variables (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \varepsilon_i\)</span>), a quadratic term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \varepsilon_i\)</span>), or including an interaction term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \varepsilon_i\)</span>). There can be non-linearity in x as long as the coefficients (<span class="math inline">\(\beta_i\)</span>) maintain a linear relationship.</p>
-<div id="multiple-linear-regression-____-example" class="section level2">
-<h2><span class="header-section-number">3.1</span> Multiple Linear Regression: ____ Example</h2>
-<p>model assumptions, test coefficients, multicolinearity</p>
+<div id="multiple-linear-regression-credit-example" class="section level2 tabset tabset-fade tabset-pills">
+<h2><span class="header-section-number">3.1</span> Multiple Linear Regression: Credit Example</h2>
+<p>We explore various models to predict credit card balance. This example was inspired by Springer’s book: <em>An Introduction to Statistical Learning</em></p>
+<p>We start with a model using all the available variables (except for ID). Note categorical variables are formatted as factors and are automatically converted to indicator/dummy variables.</p>
+<pre class="r"><code>library(ISLR)
+head(Credit)</code></pre>
+<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity Balance
+## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian     333
+## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian     903
+## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian     580
+## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian     964
+## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian     331
+## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian    1151</code></pre>
+<pre class="r"><code>mod.Full = lm(Balance ~ Cards + Limit + Rating + Age + Gender + Student + Income + Education + Married + Ethnicity, data=Credit)
+summary(mod.Full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Balance ~ Cards + Limit + Rating + Age + Gender + 
+##     Student + Income + Education + Married + Ethnicity, data = Credit)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -161.64  -77.70  -13.49   53.98  318.20 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        -479.20787   35.77394 -13.395  &lt; 2e-16 ***
+## Cards                17.72448    4.34103   4.083 5.40e-05 ***
+## Limit                 0.19091    0.03278   5.824 1.21e-08 ***
+## Rating                1.13653    0.49089   2.315   0.0211 *  
+## Age                  -0.61391    0.29399  -2.088   0.0374 *  
+## GenderFemale        -10.65325    9.91400  -1.075   0.2832    
+## StudentYes          425.74736   16.72258  25.459  &lt; 2e-16 ***
+## Income               -7.80310    0.23423 -33.314  &lt; 2e-16 ***
+## Education            -1.09886    1.59795  -0.688   0.4921    
+## MarriedYes           -8.53390   10.36287  -0.824   0.4107    
+## EthnicityAsian       16.80418   14.11906   1.190   0.2347    
+## EthnicityCaucasian   10.10703   12.20992   0.828   0.4083    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 98.79 on 388 degrees of freedom
+## Multiple R-squared:  0.9551, Adjusted R-squared:  0.9538 
+## F-statistic: 750.3 on 11 and 388 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From our output, we see <em>Gender, Education, Married, Ethnicity</em> are not significant, so we remove them from the model:</p>
+<pre class="r"><code>mod.Less = lm(Balance ~ Cards + Limit + Rating + Age + Student + Income, data=Credit)
+summary(mod.Less)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Balance ~ Cards + Limit + Rating + Age + Student + 
+##     Income, data = Credit)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -170.00  -77.85  -11.84   56.87  313.52 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -493.73419   24.82476 -19.889  &lt; 2e-16 ***
+## Cards         18.21190    4.31865   4.217 3.08e-05 ***
+## Limit          0.19369    0.03238   5.981 4.98e-09 ***
+## Rating         1.09119    0.48480   2.251   0.0250 *  
+## Age           -0.62406    0.29182  -2.139   0.0331 *  
+## StudentYes   425.60994   16.50956  25.780  &lt; 2e-16 ***
+## Income        -7.79508    0.23342 -33.395  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 98.61 on 393 degrees of freedom
+## Multiple R-squared:  0.9547, Adjusted R-squared:  0.954 
+## F-statistic:  1380 on 6 and 393 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Removing these variables results in a simplier model without sacrificing performance (<span class="math inline">\(R^2\)</span> is similar).</p>
+<div id="consider-multicollinearity" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Consider Multicollinearity</h3>
+<p>It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem. To check this, we can compute the variance inflation factor for our variables, defined as <span class="math display">\[VIF(X_m) = \frac{1}{1-R^2_m}\]</span> where <span class="math inline">\(R^2_m\)</span> is the coefficient of determinationo when <span class="math inline">\(X_m\)</span> is regressed on all of the other predictors. We want <span class="math inline">\(VIF(X_m)\)</span> to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.</p>
+<p>For our simpler model, we calculate the VIF for each variable:</p>
+<pre class="r"><code>library(car)
+vif(mod.Less)</code></pre>
+<pre><code>##      Cards      Limit     Rating        Age    Student     Income 
+##   1.439007 229.238479 230.869514   1.039696   1.009064   2.776906</code></pre>
+<p>The VIF for <em>Limit</em> and <em>Rating</em> is extremely high, indicating we should not include both of the variables in the model. We can calculate the correlation of these two variables and see it is close to 1.</p>
+<pre class="r"><code>cor(Credit$Limit, Credit$Rating)</code></pre>
+<pre><code>## [1] 0.9968797</code></pre>
+<pre class="r"><code>mod.LessNoRating = lm(Balance ~ Cards + Limit + Age + Student + Income, data=Credit)
+summary(mod.LessNoRating)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Balance ~ Cards + Limit + Age + Student + Income, 
+##     data = Credit)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -187.05  -79.57  -12.59   56.06  322.56 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -4.673e+02  2.199e+01 -21.250  &lt; 2e-16 ***
+## Cards        2.355e+01  3.628e+00   6.492 2.55e-10 ***
+## Limit        2.661e-01  3.535e-03  75.296  &lt; 2e-16 ***
+## Age         -6.220e-01  2.933e-01  -2.120   0.0346 *  
+## StudentYes   4.284e+02  1.655e+01  25.886  &lt; 2e-16 ***
+## Income      -7.760e+00  2.341e-01 -33.149  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 99.12 on 394 degrees of freedom
+## Multiple R-squared:  0.9541, Adjusted R-squared:  0.9535 
+## F-statistic:  1638 on 5 and 394 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div id="assessing-model-fit" class="section level2">
-<h2><span class="header-section-number">3.2</span> Assessing Model Fit</h2>
-<p>leverage, influence, cp, pressp, bic, aic -&gt; just some of these</p>
+<div id="checking-model-assumptions-1" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Checking Model Assumptions</h3>
+<p>Just like with the simple linear example, we need to verify our assumptions. We can plot our model to look for evidence of heteroscedasticity and non-normality:</p>
+<pre class="r"><code>plot(mod.LessNoRating, which=1)</code></pre>
+<p><img src="Regression_files/figure-html/assumptions-1.png" width="672" /></p>
+<pre class="r"><code>mod.LimitIncome = lm(Balance ~ Limit + Income, data=Credit)
+plot(mod.LimitIncome, which=1)</code></pre>
+<p><img src="Regression_files/figure-html/assumptions-2.png" width="672" /></p>
+<p>There are some concerns with our residuals which seem to be caused when both <em>Limit</em> and <em>Income</em> are included. The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added. However, this U-shape only exists wehn both <em>Limit</em> and <em>Income</em> are included. If we remove one of these (removing <em>Income</em> resulted in a smaller drop in <span class="math inline">\(R^2\)</span>), the concerns of heteroscedasticity are reduced.</p>
+<pre class="r"><code>mod.LessNoIncome = lm(Balance ~ Cards + Limit + Age + Student, data=Credit)
+summary(mod.LessNoIncome)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Balance ~ Cards + Limit + Age + Student, data = Credit)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -657.27 -118.27   -2.56  137.66  449.07 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -3.074e+02  4.171e+01  -7.369 1.01e-12 ***
+## Cards        2.950e+01  7.044e+00   4.188 3.48e-05 ***
+## Limit        1.734e-01  4.201e-03  41.282  &lt; 2e-16 ***
+## Age         -2.183e+00  5.628e-01  -3.878 0.000123 ***
+## StudentYes   4.043e+02  3.214e+01  12.578  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 192.7 on 395 degrees of freedom
+## Multiple R-squared:  0.8261, Adjusted R-squared:  0.8243 
+## F-statistic: 469.1 on 4 and 395 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>plot(mod.LessNoIncome, which=1)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We can also check our residuals are normally distributed:</p>
+<pre class="r"><code>plot(mod.LessNoIncome, which=2)</code></pre>
+<p><img src="Regression_files/figure-html/normality-1.png" width="672" /></p>
+</div>
+</div>
+<div id="adding-an-interaction-cars-example" class="section level2">
+<h2><span class="header-section-number">3.2</span> Adding an Interaction: Cars Example</h2>
+<p>So far we have assumed the effect of one predictor variable is independent of another, so all of our predictor variables are additive. However, it’s possible the variables are not independent and there is instead an interaction effect.</p>
+<p>Using the <em>mtcars</em> data set, we try to predict miles per gallon (<em>mpg</em>) using horsepower (<em>hp</em>) and engine type (<em>vs</em>: v-shaped/straight). Without an interaction effect, our model produces two parallel lines, depending on the value of <em>vs</em>.</p>
+<pre class="r"><code>mod.NoInt = lm(mpg~hp+vs, mtcars)
+mtcarsNoInt = cbind(mtcars, mpg.Fit = predict(mod.NoInt))
+ggplot(mtcarsNoInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + geom_line(aes(y=mpg.Fit))</code></pre>
+<p><img src="Regression_files/figure-html/nointeraction-1.png" width="672" /></p>
+<p>However, it is likely <em>hp</em> has a different effect on <em>mpg</em> depending on the engine type (<em>vp</em>). We add the interaction term to the model and see the lines are no longer parallel.</p>
+<pre class="r"><code>mod.Int = lm(mpg~hp+vs+hp*vs, mtcars)
+mtcarsInt = cbind(mtcars, mpg.Fit = predict(mod.Int))
+ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + geom_line(aes(y=mpg.Fit))</code></pre>
+<p><img src="Regression_files/figure-html/interaction-1.png" width="672" /></p>
+<p>We can also examine the coefficients of our models:</p>
+<pre class="r"><code>summary(mod.NoInt)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ hp + vs, data = mtcars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.7131 -2.3336 -0.1332  1.9055  7.9055 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 26.96300    2.89069   9.328 3.13e-10 ***
+## hp          -0.05453    0.01448  -3.766 0.000752 ***
+## vs           2.57622    1.96966   1.308 0.201163    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.818 on 29 degrees of freedom
+## Multiple R-squared:  0.6246, Adjusted R-squared:  0.5987 
+## F-statistic: 24.12 on 2 and 29 DF,  p-value: 6.768e-07</code></pre>
+<pre class="r"><code>summary(mod.Int)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ hp + vs + hp * vs, data = mtcars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.5821 -1.7710 -0.3612  1.5969  9.2646 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 24.49637    2.73893   8.944 1.07e-09 ***
+## hp          -0.04153    0.01379  -3.011  0.00547 ** 
+## vs          14.50418    4.58160   3.166  0.00371 ** 
+## hp:vs       -0.11657    0.04130  -2.822  0.00868 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.428 on 28 degrees of freedom
+## Multiple R-squared:  0.7077, Adjusted R-squared:  0.6764 
+## F-statistic:  22.6 on 3 and 28 DF,  p-value: 1.227e-07</code></pre>
+<p>The model with interaction has a larger <span class="math inline">\(R^2\)</span> than the model without. It is interested that <em>vs</em> is not significant in the first model but becomes significant when the interaction term is added.</p>
+<p>The hierarchical priniciple tells us that within a model if the main effects variable (e.g. <em>vs</em>) is not significant but the interaction variable is (e.g. <em>hp:vs</em>), then we should still include the main effects variable. In our example, all the main effects variables were shown to be significant, but if one hadn’t and the interaction was significant, we should still include them.</p>
+<p>A <em>non-rigorous</em> way to tell if an interaction variable is needed is to plot the data and visually fit a line by group. If the lines are parallel, no interaction is needed, but if they intersect (in this case), then an interaction should be considered.</p>
+</div>
+<div id="some-other-regression-topics" class="section level2 tabset tabset-fade tabset-pills">
+<h2><span class="header-section-number">3.3</span> Some Other Regression Topics</h2>
+<div id="model-selection" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Model Selection</h3>
+<p>We have been using <span class="math inline">\(R^2\)</span> to determine the percent of variation in the data is described by the model. We are also given the residual standard error, or root mean squared error (RMSE), in the model summary output.</p>
+<p><strong>Other model metrics</strong></p>
+<ul>
+<li>Mallow’s <span class="math inline">\(C_p\)</span>: If this is small the model is competative to the full model and preserves degrees of freedom</li>
+<li>Adjusted <span class="math inline">\(R^2\)</span>: Penalizes for too many predictors that don’t reduce unexplained variation</li>
+<li><span class="math inline">\(PRESS_p\)</span>: Prediction Sum of Squares, if small then predicts point well</li>
+<li>BIC/AIC: Small if model is good fit and simple</li>
+</ul>
+<p><code>Best subsets</code> can be used to determine the best k models for a chosen number of variables.</p>
+<p><code>Stepwise algorithms</code> add/remove independent variables one at a time before converging to a <em>best</em> model. They can be either forward selection, backward elimination, or both. The algorithm may converge to different <em>best</em> models depending on the direction and initial model.</p>
+</div>
+<div id="leverage-and-influence" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Leverage and Influence</h3>
+<ul>
+<li>Leverage: Distance of an observation from the mean of the explanatory variables. The inclusion/exclusion of this observation has a large change on the fitted line
+<ul>
+<li>Hat values - indicate potential for leverage</li>
+<li>Press residuals</li>
+<li>Studentized residuals</li>
+</ul></li>
+</ul>
+<pre class="r"><code>plot(mod.LessNoIncome, which=3)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<ul>
+<li>Influence: Ability to change metrics of lines fit. For example, <span class="math inline">\(R^2 = 1-\frac{SSE}{SST}\)</span>, so adding a data point increases SST while it may keep SSE the same, artificially inflating <span class="math inline">\(R^2\)</span>.
+<ul>
+<li>DFFITS - Difference in fits</li>
+<li>DfBetas - How much coefficients change when ith value is deleted</li>
+<li>Cook’s Distance - measures overall influence</li>
+</ul></li>
+</ul>
+<pre class="r"><code>plot(mod.LessNoIncome, which=4)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
 </div>
 </div>
 <div id="categorical-response-anova-model" class="section level1">
@@ -458,15 +701,12 @@ qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
 </div>
 <div id="anova-____-example" class="section level2">
 <h2><span class="header-section-number">4.2</span> ANOVA: ____ Example</h2>
-</div>
-</div>
-<div id="other-related-topics" class="section level1">
-<h1><span class="header-section-number">5</span> Other Related Topics</h1>
+<p>Levenes test and normality test # Other Related Topics</p>
 <ul>
 <li>Kruskal-Wallis Test</li>
 <li>Dunn Test</li>
 </ul>
-<p>Model performance: RMSE, R^2 Leverage: library(broom) mod &lt;- lm(HR ~ SB, data = regulars) mod %&gt;% augment() %&gt;% arrange(desc(.hat)) %&gt;% # or .cooksd select(HR, SB, .fitted, .resid, .hat) %&gt;% head()</p>
+</div>
 </div>
 
 

@@ -445,7 +445,7 @@ library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
-<div id="parameters-for-k-means-and-determining-number-of-clusters" class="section level2">
+<div id="parameters-for-k-means-and-determining-number-of-clusters" class="section level2 tabset tabset-fade tabset-pills">
 <h2><span class="header-section-number">3.2</span> Parameters for K-Means and Determining Number of Clusters</h2>
 <ul>
 <li>nstart: how many random starts should be done? Run algorithm nstart times and choose the result with the lowest total within sum of squares. Default = 1 but larger value is generally recommended.</li>

@@ -47,7 +47,7 @@ dist(college_gender_dummy, method='binary')
 Some popular clustering techniques are: Hierarchical, K-means, Partition Around Medoids (PAM), and Principal Component Analysis (PCA)
 
 
-# Hierarchical Clustering
+# Hierarchical Clustering 
 Generally agglomerative ("bottom-up"): each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy  
 
 * Put each data point in its own cluster  
@@ -79,7 +79,7 @@ Here we knew there were 3 species of flower, so it was easy to choose the number
 
 
 
-# K-Means Clustering
+# K-Means Clustering 
 * Choose number of clusters K 
 * Randomly generate/select K centroids and assign each data point to the nearest centroid
 * Recalculate centroids and reassign data to nearest centroid until the cluster assignments don't change
@@ -92,7 +92,7 @@ library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
 ```
 
-## Parameters for K-Means and Determining Number of Clusters
+## Parameters for K-Means and Determining Number of Clusters {.tabset .tabset-fade .tabset-pills}
 
 * nstart: how many random starts should be done? Run algorithm nstart times and choose the result with the lowest total within sum of squares.  Default = 1 but larger value is generally recommended.
 * iter.max: maximum number of iterations.  Default is 10, change if convergence takes longer.
@@ -146,7 +146,7 @@ K=2 has the largest silhouette score, indicating we should use 2 clusters (thoug
 
 
 
-# Principal Component Analysis
+# Principal Component Analysis 
 PCA finds structure in features and aids in visualization
 
 * Find linear combination of variables to create principal components

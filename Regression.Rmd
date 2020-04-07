@@ -6,7 +6,7 @@ title: "Regression"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Overview
+# Overview 
 Regression typically refers to identifying a (linear) relationship between a set of explanatory variables and response variables.  If the response variable is categorical, this typically refers to an ANOVA model.
 
 ## Correlation
@@ -16,7 +16,7 @@ $$r = \frac{1}{n-1} \sum z_xz_y$$ where $z_x = \frac{x-\bar{x}}{s_x}$.  We can t
 
 Correlation ranges from -1 to 1, values with a larger magnitude indicate a stronger correlation, and the sign designates the direction.  If the correlation is 0 we can conclude the variables are not linearly dependent.  However, even if the correlation is small (in magnitude), there may exist a non-linear relationship between them.  Correlation is unit free, unit invariant, and sensitive to outliers.
 
-# Simple Linear Regression
+# Simple Linear Regression 
 Simple linear regression occurs when there is one independent variable and one dependent variable (typically both continuous).
 
 ## Assumptions
@@ -57,7 +57,7 @@ y_n
 However, $\bar{b}$ is not in the column space of $A$, so we must search for a solution for $A\bar{x} = \bar{b}_{||} = \bar{b}-\bar{b}_\perp$.  Multiplying by the transpose of $A$ we have: $A^TA\bar{x} = A^T\bar{b} - A^T\bar{b}_\perp = A^T\bar{b} + 0$.  Finally, solving for $\bar{x}$ we have: $\bar{x} = (A^TA)^{-1}A^T\bar{b}$.
 
 
-## Simple Linear Regression: Cars Example
+## Simple Linear Regression: Cars Example {.tabset .tabset-fade .tabset-pills}
 We will use the *cars* data to predict the stopping distance of a car given it's speed.  Begin by plotting the data and calculating the correlation:
 ```{r carplot, message=F, warning=F}
 library(ggplot2)
@@ -72,7 +72,15 @@ mod.LinearCar = lm(dist~speed, data=cars)
 summary(mod.LinearCar)
 ```
 
-The coefficients, as well as their standard error and `importance` measure are given.  We are also given the *Residual standard error* = $\hat{\sigma}$ and *Multiple R-squared* which in this case (since it's a simple linear model) is equal to the square of the correlation.
+The coefficients, as well as their standard error and `importance` measure are given.  We are also given the *Residual standard error* = $\hat{\sigma}$ and *Multiple R-squared* which in this case (since it's a simple linear model) is equal to the square of the correlation.  The p-value associated with the variables test if we can drop the variable from the model, a large p-value indicates we can drop.
+
+Additionally, we can view the ANOVA table of the model.
+```{r carANOVA}
+anova(mod.LinearCar)
+```
+
+We see the model sum of squares (SSM) = $\sum\limits_{i=1}^n(\hat{y}_i-\bar{y})^2$ (in this case SSM = 21186).  We are also shown SSE = $\sum\limits_{i=1}^n(y_i-\hat{y})^2$ (in this case SSE = 11354).  We could calculate the sum of squares total as SST = SSM + SSE.  
+
 
 ### Making Predictions
 If we wanted to predicted the *average* stopping distance for a car with speed = 15, we can construct a *confidence* interval with:
@@ -87,7 +95,8 @@ predict(mod.LinearCar, data.frame(speed=15), se.fit=T, interval='prediction',lev
 
 The estimates in both cases are the same, however the *confidence* interval only considers variation from repeated experiments while a *prediction* interval considers this variance **and** the variation of an individual.  For either case, the prediction will be more reliable near the center of the data.
 
-#### Adding Line to Plot
+**Adding Line to Plot**
+
 We can easily add a linear model to our plot in the ggplot2 package.  This also defaults to drawing a 95% confidence interval.
 
 ```{r carplot2, message=F, warning=F}
@@ -97,7 +106,8 @@ ggplot(cars, aes(speed, dist)) + geom_point() + geom_smooth(method='lm')
 
 
 ### Checking Model Assumptions
-#### Homoscedasticity
+**Homoscedasticity**
+
 We assumed the spread of y's is the same at any value of x.  To check this, 
 ```{r}
 plot(fitted.values(mod.LinearCar), residuals(mod.LinearCar), pch=16, xlab='Predicted Value', ylab='Residual')
@@ -106,7 +116,8 @@ abline(h=0, lty=2)
 
 The residuals should be close to 0 and not have any pattern.  If a pattern does exist (e.g. a funnel/triangle shape), we have evidence of non-homoscedasticity which could potentially be fixed by a data transformation.
 
-#### Normality of Residuals
+**Normality of Residuals**
+
 We also assumed our errors were normally distributed.  To check this we will construct a QQ-plot:
 ```{r carqq}
 qqnorm(residuals(mod.LinearCar), pch=16)
@@ -120,11 +131,134 @@ In this plot, *Sample Quantiles* refer to the actual value of the residuals, whi
 Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables.  For example, we could have two independent variables ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \varepsilon_i$), a quadratic term ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \varepsilon_i$), or including an interaction term ($y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \varepsilon_i$).  There can be non-linearity in x as long as the coefficients ($\beta_i$) maintain a linear relationship.
 
 
-## Multiple Linear Regression: ____ Example
-model assumptions, test coefficients, multicolinearity
+## Multiple Linear Regression: Credit Example {.tabset .tabset-fade .tabset-pills}
+We explore various models to predict credit card balance.  This example was inspired by Springer's book: *An Introduction to Statistical Learning*
 
-## Assessing Model Fit
-leverage, influence, cp, pressp, bic, aic -> just some of these
+We start with a model using all the available variables (except for ID).  Note categorical variables are formatted as factors and are automatically converted to indicator/dummy variables.
+```{r multReg, message=F, warning=F}
+library(ISLR)
+head(Credit)
+mod.Full = lm(Balance ~ Cards + Limit + Rating + Age + Gender + Student + Income + Education + Married + Ethnicity, data=Credit)
+summary(mod.Full)
+```
+
+From our output, we see *Gender, Education, Married, Ethnicity* are not significant, so we remove them from the model:
+
+```{r, message=F}
+mod.Less = lm(Balance ~ Cards + Limit + Rating + Age + Student + Income, data=Credit)
+summary(mod.Less)
+```
+
+Removing these variables results in a simplier model without sacrificing performance ($R^2$ is similar).  
+
+### Consider Multicollinearity
+It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem.  To check this, we can compute the variance inflation factor for our variables, defined as 
+$$VIF(X_m) = \frac{1}{1-R^2_m}$$
+where $R^2_m$ is the coefficient of determinationo when $X_m$ is regressed on all of the other predictors.  We want $VIF(X_m)$ to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.
+
+For our simpler model, we calculate the VIF for each variable:
+```{r VIF, message=F, warning=F}
+library(car)
+vif(mod.Less)
+```
+
+The VIF for *Limit* and *Rating* is extremely high, indicating we should not include both of the variables in the model.  We can calculate the correlation of these two variables and see it is close to 1.
+
+```{r}
+cor(Credit$Limit, Credit$Rating)
+mod.LessNoRating = lm(Balance ~ Cards + Limit + Age + Student + Income, data=Credit)
+summary(mod.LessNoRating)
+```
+
+
+### Checking Model Assumptions
+Just like with the simple linear example, we need to verify our assumptions.  We can plot our model to look for evidence of heteroscedasticity and non-normality:
+```{r assumptions}
+plot(mod.LessNoRating, which=1)
+mod.LimitIncome = lm(Balance ~ Limit + Income, data=Credit)
+plot(mod.LimitIncome, which=1)
+```
+
+There are some concerns with our residuals which seem to be caused when both *Limit* and *Income* are included.  The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added.  However, this U-shape only exists wehn both *Limit* and *Income* are included.  If we remove one of these (removing *Income* resulted in a smaller drop in $R^2$), the concerns of heteroscedasticity are reduced.
+
+```{r}
+mod.LessNoIncome = lm(Balance ~ Cards + Limit + Age + Student, data=Credit)
+summary(mod.LessNoIncome)
+plot(mod.LessNoIncome, which=1)
+```
+
+We can also check our residuals are normally distributed:
+```{r normality}
+plot(mod.LessNoIncome, which=2)
+```
+
+## Adding an Interaction: Cars Example
+So far we have assumed the effect of one predictor variable is independent of another, so all of our predictor variables are additive. However, it's possible the variables are not independent and there is instead an interaction effect.
+
+Using the *mtcars* data set, we try to predict miles per gallon (*mpg*) using horsepower (*hp*) and engine type (*vs*: v-shaped/straight).  Without an interaction effect, our model produces two parallel lines, depending on the value of *vs*.
+
+```{r nointeraction}
+mod.NoInt = lm(mpg~hp+vs, mtcars)
+mtcarsNoInt = cbind(mtcars, mpg.Fit = predict(mod.NoInt))
+ggplot(mtcarsNoInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + geom_line(aes(y=mpg.Fit))
+```
+
+However, it is likely *hp* has a different effect on *mpg* depending on the engine type (*vp*).  We add the interaction term to the model and see the lines are no longer parallel.
+
+```{r interaction}
+mod.Int = lm(mpg~hp+vs+hp*vs, mtcars)
+mtcarsInt = cbind(mtcars, mpg.Fit = predict(mod.Int))
+ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + geom_line(aes(y=mpg.Fit))
+```
+
+We can also examine the coefficients of our models:
+```{r intSum}
+summary(mod.NoInt)
+summary(mod.Int)
+```
+
+The model with interaction has a larger $R^2$ than the model without.  It is interested that *vs* is not significant in the first model but becomes significant when the interaction term is added.
+
+The hierarchical priniciple tells us that within a model if the main effects variable (e.g. *vs*) is not significant but the interaction variable is (e.g. *hp:vs*), then we should still include the main effects variable.  In our example, all the main effects variables were shown to be significant, but if one hadn't and the interaction was significant, we should still include them.
+
+A *non-rigorous* way to tell if an interaction variable is needed is to plot the data and visually fit a line by group.  If the lines are parallel, no interaction is needed, but if they intersect (in this case), then an interaction should be considered.
+
+
+## Some Other Regression Topics {.tabset .tabset-fade .tabset-pills}
+### Model Selection
+We have been using $R^2$ to determine the percent of variation in the data is described by the model.  We are also given the residual standard error, or root mean squared error (RMSE), in the model summary output.
+
+**Other model metrics**
+
+* Mallow's $C_p$: If this is small the model is competative to the full model and preserves degrees of freedom
+* Adjusted $R^2$: Penalizes for too many predictors that don't reduce unexplained variation
+* $PRESS_p$: Prediction Sum of Squares, if small then predicts point well
+* BIC/AIC: Small if model is good fit and simple
+
+`Best subsets` can be used to determine the best k models for a chosen number of variables.  
+
+`Stepwise algorithms` add/remove independent variables one at a time before converging to a *best* model.  They can be either forward selection, backward elimination, or both.  The algorithm may converge to different *best* models depending on the direction and initial model.
+
+### Leverage and Influence
+* Leverage: Distance of an observation from the mean of the explanatory variables.  The inclusion/exclusion of this observation has a large change on the fitted line
+  + Hat values - indicate potential for leverage
+  + Press residuals
+  + Studentized residuals
+
+```{r}
+plot(mod.LessNoIncome, which=3)
+```
+
+* Influence: Ability to change metrics of lines fit.  For example, $R^2 = 1-\frac{SSE}{SST}$, so adding a data point increases SST while it may keep SSE the same, artificially inflating $R^2$.
+  + DFFITS - Difference in fits
+  + DfBetas - How much coefficients change when ith value is deleted
+  + Cook's Distance - measures overall influence
+```{r}
+plot(mod.LessNoIncome, which=4)
+```
+  
+
+
 
 
 # Categorical Response (ANOVA model)
@@ -132,20 +266,10 @@ leverage, influence, cp, pressp, bic, aic -> just some of these
 ## ANOVA: ____ Example
 
 
+Levenes test and normality test
 # Other Related Topics
 
 * Kruskal-Wallis Test
 * Dunn Test
 
 
-
-
-Model performance: RMSE, R^2
-Leverage: 
-library(broom)
-mod <- lm(HR ~ SB, data = regulars)
-mod %>%
-augment() %>%
-arrange(desc(.hat)) %>% # or .cooksd
-select(HR, SB, .fitted, .resid, .hat) %>%
-head()
