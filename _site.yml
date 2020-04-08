@@ -13,8 +13,8 @@ navbar:
       href: Classification.html    
     - text: "Clustering"
       href: Clustering.html
-    #- text: "SQL"
-    #  href: SQL.html
+    - text: "Databases"
+      href: Databases.html
 output:
   html_document:
     theme: flatly

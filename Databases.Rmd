@@ -1,0 +1,43 @@
+---
+title: "Databases"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+Data is often organized in a database that can be accessed, managed, and updated by users.  Databases are often defined as relational or non-relational.
+
+## Relational Databases
+A relational database model organizes data into a set of tables with rows (records) and columns (attributes) with a primary key (sometimes multiple columns) to uniquely identify each row.  Primary keys that are found in other tables are called foreign keys and are often used to join the tables together.
+
+SQL (Structured Query Language) is a language often used to query and maintain relational databases.  Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.
+
+## Non-Relational Databases
+Non-relational databases, sometimes called NoSQL (non SQL or not only SQL) databases, do not require the structure of rows and columns, but instead is optimized for the type of data it holds.  They may contain JSON documents with key/value pairs, graph data with edges and vertices, time series data, etc.  
+
+Some common non-relational databases include Apache Cassandra, MongoDB, and Oracle NoSQL.
+
+
+# Connecting to Databases in R
+We are able to connect directly to a database in R.  This is one example of connecting to a database (I used this to connect to an Oracle database).
+
+After setting up the connection to a database (in Windows using ODBC Data Source Administrator), we can connect to the database and query from one (or more) of the tables.  After storing the queried data in a dataframe, we can disconnect from the database.
+
+```{r dbconnect, eval=F}
+library(DBI)
+library(odbc)
+con = dbConnect(odbc::odbc(), "<Data Source Name>", UID="username", PWD= "password")
+result.df = dbGetQuery(con, "select * from <Table Name> ")
+dbDisconnect(con)
+```
+
+
+
+
+# SQL
+
+[Common SQL commands](https://www.w3schools.com/sql/default.asp)
+
+

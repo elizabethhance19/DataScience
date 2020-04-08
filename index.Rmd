@@ -22,6 +22,11 @@ header-includes:
 
 <div class="column-left">
 Hi! I'm Elizabeth Hance and I love data.  After getting my Master's degree in computational mathematics, I joined the team at OSU focused on studying student academic success.  Since graduating, I've expanded my knowledge of the data science world through my job and independent study.  This site serves as a collection of some of the things I have learned.  Feel free to reach out to my at my contact info below.
+
+* [GitHub](https://github.com/elizabethhance19)
+* [LinkedIn](www.linkedin.com/in/elizabeth-hance)
+* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
+
 </div>
 <div class="column-right">
 ```{r, echo=FALSE, fig.cap="My dog, Mia", out.width="50%", fig.align='center', out.extra='angle=0',}
@@ -29,18 +34,43 @@ knitr::include_graphics("Mia.png")
 ```
 </div>
 
-* [GitHub](https://github.com/elizabethhance19)
-* [LinkedIn](www.linkedin.com/in/elizabeth-hance)
-* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
 
 # Topics Covered {-}
-This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge.  The explainations of the concepts are meant to be brief with simple examples. 
+This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge.  The explanations of the concepts are meant to be brief with simple examples. 
 
 Content for these topics was gathered from a variety of sources including: DataCamp's *Data Scientist with R* Career Track, Springer's book: *An Introduction to Statistical Learning with Applications in R*, Wikipedia, various Medium articles, other online blogs, and my graduate coursework.
 
 * [Regression (work in progress)](https://elizabethhance19.github.io/DataScience/Regression.html)
 * [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
 * [Classification](https://elizabethhance19.github.io/DataScience/Classification.html) 
-<!--[R Overview](https://elizabethhance19.github.io/DataScience/R-Overview.html)  
-[SQL](https://elizabethhance19.github.io/DataScience/SQL.html)  -->
+* [Databases (work in progress)](https://elizabethhance19.github.io/DataScience/Databases.html)
+
+
+# R Packages {-}
+Most of the examples are written in R, so here are some packages that are frequently used:
+
+[All cheat sheets](https://rstudio.com/resources/cheatsheets/)
+
+* [tidyverse](https://www.tidyverse.org/packages/)
+  + [dplyr](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) - data manipulation
+  + [ggplot2](https://ggplot2.tidyverse.org/reference/) - data visualization
+  + [tidyr](https://tidyr.tidyverse.org/) - to tidy/clean data
+  + [readr](https://readr.tidyverse.org/) - read rectangular data
+  + [stringr](https://stringr.tidyverse.org/) - working with strings
+  + haven - for SPSS, Stata, and SAS data
+  + [lubridate](https://lubridate.tidyverse.org/) - working with dates
+  + readxl
+  + [purrr](https://purrr.tidyverse.org/)
+  + tibble
+  + forcats
+* data.table - *fread*: to read rectangular data
+* broom - tidy data from R functions
+* DBI - database connections
+  + odbc 
+* sqldf - use SQL to manipulate a dataframe
+* [RMarkdown](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+
+
+
+
 
