@@ -7,12 +7,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Overview
-Data is often organized in a database that can be accessed, managed, and updated by users.  Databases are often defined as relational or non-relational.
+Data is generally organized in a database that can be accessed, managed, and updated by users.  Databases are often defined as relational or non-relational.
 
 ## Relational Databases
 A relational database model organizes data into a set of tables with rows (records) and columns (attributes) with a primary key (sometimes multiple columns) to uniquely identify each row.  Primary keys that are found in other tables are called foreign keys and are often used to join the tables together.
 
-SQL (Structured Query Language) is a language often used to query and maintain relational databases.  Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.
+SQL (Structured Query Language) is a language used to query and maintain relational databases.  Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.
 
 ## Non-Relational Databases
 Non-relational databases, sometimes called NoSQL (non SQL or not only SQL) databases, do not require the structure of rows and columns, but instead is optimized for the type of data it holds.  They may contain JSON documents with key/value pairs, graph data with edges and vertices, time series data, etc.  
@@ -28,16 +28,112 @@ After setting up the connection to a database (in Windows using ODBC Data Source
 ```{r dbconnect, eval=F}
 library(DBI)
 library(odbc)
-con = dbConnect(odbc::odbc(), "<Data Source Name>", UID="username", PWD= "password")
+con = dbConnect(odbc::odbc(), "<Data Source Name>", UID = "username", PWD = "password")
 result.df = dbGetQuery(con, "select * from <Table Name> ")
 dbDisconnect(con)
 ```
 
 
 
+# Common SQL Commands
+We explore some common SQL commands: [Link to more commands](https://www.w3schools.com/sql/default.asp)
 
-# SQL
+* *SELECT DISTINCT column_1 FROM table_name* - only returns distinct row values
+* *... WHERE column_1 LIKE <pattern>* - filters column values
+  + 'a%' - starts with 'a'
+  + '_b%' - second position 'b' followed by anything
+  + Not case sensitive
+* *... WHERE column_1 BETWEEN <> AND <>*
+  + If numbers: inclusive of first and last
+  + If letters: inclusive of first not last
 
-[Common SQL commands](https://www.w3schools.com/sql/default.asp)
+## Aggregate Functions
+
+* *SELECT <>(column_1) from table_name WHERE column_1* = ___
+  + <COUNT, SUM, MAX, MIN, AVG>
+* Often *GROUP BY* a column when using aggregate functions
+  + Can *GROUP BY* column name or by 1,2,... relating to column names in *SELECT* statement
+* *WHERE* filters rows, *HAVING* filters groups (often used after *GROUP BY*)
+* Order of commands:
+  + SELECT - DISTINCT - AS - FROM - WHERE - GROUP BY - HAVING - ORDER BY - LIMIT
+
+
+## Joining Tables
+* *SELECT \* FROM table_1 JOIN table_2 ON table_1.column = table_2.column*
+  + If column name same for both tables: *SELECT \* FROM table_1 JOIN table_2 USING(column)*
+* Join types:
+  + *INNER JOIN*: only includes rows that match on condition
+  + *LEFT JOIN*: keeps all rows from first table even if there's not a match with the second
+  + *RIGHT JOIN*: keeps all rows from second table
+  + *FULL OUTER JOIN* or *FULL JOIN*: keeps all rows from both tables, matching when possible
+* *SELF JOIN*: joins table with itself
+    + *SELECT t1.country AS country1, t2.country AS country2, t1.continent  
+    FROM table AS t1  
+    INNER JOIN table AS t2  
+    ON t1.continent = t2.continent AND t1.country <> t2.country*
+    + This results in all countries matched with each other within a continent
+    + Necessary to alias table
+* *CROSS JOIN*: each row of the first tables joins with all rows of another
+  + Creates combination with lots of repeated values
+  
+## Set Operations
+Set operations combine columns
+
+* *UNION*
+  + *SELECT column_name(s) FROM table1  
+  UNION  
+  SELECT column_name(s) FROM table2*
+  + Must have same number of columns in SELECT, same data type, same order
+  + *UNION* takes distinct values
+* *UNION ALL*: same as *UNION* but allows duplicate values
+* *INTERSECT*: Only returns duplicate values (values that appear in both tables)
+* *EXCEPT*: Returns rows in first table that aren't in second table
+
+
+## Subqueries
+These examples were taken from the SQL courses on Codecademy
+
+### Non-Correlated Subqueries
+Subquery can be run independently of outer query.  Used to complete multi-step transformation.
+
+**Example using airports and flights tables:**
+
+* *SELECT \* FROM flights  
+WHERE origin IN (  
+  SELECT code FROM airport  
+  WHERE elevation > 2000)*
+  + Returns flights with origins from airports with elevation greater than 2000
+  + Note, the query inside the parenthesis could be run by itself
+  
+**Subquery with a join**: General structure
+
+* *WITH previous_results AS (  
+  SELECT ...  
+  )  
+  SELECT \*  
+  FROM previous_results  
+  JOIN table1 ON previous_results.id = table1.id*
+  + We could save *previous_results* as a table instead of executing everything together
+
+### Correlated Subqueries
+Subquery CANNOT be run independently of outer query
+
+* Row is processed in outer query
+* For particular row in outer query, subquery is executed
+
+**Example using flights tables:**
+
+* *SELECT id FROM flights AS f  
+WHERE distance > (
+SELECT AVG(distance)  
+FROM flights WHERE  
+carrier = f.carrier)*
+  + Returns id of flights where the distance for that flight is greater than the average distance of all flights for that carrier
+
+
+
+
+
+
 
 

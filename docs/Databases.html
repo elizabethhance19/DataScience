@@ -309,17 +309,22 @@ $(document).ready(function () {
 <li><a href="#non-relational-databases"><span class="toc-section-number">1.2</span> Non-Relational Databases</a></li>
 </ul></li>
 <li><a href="#connecting-to-databases-in-r"><span class="toc-section-number">2</span> Connecting to Databases in R</a></li>
-<li><a href="#sql"><span class="toc-section-number">3</span> SQL</a></li>
+<li><a href="#common-sql-commands"><span class="toc-section-number">3</span> Common SQL Commands</a><ul>
+<li><a href="#aggregate-functions"><span class="toc-section-number">3.1</span> Aggregate Functions</a></li>
+<li><a href="#joining-tables"><span class="toc-section-number">3.2</span> Joining Tables</a></li>
+<li><a href="#set-operations"><span class="toc-section-number">3.3</span> Set Operations</a></li>
+<li><a href="#subqueries"><span class="toc-section-number">3.4</span> Subqueries</a></li>
+</ul></li>
 </ul>
 </div>
 
 <div id="overview" class="section level1">
 <h1><span class="header-section-number">1</span> Overview</h1>
-<p>Data is often organized in a database that can be accessed, managed, and updated by users. Databases are often defined as relational or non-relational.</p>
+<p>Data is generally organized in a database that can be accessed, managed, and updated by users. Databases are often defined as relational or non-relational.</p>
 <div id="relational-databases" class="section level2">
 <h2><span class="header-section-number">1.1</span> Relational Databases</h2>
 <p>A relational database model organizes data into a set of tables with rows (records) and columns (attributes) with a primary key (sometimes multiple columns) to uniquely identify each row. Primary keys that are found in other tables are called foreign keys and are often used to join the tables together.</p>
-<p>SQL (Structured Query Language) is a language often used to query and maintain relational databases. Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.</p>
+<p>SQL (Structured Query Language) is a language used to query and maintain relational databases. Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.</p>
 </div>
 <div id="non-relational-databases" class="section level2">
 <h2><span class="header-section-number">1.2</span> Non-Relational Databases</h2>
@@ -333,13 +338,140 @@ $(document).ready(function () {
 <p>After setting up the connection to a database (in Windows using ODBC Data Source Administrator), we can connect to the database and query from one (or more) of the tables. After storing the queried data in a dataframe, we can disconnect from the database.</p>
 <pre class="r"><code>library(DBI)
 library(odbc)
-con = dbConnect(odbc::odbc(), &quot;&lt;Data Source Name&gt;&quot;, UID=&quot;username&quot;, PWD= &quot;password&quot;)
+con = dbConnect(odbc::odbc(), &quot;&lt;Data Source Name&gt;&quot;, UID = &quot;username&quot;, PWD = &quot;password&quot;)
 result.df = dbGetQuery(con, &quot;select * from &lt;Table Name&gt; &quot;)
 dbDisconnect(con)</code></pre>
 </div>
-<div id="sql" class="section level1">
-<h1><span class="header-section-number">3</span> SQL</h1>
-<p><a href="https://www.w3schools.com/sql/default.asp">Common SQL commands</a></p>
+<div id="common-sql-commands" class="section level1">
+<h1><span class="header-section-number">3</span> Common SQL Commands</h1>
+<p>We explore some common SQL commands: <a href="https://www.w3schools.com/sql/default.asp">Link to more commands</a></p>
+<ul>
+<li><em>SELECT DISTINCT column_1 FROM table_name</em> - only returns distinct row values</li>
+<li><em>… WHERE column_1 LIKE <pattern></em> - filters column values
+<ul>
+<li>‘a%’ - starts with ‘a’</li>
+<li>’_b%’ - second position ‘b’ followed by anything</li>
+<li>Not case sensitive</li>
+</ul></li>
+<li><em>… WHERE column_1 BETWEEN &lt;&gt; AND &lt;&gt;</em>
+<ul>
+<li>If numbers: inclusive of first and last</li>
+<li>If letters: inclusive of first not last</li>
+</ul></li>
+</ul>
+<div id="aggregate-functions" class="section level2">
+<h2><span class="header-section-number">3.1</span> Aggregate Functions</h2>
+<ul>
+<li><em>SELECT &lt;&gt;(column_1) from table_name WHERE column_1</em> = ___
+<ul>
+<li>&lt;COUNT, SUM, MAX, MIN, AVG&gt;</li>
+</ul></li>
+<li>Often <em>GROUP BY</em> a column when using aggregate functions
+<ul>
+<li>Can <em>GROUP BY</em> column name or by 1,2,… relating to column names in <em>SELECT</em> statement</li>
+</ul></li>
+<li><em>WHERE</em> filters rows, <em>HAVING</em> filters groups (often used after <em>GROUP BY</em>)</li>
+<li>Order of commands:
+<ul>
+<li>SELECT - DISTINCT - AS - FROM - WHERE - GROUP BY - HAVING - ORDER BY - LIMIT</li>
+</ul></li>
+</ul>
+</div>
+<div id="joining-tables" class="section level2">
+<h2><span class="header-section-number">3.2</span> Joining Tables</h2>
+<ul>
+<li><em>SELECT * FROM table_1 JOIN table_2 ON table_1.column = table_2.column</em>
+<ul>
+<li>If column name same for both tables: <em>SELECT * FROM table_1 JOIN table_2 USING(column)</em></li>
+</ul></li>
+<li>Join types:
+<ul>
+<li><em>INNER JOIN</em>: only includes rows that match on condition</li>
+<li><em>LEFT JOIN</em>: keeps all rows from first table even if there’s not a match with the second</li>
+<li><em>RIGHT JOIN</em>: keeps all rows from second table</li>
+<li><em>FULL OUTER JOIN</em> or <em>FULL JOIN</em>: keeps all rows from both tables, matching when possible</li>
+</ul></li>
+<li><em>SELF JOIN</em>: joins table with itself
+<ul>
+<li><em>SELECT t1.country AS country1, t2.country AS country2, t1.continent<br />
+FROM table AS t1<br />
+INNER JOIN table AS t2<br />
+ON t1.continent = t2.continent AND t1.country &lt;&gt; t2.country</em></li>
+<li>This results in all countries matched with each other within a continent</li>
+<li>Necessary to alias table</li>
+</ul></li>
+<li><em>CROSS JOIN</em>: each row of the first tables joins with all rows of another
+<ul>
+<li>Creates combination with lots of repeated values</li>
+</ul></li>
+</ul>
+</div>
+<div id="set-operations" class="section level2">
+<h2><span class="header-section-number">3.3</span> Set Operations</h2>
+<p>Set operations combine columns</p>
+<ul>
+<li><em>UNION</em>
+<ul>
+<li><em>SELECT column_name(s) FROM table1<br />
+UNION<br />
+SELECT column_name(s) FROM table2</em></li>
+<li>Must have same number of columns in SELECT, same data type, same order</li>
+<li><em>UNION</em> takes distinct values</li>
+</ul></li>
+<li><em>UNION ALL</em>: same as <em>UNION</em> but allows duplicate values</li>
+<li><em>INTERSECT</em>: Only returns duplicate values (values that appear in both tables)</li>
+<li><em>EXCEPT</em>: Returns rows in first table that aren’t in second table</li>
+</ul>
+</div>
+<div id="subqueries" class="section level2">
+<h2><span class="header-section-number">3.4</span> Subqueries</h2>
+<p>These examples were taken from the SQL courses on Codecademy</p>
+<div id="non-correlated-subqueries" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> Non-Correlated Subqueries</h3>
+<p>Subquery can be run independently of outer query. Used to complete multi-step transformation.</p>
+<p><strong>Example using airports and flights tables:</strong></p>
+<ul>
+<li><em>SELECT * FROM flights<br />
+WHERE origin IN (<br />
+SELECT code FROM airport<br />
+WHERE elevation &gt; 2000)</em>
+<ul>
+<li>Returns flights with origins from airports with elevation greater than 2000</li>
+<li>Note, the query inside the parenthesis could be run by itself</li>
+</ul></li>
+</ul>
+<p><strong>Subquery with a join</strong>: General structure</p>
+<ul>
+<li><em>WITH previous_results AS (<br />
+SELECT …<br />
+)<br />
+SELECT *<br />
+FROM previous_results<br />
+JOIN table1 ON previous_results.id = table1.id</em>
+<ul>
+<li>We could save <em>previous_results</em> as a table instead of executing everything together</li>
+</ul></li>
+</ul>
+</div>
+<div id="correlated-subqueries" class="section level3">
+<h3><span class="header-section-number">3.4.2</span> Correlated Subqueries</h3>
+<p>Subquery CANNOT be run independently of outer query</p>
+<ul>
+<li>Row is processed in outer query</li>
+<li>For particular row in outer query, subquery is executed</li>
+</ul>
+<p><strong>Example using flights tables:</strong></p>
+<ul>
+<li><em>SELECT id FROM flights AS f<br />
+WHERE distance &gt; ( SELECT AVG(distance)<br />
+FROM flights WHERE<br />
+carrier = f.carrier)</em>
+<ul>
+<li>Returns id of flights where the distance for that flight is greater than the average distance of all flights for that carrier</li>
+</ul></li>
+</ul>
+</div>
+</div>
 </div>
 
 
