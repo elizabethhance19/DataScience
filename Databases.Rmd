@@ -39,7 +39,7 @@ dbDisconnect(con)
 We explore some common SQL commands: [Link to more commands](https://www.w3schools.com/sql/default.asp)
 
 * *SELECT DISTINCT column_1 FROM table_name* - only returns distinct row values
-* *... WHERE column_1 LIKE <pattern>* - filters column values
+* *... WHERE column_1 LIKE \<pattern\>* - filters column values
   + 'a%' - starts with 'a'
   + '_b%' - second position 'b' followed by anything
   + Not case sensitive

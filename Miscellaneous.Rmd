@@ -1,0 +1,82 @@
+---
+title: "Miscellaneous"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Git
+Git is a version control system often used to coordinate work among programmers, but can be used to track changes in any set of files.  Generally, users make changes to their local repository and then share these changes to a common remote repository.
+
+Commands listed can be run in Git Bash, or a Git GUI (like SourceTree) can be used.
+
+[Glossary](https://git-scm.com/docs/gitglossary)  
+[Reference](https://git-scm.com/docs)  
+[Commands](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
+
+* Initialize/create a new local repository, tells git to begin tracking changes
+  + git init
+* Check out a repository
+  + git clone /path/to/repository
+* Add files to staging
+  + git add \<filename\>
+* Commit staging area to checked out branch
+  + git commit -m "Commit message"
+* View list of commits
+  + git log
+* See files changed and what still needs committed
+  + git status
+* Send changes to remote branch on remote repo
+  + git push origin \<branchname\>
+  + git push -u origin \<branchname\> (if branch doesn't exist remotely)
+
+  
+### Branches: {-}
+*active line of development*
+
+* List all branches and see current branch
+  + git branch
+* Create new branch (and switch to it)
+  + git checkout -b \<branchname\>
+* Switch branches
+  + git checkout \<branchname\>
+  
+### Merge: {-}
+*Bring contents of one branch into current branch*
+
+* Merge a different branch into the active branch
+  + git merge \<branchname\>
+* Fetch and merge changes from remote to working repository
+  + git pull
+* Conflicts: a file has multiple versions (perhaps from multiple branches) 
+
+
+### Pull requests: {-}
+In a properly set up repository, can't directly push to remote master.  Instead, work on local branch, rebase or merge (preference) to resolve conflicts, push to remote branch, raise PR for someone to review and approve. 
+
+To resolve conflicts:  
+
+  1. Merging: 
+  Made changes to local branch. Merge local master into local branch, resolve conflicts.
+
+  2. Rebase: *To reapply a series of changes from a branch to a different base, and reset the head of that branch to the result.*  
+  Made changes to local branch. Rebase changes onto local master: Make changes to local branch to effectively change starting point of local branch from where it was to current master branch location, resolve conflicts.
+
+Then, push local branch to remote branch, raise pull request from remote branch to remote master.  Pull remote master into local master.
+
+
+
+# Shell
+
+
+Shell == command line
+
+some shells: Bash shell (Unix shell), PowerShell, Command prompt (windows -> cmd.exe)
+
+Bash shell can read/execute commands from file -> shell script/bash script/script
+Command prompt can read/execute commands from files (.bat, .cmd, .btm)- Batch files 
+
+Git Bash for Windows - a bash shell that can be used for git commands or other non-git commands
+
+
