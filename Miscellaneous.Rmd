@@ -11,9 +11,7 @@ Git is a version control system often used to coordinate work among programmers,
 
 Commands listed can be run in Git Bash, or a Git GUI (like SourceTree) can be used.
 
-[Glossary](https://git-scm.com/docs/gitglossary)  
-[Reference](https://git-scm.com/docs)  
-[Commands](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
+Some links: [Glossary](https://git-scm.com/docs/gitglossary), [Reference](https://git-scm.com/docs), [Commands](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
 
 * Initialize/create a new local repository, tells git to begin tracking changes
   + git init
@@ -68,15 +66,63 @@ Then, push local branch to remote branch, raise pull request from remote branch 
 
 
 # Shell
+A shell is *a user interface for access to an operating system*.  Some command line shells include: Bash shell (Unix shell), Windows PowerShell, Command prompt (cmd.exe in windows).  
+
+* Shells are REPL's that can  read/execute commands from a file (shell script/bash script/script)
+* Git Bash for Windows: an emulated bash shell
+
+### Common Bash Commands {-}
+Some of these commands/examples were inspired by Codecademy's *Learn the Command Line* course 
+
+| Command           | Description                                    |
+|------------------|------------------------------------------------|
+| `ls`     | List file system (default current directory)              |
+| `pwd`      | Print working directory  |
+| `cd newdirectory;  cd ..`     | Change to newdirectory, move up one directory |
+| `mkdir dirname` | Make new directory          |
+|`touch newfile` | Create new file in working directory |
+|`cp old.txt new.txt` | Copy old into new|
+| `mv file.txt directory` | Move file in current directory to new directory|
+|`mv file.txt newname.txt` | Rename file|
+|`rm file, rm -r directory`| Delete file or directory (including sub-directory)|
+
+### Redirecting Input and Output {-}
+
+| Command           | Description                                    |
+|------------------|------------------------------------------------|
+| `export var="myvar"`         | Set var to "myvar" |
+| `echo "string"; echo $var`     | Displays in terminal              |
+| `echo "string" > file.txt`      | Write "string" to file  |
+| `cat file.txt`     | Print contents of file |
+| `cat file1.txt > file2.txt` | Replace file2 with file1          |
+|`cat file1.txt >> file2.txt` | Append file1 to file2 |
+|`cat file1.txt |wc| cat > file2.txt` | Compute # lines, words, characters in 1, redirect to 2|
+| `sort file1.txt | uniq > file2.txt` | Sort alphabetically, save uniq to 2|
+|Note: `uniq` | Filters out adjacent, duplicate lines|
+|`grep "string" file.txt` | Returns lines with "string" (grep: global regular expression print)|
+|`sed 's/old/new/' file.txt`| Substitute first 'old' with 'new' per line (sed: stream editor)|
+|`sed 's/old/new/g' file.txt`| Substitute all 'old' with 'new' per line|
+
+### Configuring the Environment {-}
+The `.bash_profile` and `.bash_rc` are configuration files for bash shell.  `.bash_profile` is run on log-in shells (generally on start-up), while `.bash_rc` is run on normal shells.  
+
+Some commands that could be run the terminal or stored in `.bash_profile` or `.bash_rc`:
+
+| Command           | Description                                    |
+|------------------|------------------------------------------------|
+| `echo "Welcome"`     | Welcome message displayed             |
+| `alias ls="ls --color"`      | Write "string" to file  |
+| `export PS1=">> "`     | Prompt changed from $ to >> |
+| `export USER="Name"` | Create variable          |
+| `source ~/.bash_profile` | Activate changes to current session |
 
 
-Shell == command line
+*nano* is a command line text editor.  It can be used to edit any file, for instance `nano ~/.bash_profile`.  
 
-some shells: Bash shell (Unix shell), PowerShell, Command prompt (windows -> cmd.exe)
 
-Bash shell can read/execute commands from file -> shell script/bash script/script
-Command prompt can read/execute commands from files (.bat, .cmd, .btm)- Batch files 
+### Bash Scripting {-}
+In a file (e.g. *myfile*, *myfile.sh*), a shebang is given at the beginning to tell which interpreter to use when executing the file (e.g. `#!/bin/bash`, `#!/bin/python`).  To run the file: `./myfile`.  To run explicitly with different interpreter: `python myfile`.
 
-Git Bash for Windows - a bash shell that can be used for git commands or other non-git commands
+* To give permission to execute the file: `chmod +x myfile.sh`
 
 

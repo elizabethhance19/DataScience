@@ -316,9 +316,7 @@ $(document).ready(function () {
 <h1><span class="header-section-number">1</span> Git</h1>
 <p>Git is a version control system often used to coordinate work among programmers, but can be used to track changes in any set of files. Generally, users make changes to their local repository and then share these changes to a common remote repository.</p>
 <p>Commands listed can be run in Git Bash, or a Git GUI (like SourceTree) can be used.</p>
-<p><a href="https://git-scm.com/docs/gitglossary">Glossary</a><br />
-<a href="https://git-scm.com/docs">Reference</a><br />
-<a href="https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html">Commands</a></p>
+<p>Some links: <a href="https://git-scm.com/docs/gitglossary">Glossary</a>, <a href="https://git-scm.com/docs">Reference</a>, <a href="https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html">Commands</a></p>
 <ul>
 <li>Initialize/create a new local repository, tells git to begin tracking changes
 <ul>
@@ -397,10 +395,173 @@ Made changes to local branch. Rebase changes onto local master: Make changes to 
 </div>
 <div id="shell" class="section level1">
 <h1><span class="header-section-number">2</span> Shell</h1>
-<p>Shell == command line</p>
-<p>some shells: Bash shell (Unix shell), PowerShell, Command prompt (windows -&gt; cmd.exe)</p>
-<p>Bash shell can read/execute commands from file -&gt; shell script/bash script/script Command prompt can read/execute commands from files (.bat, .cmd, .btm)- Batch files</p>
-<p>Git Bash for Windows - a bash shell that can be used for git commands or other non-git commands</p>
+<p>A shell is <em>a user interface for access to an operating system</em>. Some command line shells include: Bash shell (Unix shell), Windows PowerShell, Command prompt (cmd.exe in windows).</p>
+<ul>
+<li>Shells are REPL’s that can read/execute commands from a file (shell script/bash script/script)</li>
+<li>Git Bash for Windows: an emulated bash shell</li>
+</ul>
+<div id="common-bash-commands" class="section level3 unnumbered">
+<h3>Common Bash Commands</h3>
+<p>Some of these commands/examples were inspired by Codecademy’s <em>Learn the Command Line</em> course</p>
+<table>
+<colgroup>
+<col width="27%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ls</code></td>
+<td>List file system (default current directory)</td>
+</tr>
+<tr class="even">
+<td><code>pwd</code></td>
+<td>Print working directory</td>
+</tr>
+<tr class="odd">
+<td><code>cd newdirectory;  cd ..</code></td>
+<td>Change to newdirectory, move up one directory</td>
+</tr>
+<tr class="even">
+<td><code>mkdir dirname</code></td>
+<td>Make new directory</td>
+</tr>
+<tr class="odd">
+<td><code>touch newfile</code></td>
+<td>Create new file in working directory</td>
+</tr>
+<tr class="even">
+<td><code>cp old.txt new.txt</code></td>
+<td>Copy old into new</td>
+</tr>
+<tr class="odd">
+<td><code>mv file.txt directory</code></td>
+<td>Move file in current directory to new directory</td>
+</tr>
+<tr class="even">
+<td><code>mv file.txt newname.txt</code></td>
+<td>Rename file</td>
+</tr>
+<tr class="odd">
+<td><code>rm file, rm -r directory</code></td>
+<td>Delete file or directory (including sub-directory)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="redirecting-input-and-output" class="section level3 unnumbered">
+<h3>Redirecting Input and Output</h3>
+<table>
+<colgroup>
+<col width="27%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>export var="myvar"</code></td>
+<td>Set var to “myvar”</td>
+</tr>
+<tr class="even">
+<td><code>echo "string"; echo $var</code></td>
+<td>Displays in terminal</td>
+</tr>
+<tr class="odd">
+<td><code>echo "string" &gt; file.txt</code></td>
+<td>Write “string” to file</td>
+</tr>
+<tr class="even">
+<td><code>cat file.txt</code></td>
+<td>Print contents of file</td>
+</tr>
+<tr class="odd">
+<td><code>cat file1.txt &gt; file2.txt</code></td>
+<td>Replace file2 with file1</td>
+</tr>
+<tr class="even">
+<td><code>cat file1.txt &gt;&gt; file2.txt</code></td>
+<td>Append file1 to file2</td>
+</tr>
+<tr class="odd">
+<td><code>cat file1.txt |wc| cat &gt; file2.txt</code></td>
+<td>Compute # lines, words, characters in 1, redirect to 2</td>
+</tr>
+<tr class="even">
+<td><code>sort file1.txt | uniq &gt; file2.txt</code></td>
+<td>Sort alphabetically, save uniq to 2</td>
+</tr>
+<tr class="odd">
+<td>Note: <code>uniq</code></td>
+<td>Filters out adjacent, duplicate lines</td>
+</tr>
+<tr class="even">
+<td><code>grep "string" file.txt</code></td>
+<td>Returns lines with “string” (grep: global regular expression print)</td>
+</tr>
+<tr class="odd">
+<td><code>sed 's/old/new/' file.txt</code></td>
+<td>Substitute first ‘old’ with ‘new’ per line (sed: stream editor)</td>
+</tr>
+<tr class="even">
+<td><code>sed 's/old/new/g' file.txt</code></td>
+<td>Substitute all ‘old’ with ‘new’ per line</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="configuring-the-environment" class="section level3 unnumbered">
+<h3>Configuring the Environment</h3>
+<p>The <code>.bash_profile</code> and <code>.bash_rc</code> are configuration files for bash shell. <code>.bash_profile</code> is run on log-in shells (generally on start-up), while <code>.bash_rc</code> is run on normal shells.</p>
+<p>Some commands that could be run the terminal or stored in <code>.bash_profile</code> or <code>.bash_rc</code>:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>echo "Welcome"</code></td>
+<td>Welcome message displayed</td>
+</tr>
+<tr class="even">
+<td><code>alias ls="ls --color"</code></td>
+<td>Write “string” to file</td>
+</tr>
+<tr class="odd">
+<td><code>export PS1="&gt;&gt; "</code></td>
+<td>Prompt changed from $ to &gt;&gt;</td>
+</tr>
+<tr class="even">
+<td><code>export USER="Name"</code></td>
+<td>Create variable</td>
+</tr>
+<tr class="odd">
+<td><code>source ~/.bash_profile</code></td>
+<td>Activate changes to current session</td>
+</tr>
+</tbody>
+</table>
+<p><em>nano</em> is a command line text editor. It can be used to edit any file, for instance <code>nano ~/.bash_profile</code>.</p>
+</div>
+<div id="bash-scripting" class="section level3 unnumbered">
+<h3>Bash Scripting</h3>
+<p>In a file (e.g. <em>myfile</em>, <em>myfile.sh</em>), a shebang is given at the beginning to tell which interpreter to use when executing the file (e.g. <code>#!/bin/bash</code>, <code>#!/bin/python</code>). To run the file: <code>./myfile</code>. To run explicitly with different interpreter: <code>python myfile</code>.</p>
+<ul>
+<li>To give permission to execute the file: <code>chmod +x myfile.sh</code></li>
+</ul>
+</div>
 </div>
 
 
