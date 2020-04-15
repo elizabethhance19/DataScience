@@ -154,7 +154,7 @@ Removing these variables results in a simplier model without sacrificing perform
 ### Consider Multicollinearity
 It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem.  To check this, we can compute the variance inflation factor for our variables, defined as 
 $$VIF(X_m) = \frac{1}{1-R^2_m}$$
-where $R^2_m$ is the coefficient of determinationo when $X_m$ is regressed on all of the other predictors.  We want $VIF(X_m)$ to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.
+where $R^2_m$ is the coefficient of determination when $X_m$ is regressed on all of the other predictors.  We want $VIF(X_m)$ to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.
 
 For our simpler model, we calculate the VIF for each variable:
 ```{r VIF, message=F, warning=F}
@@ -179,7 +179,7 @@ mod.LimitIncome = lm(Balance ~ Limit + Income, data=Credit)
 plot(mod.LimitIncome, which=1)
 ```
 
-There are some concerns with our residuals which seem to be caused when both *Limit* and *Income* are included.  The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added.  However, this U-shape only exists wehn both *Limit* and *Income* are included.  If we remove one of these (removing *Income* resulted in a smaller drop in $R^2$), the concerns of heteroscedasticity are reduced.
+There are some concerns with our residuals which seem to be caused when both *Limit* and *Income* are included.  The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added.  However, this U-shape only exists when both *Limit* and *Income* are included.  If we remove one of these (removing *Income* resulted in a smaller drop in $R^2$), the concerns of heteroscedasticity are reduced.
 
 ```{r}
 mod.LessNoIncome = lm(Balance ~ Cards + Limit + Age + Student, data=Credit)
@@ -219,7 +219,7 @@ summary(mod.Int)
 
 The model with interaction has a larger $R^2$ than the model without.  It is interested that *vs* is not significant in the first model but becomes significant when the interaction term is added.
 
-The hierarchical priniciple tells us that within a model if the main effects variable (e.g. *vs*) is not significant but the interaction variable is (e.g. *hp:vs*), then we should still include the main effects variable.  In our example, all the main effects variables were shown to be significant, but if one hadn't and the interaction was significant, we should still include them.
+The hierarchical principle tells us that within a model if the main effects variable (e.g. *vs*) is not significant but the interaction variable is (e.g. *hp:vs*), then we should still include the main effects variable.  In our example, all the main effects variables were shown to be significant, but if one hadn't and the interaction was significant, we should still include them.
 
 A *non-rigorous* way to tell if an interaction variable is needed is to plot the data and visually fit a line by group.  If the lines are parallel, no interaction is needed, but if they intersect (in this case), then an interaction should be considered.
 
@@ -230,7 +230,7 @@ We have been using $R^2$ to determine the percent of variation in the data is de
 
 **Other model metrics**
 
-* Mallow's $C_p$: If this is small the model is competative to the full model and preserves degrees of freedom
+* Mallow's $C_p$: If this is small the model is competitive to the full model and preserves degrees of freedom
 * Adjusted $R^2$: Penalizes for too many predictors that don't reduce unexplained variation
 * $PRESS_p$: Prediction Sum of Squares, if small then predicts point well
 * BIC/AIC: Small if model is good fit and simple
@@ -261,15 +261,195 @@ plot(mod.LessNoIncome, which=4)
 
 
 
-# Categorical Response (ANOVA model)
-## Confidence Intervals
-## ANOVA: ____ Example
+# Comparing Means
+One-way analysis of variance (one-way ANOVA) allows us to compare means between two or more samples, where the repose variable is numeric and there is one explanatory variable (hence, one-way) that is generally categorical.
+
+The one-factor ANOVA model is given by either the *means model* 
+$$Y_{i,j} = \mu_i + \varepsilon_{i,j}$$ or by the *main effects model*
+$$Y_{i,j} = \mu + \alpha_i + \varepsilon_{i,j}$$ where $Y_{i,j}$ is the jth observation at the ith treatment level, $\mu$ is the grand mean, $\mu_i$ is the mean of the observation for the ith treatment group, and $\alpha_i$ is the ith treatment effect (deviation from the grand mean).
+
+We have a balanced design if $n_i$ is the same for all groups.  If we think some treatment group has more variation we could use an unbalanced design.
+
+ANOVA models perform an F-test to determine if all the group means are the same, or if at least one is statistically different.  Various comparison and confidence interval methods allow us to determine which group is different.
+
+The ANOVA model is a generalization of the simple linear regression model so it follows the same assumptions.
+
+## One-Factor ANOVA: Plant Growth Example {.tabset .tabset-fade .tabset-pills}
+This example was inspired by [One-way ANOVA](http://www.sthda.com/english/wiki/one-way-anova-test-in-r#visualize-your-data-and-compute-one-way-anova-in-r)
+
+### Fitting ANOVA Model
+Our dataset include the weights of plants in a control group and two treatment groups.  Notice the *group* column is formatted as a factor.
+```{r oneAnova, message=F}
+library(ggplot2)
+growth = PlantGrowth
+str(growth)
+ggplot(growth, aes(group, weight)) + geom_boxplot()
+```
+
+The boxplot indicates there may be a difference between treatments 1 and 2.  We compute the one-way ANOVA test.
+
+```{r}
+mod.aov = aov(weight~group, data = growth)
+summary(mod.aov)
+```
+
+The p-value is less than 0.05 (our significance level), so there is evidence of a difference between some of the group means.
+
+### Checking Assumptions
+**Homoscedasticity**
+
+Like with the regression examples, we look for homogeneity of variances with a plot.
+```{r}
+plot(mod.aov, which=1)
+```
+
+We could also use the *Levene's Test*.  For this, we fit an ANOVA model of the absolute residuals from our model against the groups.  The F-statistic tests if there is a difference in the absolute mean residuals between the groups.  If the test does detect a difference (small p-value), then there may be evidence of heteroscedasticity.
+
+There is also a function in the *car* package to run the Levene's Test.
+
+```{r, message=F}
+summary(aov(abs(mod.aov$residuals)~group, data=growth))
+library(car)
+leveneTest(weight~group, data=growth)
+```
+
+**Normality of Residuals**
+
+Again, we can check the normality of the residuals with a plot.
+```{r normalityAOV}
+plot(mod.aov, which=2)
+```
+
+Note: observations 4, 15, and 17 may be outliers.
+
+We can also use the *Shapiro-Wilk* test to determine if the residuals came from a normally distributed population.  
+```{r shapiro}
+shapiro.test(mod.aov$residuals)
+```
+
+A large p-value means that we don't reject the null hypothesis that our residuals are normally distributed.
+
+### Nonparametric Alternative
+If the assumptions of the ANOVA are not met, we could use the *Kruskal-Wallis* test that does not assume a normal distribution of residuals.  This test ranks all the data (ignoring group membership), computes a test statistic, then tests if all the groups have the same distribution.
+
+The Dunn test can then be used to compute all pairwise comparisons (similar to Tukey's pairwise comparisons method for ANOVA).
+
+```{r, message=F, warning=F}
+kruskal.test(weight~group, data=growth)
+library(FSA)
+DT = dunnTest(weight~group, data=growth, method='bh')
+DT
+library(rcompanion)
+cldList(P.adj~Comparison, data = DT$res, threshold=0.05)
+```
+
+The large p-value from the Kruskal-Wallis test tells us our groups come from different distributions. The Dunn test tells us there is a difference between treatment 1 and treatment 2.
 
 
-Levenes test and normality test
-# Other Related Topics
+## Multiple Comparisons {.tabset .tabset-fade .tabset-pills}
+The ANOVA test will determine if there is a difference between some of the groups, but won't immediately tell us what groups are different.  We can compute *pairwise confidence intervals* to determine which groups are different.
 
-* Kruskal-Wallis Test
-* Dunn Test
+The general structure of a confidence interval is $estimate \pm t_{dfe}*SE$, and various $t_{dfe}$ and standard errors are possible.
+
+### T-Interval
+
+**Welch's t-interval** (Unpooled)
+
+Welch's t-interval is useful if we don't think the population variances of the groups are equal.  The standard error is given by $\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}$
+where the standard deviations of the groups are kept separated.  
+
+In R, we calculate this by 
+```{r welch}
+control = growth$weight[growth$group=='ctrl'] 
+treat1 = growth$weight[growth$group=='trt1']
+treat2 = growth$weight[growth$group=='trt2'] 
+t.test(control, treat1, var.equal=F, alternative = 'two.sided')$conf.int
+t.test(control, treat2, var.equal=F, alternative = 'two.sided')$conf.int
+t.test(treat1, treat2, var.equal=F, alternative = 'two.sided')$conf.int
+```
+
+According to these intervals, there is a difference between control and treatment 2 and between treatment 1 and treatment 2.
+
+**Pooled t-interval** 
+
+When we created the ANOVA model, we showed there was not a significant difference in variance between the groups, so we are able to pool the variance.  In this case, our standard error is given by $s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}$ where $s_p$ is the pooled variance equal to $\hat{\sigma}$.  
+
+In R, the confidence intervals are calculated similarly to the unpooled intervals, except now the variance is equal.
+```{r pool}
+t.test(control, treat1, var.equal=T, alternative = 'two.sided')$conf.int
+t.test(control, treat2, var.equal=T, alternative = 'two.sided')$conf.int
+t.test(treat1, treat2, var.equal=T, alternative = 'two.sided')$conf.int
+
+pairwise.t.test(growth$weight, growth$group)
+```
+
+The intervals are slightly different than the unpooled intervals.
+
+Using the standard t confidence interval to construct all the pair-wise confidence intervals is generally not recommended because it doesn't consider the family-wise error rate, and results in artificially small intervals.  This method should only be used if we're interested in one pairwise contrast which was decided upon beofre looking at the data.
+
+
+### Family-wise error rate
+Suppose our significance level ($\alpha$) is 0.05.  If we construct one 95% confidence interval, the probability of making a type I error is 0.05.  
+
+The family-wise error rate is the probability of making at least one type I error in the family, defined as 
+$$FWER \leq 1-(1-\alpha)^{I \choose 2} $$ where $\alpha$ is the significance level for an individual test and ${I \choose 2}$ is the number of pairwise comparisons given the total number of groups I.  
+
+If there are 3 groups, then there are 3 pairwise comparisons, and $FWER \leq 0.1426$.  If there are 5 groups, then there are 10 pairwise comparisons, and $FWER \leq 0.4013$, etc.
+
+As the number of groups grows, the upper bound for FWER also grows.  So, as increase groups, the probability of a type I error becomes very high.  Some ways to control this include the Bonferroni correction, Tukey's procedure, and Scheffe's method
+
+
+### Bonferonni Correction
+The Bonferroni correction constructs each individual confidence interval at a higher level to result in a higher family-wise confidence level.  The individual confidence level is $\frac{\alpha}{m}$ where m is the total number of intervals to construct (often $m = {I \choose 2}$).  So, each confidence interval will have a $1-\frac{\alpha}{m}$ level of confidence.  The Bonferonni correction is typically only recommended for 3 or 4 groups.
+
+For our example, we had 3 groups so each pairwise confidence interval will be constructed at the 98.3% confidence level.
+
+```{r bonf, warning=F, message=F}
+library(DescTools)
+PostHocTest(mod.aov, method='bonferroni')
+```
+
+These intervals tell us only the difference between treatment 1 and treatment 2 are stastically significant.
+
+### Tukey Procedure
+The Tukey method uses the studentized range distribution to create simultaneous comparisons for all pairwise comparisons.
+
+We can compute all the pairwise Tukey intervals in R.
+
+```{r tukey}
+TukeyHSD(mod.aov)
+```
+
+We can also visualize the intervals
+```{r tukeyplot}
+plot(TukeyHSD(mod.aov))
+```
+
+The conclusion is the same as with the Bonferonni correction (treatment 1 and 2 are different), however the Tukey method works well for many groups.  
+
+### Scheffe's Method
+Scheffe's method is useful for any type of contrast, not just pairwise differences.  A confidence interval for contrast $\Psi = \sum\limits_{i=1}^Ic_iy_i$ is given by
+$$\sum\limits_{i=1}^Ic_i\hat{y}_i \pm \sqrt{(I-1)F_{I-1,n-1}^\alpha}*\hat{\sigma}\sqrt{\sum\limits_{i=1}^I\frac{c_i^2}{n_i}}$$
+For example, suppose we want a confidence interval for $y_{control} - \frac{y_{treat1} + y_{treat2}}{2}$ which compares control to the average of the treatments.
+
+```{r scheffe}
+ScheffeTest(mod.aov, contrasts = matrix(c(1,-0.5,-0.5,
+                                          -0.5,1,-0.5,
+                                          -0.5,-0.5,1),ncol=3))
+```
+
+The first row of the output table shows there is not a significant difference between the control group and the average of the treatment groups.
+
+The second row shows there may be a difference between treatment 1 and the average of control and treatment 2.
+
+The third row shows there is likely a difference between treatment 2 and the average between control and treatment 1.
+
+
+
+## Two-Factor ANOVA: ____ Example
+HW 6
+
+
+
 
 

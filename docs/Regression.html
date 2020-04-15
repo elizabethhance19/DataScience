@@ -320,9 +320,10 @@ $(document).ready(function () {
 <li><a href="#adding-an-interaction-cars-example"><span class="toc-section-number">3.2</span> Adding an Interaction: Cars Example</a></li>
 <li><a href="#some-other-regression-topics"><span class="toc-section-number">3.3</span> Some Other Regression Topics</a></li>
 </ul></li>
-<li><a href="#categorical-response-anova-model"><span class="toc-section-number">4</span> Categorical Response (ANOVA model)</a><ul>
-<li><a href="#confidence-intervals"><span class="toc-section-number">4.1</span> Confidence Intervals</a></li>
-<li><a href="#anova-____-example"><span class="toc-section-number">4.2</span> ANOVA: ____ Example</a></li>
+<li><a href="#comparing-means"><span class="toc-section-number">4</span> Comparing Means</a><ul>
+<li><a href="#one-factor-anova-plant-growth-example"><span class="toc-section-number">4.1</span> One-Factor ANOVA: Plant Growth Example</a></li>
+<li><a href="#multiple-comparisons"><span class="toc-section-number">4.2</span> Multiple Comparisons</a></li>
+<li><a href="#two-factor-anova-____-example"><span class="toc-section-number">4.3</span> Two-Factor ANOVA: ____ Example</a></li>
 </ul></li>
 </ul>
 </div>
@@ -459,13 +460,20 @@ qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
 <p>We start with a model using all the available variables (except for ID). Note categorical variables are formatted as factors and are automatically converted to indicator/dummy variables.</p>
 <pre class="r"><code>library(ISLR)
 head(Credit)</code></pre>
-<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity Balance
-## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian     333
-## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian     903
-## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian     580
-## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian     964
-## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian     331
-## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian    1151</code></pre>
+<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity
+## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian
+## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian
+## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian
+## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian
+## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian
+## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian
+##   Balance
+## 1     333
+## 2     903
+## 3     580
+## 4     964
+## 5     331
+## 6    1151</code></pre>
 <pre class="r"><code>mod.Full = lm(Balance ~ Cards + Limit + Rating + Age + Gender + Student + Income + Education + Married + Ethnicity, data=Credit)
 summary(mod.Full)</code></pre>
 <pre><code>## 
@@ -527,7 +535,7 @@ summary(mod.Less)</code></pre>
 <p>Removing these variables results in a simplier model without sacrificing performance (<span class="math inline">\(R^2\)</span> is similar).</p>
 <div id="consider-multicollinearity" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Consider Multicollinearity</h3>
-<p>It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem. To check this, we can compute the variance inflation factor for our variables, defined as <span class="math display">\[VIF(X_m) = \frac{1}{1-R^2_m}\]</span> where <span class="math inline">\(R^2_m\)</span> is the coefficient of determinationo when <span class="math inline">\(X_m\)</span> is regressed on all of the other predictors. We want <span class="math inline">\(VIF(X_m)\)</span> to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.</p>
+<p>It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem. To check this, we can compute the variance inflation factor for our variables, defined as <span class="math display">\[VIF(X_m) = \frac{1}{1-R^2_m}\]</span> where <span class="math inline">\(R^2_m\)</span> is the coefficient of determination when <span class="math inline">\(X_m\)</span> is regressed on all of the other predictors. We want <span class="math inline">\(VIF(X_m)\)</span> to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.</p>
 <p>For our simpler model, we calculate the VIF for each variable:</p>
 <pre class="r"><code>library(car)
 vif(mod.Less)</code></pre>
@@ -570,7 +578,7 @@ summary(mod.LessNoRating)</code></pre>
 <pre class="r"><code>mod.LimitIncome = lm(Balance ~ Limit + Income, data=Credit)
 plot(mod.LimitIncome, which=1)</code></pre>
 <p><img src="Regression_files/figure-html/assumptions-2.png" width="672" /></p>
-<p>There are some concerns with our residuals which seem to be caused when both <em>Limit</em> and <em>Income</em> are included. The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added. However, this U-shape only exists wehn both <em>Limit</em> and <em>Income</em> are included. If we remove one of these (removing <em>Income</em> resulted in a smaller drop in <span class="math inline">\(R^2\)</span>), the concerns of heteroscedasticity are reduced.</p>
+<p>There are some concerns with our residuals which seem to be caused when both <em>Limit</em> and <em>Income</em> are included. The U-shape of the residuals indicate there may be something wrong with our model structure, and perhaps a quadratic term should be added. However, this U-shape only exists when both <em>Limit</em> and <em>Income</em> are included. If we remove one of these (removing <em>Income</em> resulted in a smaller drop in <span class="math inline">\(R^2\)</span>), the concerns of heteroscedasticity are reduced.</p>
 <pre class="r"><code>mod.LessNoIncome = lm(Balance ~ Cards + Limit + Age + Student, data=Credit)
 summary(mod.LessNoIncome)</code></pre>
 <pre><code>## 
@@ -657,7 +665,7 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 ## Multiple R-squared:  0.7077, Adjusted R-squared:  0.6764 
 ## F-statistic:  22.6 on 3 and 28 DF,  p-value: 1.227e-07</code></pre>
 <p>The model with interaction has a larger <span class="math inline">\(R^2\)</span> than the model without. It is interested that <em>vs</em> is not significant in the first model but becomes significant when the interaction term is added.</p>
-<p>The hierarchical priniciple tells us that within a model if the main effects variable (e.g. <em>vs</em>) is not significant but the interaction variable is (e.g. <em>hp:vs</em>), then we should still include the main effects variable. In our example, all the main effects variables were shown to be significant, but if one hadn’t and the interaction was significant, we should still include them.</p>
+<p>The hierarchical principle tells us that within a model if the main effects variable (e.g. <em>vs</em>) is not significant but the interaction variable is (e.g. <em>hp:vs</em>), then we should still include the main effects variable. In our example, all the main effects variables were shown to be significant, but if one hadn’t and the interaction was significant, we should still include them.</p>
 <p>A <em>non-rigorous</em> way to tell if an interaction variable is needed is to plot the data and visually fit a line by group. If the lines are parallel, no interaction is needed, but if they intersect (in this case), then an interaction should be considered.</p>
 </div>
 <div id="some-other-regression-topics" class="section level2 tabset tabset-fade tabset-pills">
@@ -667,7 +675,7 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 <p>We have been using <span class="math inline">\(R^2\)</span> to determine the percent of variation in the data is described by the model. We are also given the residual standard error, or root mean squared error (RMSE), in the model summary output.</p>
 <p><strong>Other model metrics</strong></p>
 <ul>
-<li>Mallow’s <span class="math inline">\(C_p\)</span>: If this is small the model is competative to the full model and preserves degrees of freedom</li>
+<li>Mallow’s <span class="math inline">\(C_p\)</span>: If this is small the model is competitive to the full model and preserves degrees of freedom</li>
 <li>Adjusted <span class="math inline">\(R^2\)</span>: Penalizes for too many predictors that don’t reduce unexplained variation</li>
 <li><span class="math inline">\(PRESS_p\)</span>: Prediction Sum of Squares, if small then predicts point well</li>
 <li>BIC/AIC: Small if model is good fit and simple</li>
@@ -700,18 +708,222 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 </div>
 </div>
 </div>
-<div id="categorical-response-anova-model" class="section level1">
-<h1><span class="header-section-number">4</span> Categorical Response (ANOVA model)</h1>
-<div id="confidence-intervals" class="section level2">
-<h2><span class="header-section-number">4.1</span> Confidence Intervals</h2>
+<div id="comparing-means" class="section level1">
+<h1><span class="header-section-number">4</span> Comparing Means</h1>
+<p>One-way analysis of variance (one-way ANOVA) allows us to compare means between two or more samples, where the repose variable is numeric and there is one explanatory variable (hence, one-way) that is generally categorical.</p>
+<p>The one-factor ANOVA model is given by either the <em>means model</em> <span class="math display">\[Y_{i,j} = \mu_i + \varepsilon_{i,j}\]</span> or by the <em>main effects model</em> <span class="math display">\[Y_{i,j} = \mu + \alpha_i + \varepsilon_{i,j}\]</span> where <span class="math inline">\(Y_{i,j}\)</span> is the jth observation at the ith treatment level, <span class="math inline">\(\mu\)</span> is the grand mean, <span class="math inline">\(\mu_i\)</span> is the mean of the observation for the ith treatment group, and <span class="math inline">\(\alpha_i\)</span> is the ith treatment effect (deviation from the grand mean).</p>
+<p>We have a balanced design if <span class="math inline">\(n_i\)</span> is the same for all groups. If we think some treatment group has more variation we could use an unbalanced design.</p>
+<p>ANOVA models perform an F-test to determine if all the group means are the same, or if at least one is statistically different. Various comparison and confidence interval methods allow us to determine which group is different.</p>
+<p>The ANOVA model is a generalization of the simple linear regression model so it follows the same assumptions.</p>
+<div id="one-factor-anova-plant-growth-example" class="section level2 tabset tabset-fade tabset-pills">
+<h2><span class="header-section-number">4.1</span> One-Factor ANOVA: Plant Growth Example</h2>
+<p>This example was inspired by <a href="http://www.sthda.com/english/wiki/one-way-anova-test-in-r#visualize-your-data-and-compute-one-way-anova-in-r">One-way ANOVA</a></p>
+<div id="fitting-anova-model" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Fitting ANOVA Model</h3>
+<p>Our dataset include the weights of plants in a control group and two treatment groups. Notice the <em>group</em> column is formatted as a factor.</p>
+<pre class="r"><code>library(ggplot2)
+growth = PlantGrowth
+str(growth)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    30 obs. of  2 variables:
+##  $ weight: num  4.17 5.58 5.18 6.11 4.5 4.61 5.17 4.53 5.33 5.14 ...
+##  $ group : Factor w/ 3 levels &quot;ctrl&quot;,&quot;trt1&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<pre class="r"><code>ggplot(growth, aes(group, weight)) + geom_boxplot()</code></pre>
+<p><img src="Regression_files/figure-html/oneAnova-1.png" width="672" /></p>
+<p>The boxplot indicates there may be a difference between treatments 1 and 2. We compute the one-way ANOVA test.</p>
+<pre class="r"><code>mod.aov = aov(weight~group, data = growth)
+summary(mod.aov)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)  
+## group        2  3.766  1.8832   4.846 0.0159 *
+## Residuals   27 10.492  0.3886                 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The p-value is less than 0.05 (our significance level), so there is evidence of a difference between some of the group means.</p>
 </div>
-<div id="anova-____-example" class="section level2">
-<h2><span class="header-section-number">4.2</span> ANOVA: ____ Example</h2>
-<p>Levenes test and normality test # Other Related Topics</p>
-<ul>
-<li>Kruskal-Wallis Test</li>
-<li>Dunn Test</li>
-</ul>
+<div id="checking-assumptions" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Checking Assumptions</h3>
+<p><strong>Homoscedasticity</strong></p>
+<p>Like with the regression examples, we look for homogeneity of variances with a plot.</p>
+<pre class="r"><code>plot(mod.aov, which=1)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We could also use the <em>Levene’s Test</em>. For this, we fit an ANOVA model of the absolute residuals from our model against the groups. The F-statistic tests if there is a difference in the absolute mean residuals between the groups. If the test does detect a difference (small p-value), then there may be evidence of heteroscedasticity.</p>
+<p>There is also a function in the <em>car</em> package to run the Levene’s Test.</p>
+<pre class="r"><code>summary(aov(abs(mod.aov$residuals)~group, data=growth))</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)
+## group        2  0.332  0.1662   1.237  0.306
+## Residuals   27  3.628  0.1344</code></pre>
+<pre class="r"><code>library(car)
+leveneTest(weight~group, data=growth)</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  2  1.1192 0.3412
+##       27</code></pre>
+<p><strong>Normality of Residuals</strong></p>
+<p>Again, we can check the normality of the residuals with a plot.</p>
+<pre class="r"><code>plot(mod.aov, which=2)</code></pre>
+<p><img src="Regression_files/figure-html/normalityAOV-1.png" width="672" /></p>
+<p>Note: observations 4, 15, and 17 may be outliers.</p>
+<p>We can also use the <em>Shapiro-Wilk</em> test to determine if the residuals came from a normally distributed population.</p>
+<pre class="r"><code>shapiro.test(mod.aov$residuals)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  mod.aov$residuals
+## W = 0.96607, p-value = 0.4379</code></pre>
+<p>A large p-value means that we don’t reject the null hypothesis that our residuals are normally distributed.</p>
+</div>
+<div id="nonparametric-alternative" class="section level3">
+<h3><span class="header-section-number">4.1.3</span> Nonparametric Alternative</h3>
+<p>If the assumptions of the ANOVA are not met, we could use the <em>Kruskal-Wallis</em> test that does not assume a normal distribution of residuals. This test ranks all the data (ignoring group membership), computes a test statistic, then tests if all the groups have the same distribution.</p>
+<p>The Dunn test can then be used to compute all pairwise comparisons (similar to Tukey’s pairwise comparisons method for ANOVA).</p>
+<pre class="r"><code>kruskal.test(weight~group, data=growth)</code></pre>
+<pre><code>## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  weight by group
+## Kruskal-Wallis chi-squared = 7.9882, df = 2, p-value = 0.01842</code></pre>
+<pre class="r"><code>library(FSA)
+DT = dunnTest(weight~group, data=growth, method=&#39;bh&#39;)
+DT</code></pre>
+<pre><code>##    Comparison         Z    P.unadj      P.adj
+## 1 ctrl - trt1  1.117725 0.26368427 0.26368427
+## 2 ctrl - trt2 -1.689290 0.09116394 0.13674592
+## 3 trt1 - trt2 -2.807015 0.00500029 0.01500087</code></pre>
+<pre class="r"><code>library(rcompanion)
+cldList(P.adj~Comparison, data = DT$res, threshold=0.05)</code></pre>
+<pre><code>##   Group Letter MonoLetter
+## 1  ctrl     ab         ab
+## 2  trt1      a         a 
+## 3  trt2      b          b</code></pre>
+<p>The large p-value from the Kruskal-Wallis test tells us our groups come from different distributions. The Dunn test tells us there is a difference between treatment 1 and treatment 2.</p>
+</div>
+</div>
+<div id="multiple-comparisons" class="section level2 tabset tabset-fade tabset-pills">
+<h2><span class="header-section-number">4.2</span> Multiple Comparisons</h2>
+<p>The ANOVA test will determine if there is a difference between some of the groups, but won’t immediately tell us what groups are different. We can compute <em>pairwise confidence intervals</em> to determine which groups are different.</p>
+<p>The general structure of a confidence interval is <span class="math inline">\(estimate \pm t_{dfe}*SE\)</span>, and various <span class="math inline">\(t_{dfe}\)</span> and standard errors are possible.</p>
+<div id="t-interval" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> T-Interval</h3>
+<p><strong>Welch’s t-interval</strong> (Unpooled)</p>
+<p>Welch’s t-interval is useful if we don’t think the population variances of the groups are equal. The standard error is given by <span class="math inline">\(\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}\)</span> where the standard deviations of the groups are kept separated.</p>
+<p>In R, we calculate this by</p>
+<pre class="r"><code>control = growth$weight[growth$group==&#39;ctrl&#39;] 
+treat1 = growth$weight[growth$group==&#39;trt1&#39;]
+treat2 = growth$weight[growth$group==&#39;trt2&#39;] 
+t.test(control, treat1, var.equal=F, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -0.2875162  1.0295162
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<pre class="r"><code>t.test(control, treat2, var.equal=F, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -0.98287213 -0.00512787
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<pre class="r"><code>t.test(treat1, treat2, var.equal=F, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -1.4809144 -0.2490856
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<p>According to these intervals, there is a difference between control and treatment 2 and between treatment 1 and treatment 2.</p>
+<p><strong>Pooled t-interval</strong></p>
+<p>When we created the ANOVA model, we showed there was not a significant difference in variance between the groups, so we are able to pool the variance. In this case, our standard error is given by <span class="math inline">\(s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}\)</span> where <span class="math inline">\(s_p\)</span> is the pooled variance equal to <span class="math inline">\(\hat{\sigma}\)</span>.</p>
+<p>In R, the confidence intervals are calculated similarly to the unpooled intervals, except now the variance is equal.</p>
+<pre class="r"><code>t.test(control, treat1, var.equal=T, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -0.2833003  1.0253003
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<pre class="r"><code>t.test(control, treat2, var.equal=T, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -0.980338117 -0.007661883
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<pre class="r"><code>t.test(treat1, treat2, var.equal=T, alternative = &#39;two.sided&#39;)$conf.int</code></pre>
+<pre><code>## [1] -1.4687336 -0.2612664
+## attr(,&quot;conf.level&quot;)
+## [1] 0.95</code></pre>
+<pre class="r"><code>pairwise.t.test(growth$weight, growth$group)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  growth$weight and growth$group 
+## 
+##      ctrl  trt1 
+## trt1 0.194 -    
+## trt2 0.175 0.013
+## 
+## P value adjustment method: holm</code></pre>
+<p>The intervals are slightly different than the unpooled intervals.</p>
+<p>Using the standard t confidence interval to construct all the pair-wise confidence intervals is generally not recommended because it doesn’t consider the family-wise error rate, and results in artificially small intervals. This method should only be used if we’re interested in one pairwise contrast which was decided upon beofre looking at the data.</p>
+</div>
+<div id="family-wise-error-rate" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Family-wise error rate</h3>
+<p>Suppose our significance level (<span class="math inline">\(\alpha\)</span>) is 0.05. If we construct one 95% confidence interval, the probability of making a type I error is 0.05.</p>
+<p>The family-wise error rate is the probability of making at least one type I error in the family, defined as <span class="math display">\[FWER \leq 1-(1-\alpha)^{I \choose 2} \]</span> where <span class="math inline">\(\alpha\)</span> is the significance level for an individual test and <span class="math inline">\({I \choose 2}\)</span> is the number of pairwise comparisons given the total number of groups I.</p>
+<p>If there are 3 groups, then there are 3 pairwise comparisons, and <span class="math inline">\(FWER \leq 0.1426\)</span>. If there are 5 groups, then there are 10 pairwise comparisons, and <span class="math inline">\(FWER \leq 0.4013\)</span>, etc.</p>
+<p>As the number of groups grows, the upper bound for FWER also grows. So, as increase groups, the probability of a type I error becomes very high. Some ways to control this include the Bonferroni correction, Tukey’s procedure, and Scheffe’s method</p>
+</div>
+<div id="bonferonni-correction" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Bonferonni Correction</h3>
+<p>The Bonferroni correction constructs each individual confidence interval at a higher level to result in a higher family-wise confidence level. The individual confidence level is <span class="math inline">\(\frac{\alpha}{m}\)</span> where m is the total number of intervals to construct (often <span class="math inline">\(m = {I \choose 2}\)</span>). So, each confidence interval will have a <span class="math inline">\(1-\frac{\alpha}{m}\)</span> level of confidence. The Bonferonni correction is typically only recommended for 3 or 4 groups.</p>
+<p>For our example, we had 3 groups so each pairwise confidence interval will be constructed at the 98.3% confidence level.</p>
+<pre class="r"><code>library(DescTools)
+PostHocTest(mod.aov, method=&#39;bonferroni&#39;)</code></pre>
+<pre><code>## 
+##   Posthoc multiple comparisons of means : Bonferroni 
+##     95% family-wise confidence level
+## 
+## $group
+##             diff     lwr.ci    upr.ci   pval    
+## trt1-ctrl -0.371 -1.0825786 0.3405786 0.5832    
+## trt2-ctrl  0.494 -0.2175786 1.2055786 0.2630    
+## trt2-trt1  0.865  0.1534214 1.5765786 0.0134 *  
+## 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>These intervals tell us only the difference between treatment 1 and treatment 2 are stastically significant.</p>
+</div>
+<div id="tukey-procedure" class="section level3">
+<h3><span class="header-section-number">4.2.4</span> Tukey Procedure</h3>
+<p>The Tukey method uses the studentized range distribution to create simultaneous comparisons for all pairwise comparisons.</p>
+<p>We can compute all the pairwise Tukey intervals in R.</p>
+<pre class="r"><code>TukeyHSD(mod.aov)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = weight ~ group, data = growth)
+## 
+## $group
+##             diff        lwr       upr     p adj
+## trt1-ctrl -0.371 -1.0622161 0.3202161 0.3908711
+## trt2-ctrl  0.494 -0.1972161 1.1852161 0.1979960
+## trt2-trt1  0.865  0.1737839 1.5562161 0.0120064</code></pre>
+<p>We can also visualize the intervals</p>
+<pre class="r"><code>plot(TukeyHSD(mod.aov))</code></pre>
+<p><img src="Regression_files/figure-html/tukeyplot-1.png" width="672" /></p>
+<p>The conclusion is the same as with the Bonferonni correction (treatment 1 and 2 are different), however the Tukey method works well for many groups.</p>
+</div>
+<div id="scheffes-method" class="section level3">
+<h3><span class="header-section-number">4.2.5</span> Scheffe’s Method</h3>
+<p>Scheffe’s method is useful for any type of contrast, not just pairwise differences. A confidence interval for contrast <span class="math inline">\(\Psi = \sum\limits_{i=1}^Ic_iy_i\)</span> is given by <span class="math display">\[\sum\limits_{i=1}^Ic_i\hat{y}_i \pm \sqrt{(I-1)F_{I-1,n-1}^\alpha}*\hat{\sigma}\sqrt{\sum\limits_{i=1}^I\frac{c_i^2}{n_i}}\]</span> For example, suppose we want a confidence interval for <span class="math inline">\(y_{control} - \frac{y_{treat1} + y_{treat2}}{2}\)</span> which compares control to the average of the treatments.</p>
+<pre class="r"><code>ScheffeTest(mod.aov, contrasts = matrix(c(1,-0.5,-0.5,
+                                          -0.5,1,-0.5,
+                                          -0.5,-0.5,1),ncol=3))</code></pre>
+<pre><code>## 
+##   Posthoc multiple comparisons of means : Scheffe Test 
+##     95% family-wise confidence level
+## 
+## $group
+##                   diff     lwr.ci      upr.ci   pval    
+## ctrl-trt1,trt2 -0.0615 -0.6868163 0.563816298 0.9681    
+## trt1-ctrl,trt2 -0.6180 -1.2433163 0.007316298 0.0532 .  
+## trt2-ctrl,trt1  0.6795  0.0541837 1.304816298 0.0310 *  
+## 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The first row of the output table shows there is not a significant difference between the control group and the average of the treatment groups.</p>
+<p>The second row shows there may be a difference between treatment 1 and the average of control and treatment 2.</p>
+<p>The third row shows there is likely a difference between treatment 2 and the average between control and treatment 1.</p>
+</div>
+</div>
+<div id="two-factor-anova-____-example" class="section level2">
+<h2><span class="header-section-number">4.3</span> Two-Factor ANOVA: ____ Example</h2>
+<p>HW 6</p>
 </div>
 </div>
 
