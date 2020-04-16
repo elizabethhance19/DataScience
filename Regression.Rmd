@@ -270,6 +270,9 @@ $$Y_{i,j} = \mu + \alpha_i + \varepsilon_{i,j}$$ where $Y_{i,j}$ is the jth obse
 
 We have a balanced design if $n_i$ is the same for all groups.  If we think some treatment group has more variation we could use an unbalanced design.
 
+We could also consider the two-factor ANOVA model which considers the influence of two explanatory variables.  The (full) model is given by 
+$$Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}$$ where $Y_{ijk}$ is the kth observation at the ith and jth treatment level, and $(\alpha\beta)_{ij}$ is the interaction effect.
+
 ANOVA models perform an F-test to determine if all the group means are the same, or if at least one is statistically different.  Various comparison and confidence interval methods allow us to determine which group is different.
 
 The ANOVA model is a generalization of the simple linear regression model so it follows the same assumptions.
@@ -445,9 +448,99 @@ The second row shows there may be a difference between treatment 1 and the avera
 The third row shows there is likely a difference between treatment 2 and the average between control and treatment 1.
 
 
+## Two-Factor ANOVA: Strength Example {.tabset .tabset-fade .tabset-pills}
+Data for this example were modified from an assignment in one of my graduate courses.  Our goal is to determine if substrate or bonding material are useful in predicting strength.
 
-## Two-Factor ANOVA: ____ Example
-HW 6
+### Analyzing the Data
+```{r}
+strength = c(1.51,1.96,1.83,1.98, 2.62,2.82,2.69,2.93, 2.96,2.82,3.11,3.11, 3.67,3.4,3.25,2.9,
+             1.63,1.8,1.92,1.71, 3.12,2.94,3.23,2.99, 2.91,2.93,3.01,2.93, 3.48,3.51,3.24,3.45,
+             3.04,3.16,3.09,3.5, 1.19,2.11,1.78,2.25, 3.04,2.91,2.48,2.83, 3.47,3.42,3.31,3.76)
+substrate = c(rep("A",16), rep("B", 16), rep("C", 16))
+material = c(rep( c(rep("E1",4), rep("E2",4), rep("S1",4), rep("S2",4)),3))
+bonds = data.frame(substrate, material, strength)
+plot(strength~substrate,bonds) 
+plot(strength~material,bonds)
+```
+
+It appears material has a greater impact on strength than substrate.  We also consider the interaction between substrate and material.
+```{r interaction2}
+interaction.plot(bonds$substrate, bonds$material, bonds$strength, xlab="Substrate", ylab="Mean Strength")
+interaction.plot(bonds$material, bonds$substrate, bonds$strength, xlab="Material", ylab="Mean Strength")
+```
+
+The lines are not parallel indicating interaction may be significant.
+
+### ANOVA Model
+We fit the full 2-way ANOVA model.  Any of the fitting methods can be used and produce the same results.
+
+```{r anova2}
+mod.aov2Full = lm(strength ~ material + substrate + material*substrate, data = bonds)
+#mod.aov2Full = lm(strength~material*substrate, data=bonds)
+#mod.aov2Full = aov(strength~material*substrate, data=bonds)
+#mod.aov2Full = aov(strength ~ material + substrate + material*substrate, data = bonds)
+#mod.aov2Full = aov(strength ~ material + substrate + material:substrate, data = bonds)
+summary(mod.aov2Full)
+anova(mod.aov2Full)
+```
+
+The ANOVA output shows substrate may not be significant to the model (it also didn't appear to be significant in the initial boxplot).  However, if we remove substrate we must also remove the interaction term (to maintain a hierarchical model).  We test if the coefficients for substrate and interaction terms are 0.
+
+We first compute the F-statistic:
+$$F = \frac{[SSE_{Reduced} - SSE_{Full}]/[dfe_{Reduced}-dfe_{Full}]}{MSE_{Full}} = \frac{(0.1041+8.6333)/(2+6)}{0.04982}$$
+Then, we compare this F-statistic to the F distribution with 8 and 36 degrees of freedom to obtain the p-value.
+
+```{r dropsubstrate}
+Fstat = ((0.1041 + 8.6333)/(2+6)) / 0.04982
+pvalue = pf(Fstat, 8,36,lower.tail = FALSE)
+pvalue
+```
+
+The small p-value means we reject the null hypothesis and conclude we cannot drop the subtrate and interaction terms.  
+
+### Checking Assumptions
+**Homoscedasticity**
+
+We check the assumption of homoscedasticity with a plot (we could also use Levene's test) 
+```{r}
+plot(mod.aov2Full, which=1)
+```
+
+There may be some outliers but not overwhelming evidence of heteroscedasticity.
+
+**Normality of Residuals**
+
+We also check the distribution of the residuals with a plot (we could use the Shapiro-Wilk test).
+```{r normality2}
+plot(mod.aov2Full, which=2)
+```
+
+
+### Making Predictions
+If we want to determine which combination(s) of material and substrate produce the greatest strenght, we could start by computing all bonding material pairwise confidence intervals.
+
+```{r}
+mod.aov2Full = aov(strength ~ material + substrate + material:substrate, data = bonds)
+TukeyHSD(mod.aov2Full,which = 'material', conf.level = 0.95) #TukeyHSD requires an ANOVA object
+```
+
+This output tells us there is a significant difference between all bonding materials.
+
+We could also plot the mean of each combination with their standard errors.  Note, since we are using the full model, the predictions for each of the 12 treatments combinations are equal to each of the cell means.
+
+```{r meanSEPlot, warning=F, message=F}
+library(tidyverse)
+meanData = bonds %>% group_by(substrate, material) %>% summarise(strength = mean(strength))
+sigma = sqrt(.04982)
+se = sigma/sqrt(4) 
+pd = position_dodge(0.1) 
+ggplot(meanData, aes(x=substrate, y=strength, colour=material, group=material)) + 
+  geom_errorbar(aes(ymin=strength-se, ymax=strength+se), colour="black", width=.25, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=4, shape=21, fill="white")
+```
+
+To obtain the greatest strength we should use material S2 with any subtrate.
 
 
 

@@ -323,7 +323,7 @@ $(document).ready(function () {
 <li><a href="#comparing-means"><span class="toc-section-number">4</span> Comparing Means</a><ul>
 <li><a href="#one-factor-anova-plant-growth-example"><span class="toc-section-number">4.1</span> One-Factor ANOVA: Plant Growth Example</a></li>
 <li><a href="#multiple-comparisons"><span class="toc-section-number">4.2</span> Multiple Comparisons</a></li>
-<li><a href="#two-factor-anova-____-example"><span class="toc-section-number">4.3</span> Two-Factor ANOVA: ____ Example</a></li>
+<li><a href="#two-factor-anova-strength-example"><span class="toc-section-number">4.3</span> Two-Factor ANOVA: Strength Example</a></li>
 </ul></li>
 </ul>
 </div>
@@ -460,20 +460,13 @@ qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
 <p>We start with a model using all the available variables (except for ID). Note categorical variables are formatted as factors and are automatically converted to indicator/dummy variables.</p>
 <pre class="r"><code>library(ISLR)
 head(Credit)</code></pre>
-<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity
-## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian
-## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian
-## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian
-## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian
-## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian
-## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian
-##   Balance
-## 1     333
-## 2     903
-## 3     580
-## 4     964
-## 5     331
-## 6    1151</code></pre>
+<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity Balance
+## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian     333
+## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian     903
+## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian     580
+## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian     964
+## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian     331
+## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian    1151</code></pre>
 <pre class="r"><code>mod.Full = lm(Balance ~ Cards + Limit + Rating + Age + Gender + Student + Income + Education + Married + Ethnicity, data=Credit)
 summary(mod.Full)</code></pre>
 <pre><code>## 
@@ -713,6 +706,7 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 <p>One-way analysis of variance (one-way ANOVA) allows us to compare means between two or more samples, where the repose variable is numeric and there is one explanatory variable (hence, one-way) that is generally categorical.</p>
 <p>The one-factor ANOVA model is given by either the <em>means model</em> <span class="math display">\[Y_{i,j} = \mu_i + \varepsilon_{i,j}\]</span> or by the <em>main effects model</em> <span class="math display">\[Y_{i,j} = \mu + \alpha_i + \varepsilon_{i,j}\]</span> where <span class="math inline">\(Y_{i,j}\)</span> is the jth observation at the ith treatment level, <span class="math inline">\(\mu\)</span> is the grand mean, <span class="math inline">\(\mu_i\)</span> is the mean of the observation for the ith treatment group, and <span class="math inline">\(\alpha_i\)</span> is the ith treatment effect (deviation from the grand mean).</p>
 <p>We have a balanced design if <span class="math inline">\(n_i\)</span> is the same for all groups. If we think some treatment group has more variation we could use an unbalanced design.</p>
+<p>We could also consider the two-factor ANOVA model which considers the influence of two explanatory variables. The (full) model is given by <span class="math display">\[Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}\]</span> where <span class="math inline">\(Y_{ijk}\)</span> is the kth observation at the ith and jth treatment level, and <span class="math inline">\((\alpha\beta)_{ij}\)</span> is the interaction effect.</p>
 <p>ANOVA models perform an F-test to determine if all the group means are the same, or if at least one is statistically different. Various comparison and confidence interval methods allow us to determine which group is different.</p>
 <p>The ANOVA model is a generalization of the simple linear regression model so it follows the same assumptions.</p>
 <div id="one-factor-anova-plant-growth-example" class="section level2 tabset tabset-fade tabset-pills">
@@ -921,9 +915,129 @@ PostHocTest(mod.aov, method=&#39;bonferroni&#39;)</code></pre>
 <p>The third row shows there is likely a difference between treatment 2 and the average between control and treatment 1.</p>
 </div>
 </div>
-<div id="two-factor-anova-____-example" class="section level2">
-<h2><span class="header-section-number">4.3</span> Two-Factor ANOVA: ____ Example</h2>
-<p>HW 6</p>
+<div id="two-factor-anova-strength-example" class="section level2 tabset tabset-fade tabset-pills">
+<h2><span class="header-section-number">4.3</span> Two-Factor ANOVA: Strength Example</h2>
+<p>Data for this example were modified from an assignment in one of my graduate courses. Our goal is to determine if substrate or bonding material are useful in predicting strength.</p>
+<div id="analyzing-the-data" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> Analyzing the Data</h3>
+<pre class="r"><code>strength = c(1.51,1.96,1.83,1.98, 2.62,2.82,2.69,2.93, 2.96,2.82,3.11,3.11, 3.67,3.4,3.25,2.9,
+             1.63,1.8,1.92,1.71, 3.12,2.94,3.23,2.99, 2.91,2.93,3.01,2.93, 3.48,3.51,3.24,3.45,
+             3.04,3.16,3.09,3.5, 1.19,2.11,1.78,2.25, 3.04,2.91,2.48,2.83, 3.47,3.42,3.31,3.76)
+substrate = c(rep(&quot;A&quot;,16), rep(&quot;B&quot;, 16), rep(&quot;C&quot;, 16))
+material = c(rep( c(rep(&quot;E1&quot;,4), rep(&quot;E2&quot;,4), rep(&quot;S1&quot;,4), rep(&quot;S2&quot;,4)),3))
+bonds = data.frame(substrate, material, strength)
+plot(strength~substrate,bonds) </code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>plot(strength~material,bonds)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<p>It appears material has a greater impact on strength than substrate. We also consider the interaction between substrate and material.</p>
+<pre class="r"><code>interaction.plot(bonds$substrate, bonds$material, bonds$strength, xlab=&quot;Substrate&quot;, ylab=&quot;Mean Strength&quot;)</code></pre>
+<p><img src="Regression_files/figure-html/interaction2-1.png" width="672" /></p>
+<pre class="r"><code>interaction.plot(bonds$material, bonds$substrate, bonds$strength, xlab=&quot;Material&quot;, ylab=&quot;Mean Strength&quot;)</code></pre>
+<p><img src="Regression_files/figure-html/interaction2-2.png" width="672" /></p>
+<p>The lines are not parallel indicating interaction may be significant.</p>
+</div>
+<div id="anova-model" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> ANOVA Model</h3>
+<p>We fit the full 2-way ANOVA model. Any of the fitting methods can be used and produce the same results.</p>
+<pre class="r"><code>mod.aov2Full = lm(strength ~ material + substrate + material*substrate, data = bonds)
+#mod.aov2Full = lm(strength~material*substrate, data=bonds)
+#mod.aov2Full = aov(strength~material*substrate, data=bonds)
+#mod.aov2Full = aov(strength ~ material + substrate + material*substrate, data = bonds)
+#mod.aov2Full = aov(strength ~ material + substrate + material:substrate, data = bonds)
+summary(mod.aov2Full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = strength ~ material + substrate + material * substrate, 
+##     data = bonds)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64250 -0.08687 -0.00250  0.11000  0.41750 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            1.820e+00  1.116e-01  16.308  &lt; 2e-16 ***
+## materialE2             9.450e-01  1.578e-01   5.988 7.22e-07 ***
+## materialS1             1.180e+00  1.578e-01   7.477 7.86e-09 ***
+## materialS2             1.485e+00  1.578e-01   9.409 3.08e-11 ***
+## substrateB            -5.500e-02  1.578e-01  -0.348    0.730    
+## substrateC             1.377e+00  1.578e-01   8.728 2.06e-10 ***
+## materialE2:substrateB  3.600e-01  2.232e-01   1.613    0.115    
+## materialS1:substrateB  1.041e-15  2.232e-01   0.000    1.000    
+## materialS2:substrateB  1.700e-01  2.232e-01   0.762    0.451    
+## materialE2:substrateC -2.310e+00  2.232e-01 -10.349 2.46e-12 ***
+## materialS1:substrateC -1.562e+00  2.232e-01  -7.000 3.28e-08 ***
+## materialS2:substrateC -1.192e+00  2.232e-01  -5.343 5.25e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2232 on 36 degrees of freedom
+## Multiple R-squared:  0.907,  Adjusted R-squared:  0.8786 
+## F-statistic: 31.93 on 11 and 36 DF,  p-value: 2.848e-15</code></pre>
+<pre class="r"><code>anova(mod.aov2Full)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: strength
+##                    Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## material            3 8.7587 2.91957  58.605 6.268e-14 ***
+## substrate           2 0.1041 0.05206   1.045    0.3621    
+## material:substrate  6 8.6333 1.43889  28.883 2.312e-12 ***
+## Residuals          36 1.7934 0.04982                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>The ANOVA output shows substrate may not be significant to the model (it also didn’t appear to be significant in the initial boxplot). However, if we remove substrate we must also remove the interaction term (to maintain a hierarchical model). We test if the coefficients for substrate and interaction terms are 0.</p>
+<p>We first compute the F-statistic: <span class="math display">\[F = \frac{[SSE_{Reduced} - SSE_{Full}]/[dfe_{Reduced}-dfe_{Full}]}{MSE_{Full}} = \frac{(0.1041+8.6333)/(2+6)}{0.04982}\]</span> Then, we compare this F-statistic to the F distribution with 8 and 36 degrees of freedom to obtain the p-value.</p>
+<pre class="r"><code>Fstat = ((0.1041 + 8.6333)/(2+6)) / 0.04982
+pvalue = pf(Fstat, 8,36,lower.tail = FALSE)
+pvalue</code></pre>
+<pre><code>## [1] 1.140389e-11</code></pre>
+<p>The small p-value means we reject the null hypothesis and conclude we cannot drop the subtrate and interaction terms.</p>
+</div>
+<div id="checking-assumptions-1" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> Checking Assumptions</h3>
+<p><strong>Homoscedasticity</strong></p>
+<p>We check the assumption of homoscedasticity with a plot (we could also use Levene’s test)</p>
+<pre class="r"><code>plot(mod.aov2Full, which=1)</code></pre>
+<p><img src="Regression_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>There may be some outliers but not overwhelming evidence of heteroscedasticity.</p>
+<p><strong>Normality of Residuals</strong></p>
+<p>We also check the distribution of the residuals with a plot (we could use the Shapiro-Wilk test).</p>
+<pre class="r"><code>plot(mod.aov2Full, which=2)</code></pre>
+<p><img src="Regression_files/figure-html/normality2-1.png" width="672" /></p>
+</div>
+<div id="making-predictions-1" class="section level3">
+<h3><span class="header-section-number">4.3.4</span> Making Predictions</h3>
+<p>If we want to determine which combination(s) of material and substrate produce the greatest strenght, we could start by computing all bonding material pairwise confidence intervals.</p>
+<pre class="r"><code>mod.aov2Full = aov(strength ~ material + substrate + material:substrate, data = bonds)
+TukeyHSD(mod.aov2Full,which = &#39;material&#39;, conf.level = 0.95) #TukeyHSD requires an ANOVA object</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = strength ~ material + substrate + material:substrate, data = bonds)
+## 
+## $material
+##            diff        lwr       upr     p adj
+## E2-E1 0.2950000 0.04959085 0.5404091 0.0132102
+## S1-E1 0.6591667 0.41375752 0.9045758 0.0000001
+## S2-E1 1.1441667 0.89875752 1.3895758 0.0000000
+## S1-E2 0.3641667 0.11875752 0.6095758 0.0016623
+## S2-E2 0.8491667 0.60375752 1.0945758 0.0000000
+## S2-S1 0.4850000 0.23959085 0.7304091 0.0000321</code></pre>
+<p>This output tells us there is a significant difference between all bonding materials.</p>
+<p>We could also plot the mean of each combination with their standard errors. Note, since we are using the full model, the predictions for each of the 12 treatments combinations are equal to each of the cell means.</p>
+<pre class="r"><code>library(tidyverse)
+meanData = bonds %&gt;% group_by(substrate, material) %&gt;% summarise(strength = mean(strength))
+sigma = sqrt(.04982)
+se = sigma/sqrt(4) 
+pd = position_dodge(0.1) 
+ggplot(meanData, aes(x=substrate, y=strength, colour=material, group=material)) + 
+  geom_errorbar(aes(ymin=strength-se, ymax=strength+se), colour=&quot;black&quot;, width=.25, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=4, shape=21, fill=&quot;white&quot;)</code></pre>
+<p><img src="Regression_files/figure-html/meanSEPlot-1.png" width="672" /></p>
+<p>To obtain the greatest strength we should use material S2 with any subtrate.</p>
+</div>
 </div>
 </div>
 
