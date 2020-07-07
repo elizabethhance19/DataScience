@@ -1,0 +1,37 @@
+---
+title: "Cloud Computing"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+*Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.*
+
+From Microsoft Azure: cloud computing is the delivery of computing services—including servers, storage, databases, networking, software, analytics, and intelligence—over the Internet ('the cloud') to offer faster innovation, flexible resources, and economies of scale.
+
+* Types of cloud deployment: private (own hardware, can provide best security), public (using hardware/software you don't own, can be less secure), hybrid
+
+# Cloud computing services
+**Infrastructure as a Service (IaaS)**  
+
+* IaaS provider manages hardware, software, servers, and storage
+* Customer can add and manage any software (operating systems, applications, etc.)
+* Examples: Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform
+
+**Software as a Service (SaaS)**  
+
+* SaaS provider manages infrastructure, operating systems, middleware, and data
+* Applications typically run through web browsers, users may have subscriptions to access
+* Examples: Salesforce (customer relationship management solution), Google Apps (provides storage, wood processing, spreadsheets, etc.), Microsoft Office 365
+
+**Platform as a Service (PaaS)**  
+
+* PaaS provides the framework to build, test, deploy, manage, and update software produces
+* Typically combines with an IaaS by including operating system, development tools, database management systems, etc. 
+* Examples: AWS Elastic Beanstalk (PaaS cloud that run within an IaaS - AWS), Apache Stratos, Google App Engine, Microsoft Azure
+
+
+
+
+

@@ -11,7 +11,7 @@
 
 
 
-<title>Miscellaneous</title>
+<title>Shell/Git</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -287,7 +287,10 @@ $(document).ready(function () {
   <a href="Databases.html">Databases</a>
 </li>
 <li>
-  <a href="Miscellaneous.html">Miscellaneous</a>
+  <a href="CloudComputing.html">Cloud Computing</a>
+</li>
+<li>
+  <a href="ShellGit.html">Shell/Git</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -301,100 +304,19 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Miscellaneous</h1>
+<h1 class="title toc-ignore">Shell/Git</h1>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#git"><span class="toc-section-number">1</span> Git</a></li>
-<li><a href="#shell"><span class="toc-section-number">2</span> Shell</a></li>
+<li><a href="#shell"><span class="toc-section-number">1</span> Shell</a></li>
+<li><a href="#git"><span class="toc-section-number">2</span> Git</a></li>
 </ul>
 </div>
 
-<div id="git" class="section level1">
-<h1><span class="header-section-number">1</span> Git</h1>
-<p>Git is a version control system often used to coordinate work among programmers, but can be used to track changes in any set of files. Generally, users make changes to their local repository and then share these changes to a common remote repository.</p>
-<p>Commands listed can be run in Git Bash, or a Git GUI (like SourceTree) can be used.</p>
-<p>Some links: <a href="https://git-scm.com/docs/gitglossary">Glossary</a>, <a href="https://git-scm.com/docs">Reference</a>, <a href="https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html">Commands</a></p>
-<ul>
-<li>Initialize/create a new local repository, tells git to begin tracking changes
-<ul>
-<li>git init</li>
-</ul></li>
-<li>Check out a repository
-<ul>
-<li>git clone /path/to/repository</li>
-</ul></li>
-<li>Add files to staging
-<ul>
-<li>git add &lt;filename&gt;</li>
-</ul></li>
-<li>Commit staging area to checked out branch
-<ul>
-<li>git commit -m “Commit message”</li>
-</ul></li>
-<li>View list of commits
-<ul>
-<li>git log</li>
-</ul></li>
-<li>See files changed and what still needs committed
-<ul>
-<li>git status</li>
-</ul></li>
-<li>Send changes to remote branch on remote repo
-<ul>
-<li>git push origin &lt;branchname&gt;</li>
-<li>git push -u origin &lt;branchname&gt; (if branch doesn’t exist remotely)</li>
-</ul></li>
-</ul>
-<div id="branches" class="section level3 unnumbered">
-<h3>Branches:</h3>
-<p><em>active line of development</em></p>
-<ul>
-<li>List all branches and see current branch
-<ul>
-<li>git branch</li>
-</ul></li>
-<li>Create new branch (and switch to it)
-<ul>
-<li>git checkout -b &lt;branchname&gt;</li>
-</ul></li>
-<li>Switch branches
-<ul>
-<li>git checkout &lt;branchname&gt;</li>
-</ul></li>
-</ul>
-</div>
-<div id="merge" class="section level3 unnumbered">
-<h3>Merge:</h3>
-<p><em>Bring contents of one branch into current branch</em></p>
-<ul>
-<li>Merge a different branch into the active branch
-<ul>
-<li>git merge &lt;branchname&gt;</li>
-</ul></li>
-<li>Fetch and merge changes from remote to working repository
-<ul>
-<li>git pull</li>
-</ul></li>
-<li>Conflicts: a file has multiple versions (perhaps from multiple branches)</li>
-</ul>
-</div>
-<div id="pull-requests" class="section level3 unnumbered">
-<h3>Pull requests:</h3>
-<p>In a properly set up repository, can’t directly push to remote master. Instead, work on local branch, rebase or merge (preference) to resolve conflicts, push to remote branch, raise PR for someone to review and approve.</p>
-<p>To resolve conflicts:</p>
-<ol style="list-style-type: decimal">
-<li><p>Merging: Made changes to local branch. Merge local master into local branch, resolve conflicts.</p></li>
-<li><p>Rebase: <em>To reapply a series of changes from a branch to a different base, and reset the head of that branch to the result.</em><br />
-Made changes to local branch. Rebase changes onto local master: Make changes to local branch to effectively change starting point of local branch from where it was to current master branch location, resolve conflicts.</p></li>
-</ol>
-<p>Then, push local branch to remote branch, raise pull request from remote branch to remote master. Pull remote master into local master.</p>
-</div>
-</div>
 <div id="shell" class="section level1">
-<h1><span class="header-section-number">2</span> Shell</h1>
+<h1><span class="header-section-number">1</span> Shell</h1>
 <p>A shell is <em>a user interface for access to an operating system</em>. Some command line shells include: Bash shell (Unix shell), Windows PowerShell, Command prompt (cmd.exe in windows).</p>
 <ul>
 <li>Shells are REPL’s that can read/execute commands from a file (shell script/bash script/script)</li>
@@ -561,6 +483,87 @@ Made changes to local branch. Rebase changes onto local master: Make changes to 
 <ul>
 <li>To give permission to execute the file: <code>chmod +x myfile.sh</code></li>
 </ul>
+</div>
+</div>
+<div id="git" class="section level1">
+<h1><span class="header-section-number">2</span> Git</h1>
+<p>Git is a version control system often used to coordinate work among programmers, but can be used to track changes in any set of files. Generally, users make changes to their local repository and then share these changes to a common remote repository.</p>
+<p>Commands listed can be run in Git Bash, or a Git GUI (like SourceTree) can be used.</p>
+<p>Some links: <a href="https://git-scm.com/docs/gitglossary">Glossary</a>, <a href="https://git-scm.com/docs">Reference</a>, <a href="https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html">Commands</a></p>
+<ul>
+<li>Initialize/create a new local repository, tells git to begin tracking changes
+<ul>
+<li>git init</li>
+</ul></li>
+<li>Check out a repository
+<ul>
+<li>git clone /path/to/repository</li>
+</ul></li>
+<li>Add files to staging
+<ul>
+<li>git add &lt;filename&gt;</li>
+</ul></li>
+<li>Commit staging area to checked out branch
+<ul>
+<li>git commit -m “Commit message”</li>
+</ul></li>
+<li>View list of commits
+<ul>
+<li>git log</li>
+</ul></li>
+<li>See files changed and what still needs committed
+<ul>
+<li>git status</li>
+</ul></li>
+<li>Send changes to remote branch on remote repo
+<ul>
+<li>git push origin &lt;branchname&gt;</li>
+<li>git push -u origin &lt;branchname&gt; (if branch doesn’t exist remotely)</li>
+</ul></li>
+</ul>
+<div id="branches" class="section level3 unnumbered">
+<h3>Branches:</h3>
+<p><em>active line of development</em></p>
+<ul>
+<li>List all branches and see current branch
+<ul>
+<li>git branch</li>
+</ul></li>
+<li>Create new branch (and switch to it)
+<ul>
+<li>git checkout -b &lt;branchname&gt;</li>
+</ul></li>
+<li>Switch branches
+<ul>
+<li>git checkout &lt;branchname&gt;</li>
+</ul></li>
+</ul>
+</div>
+<div id="merge" class="section level3 unnumbered">
+<h3>Merge:</h3>
+<p><em>Bring contents of one branch into current branch</em></p>
+<ul>
+<li>Merge a different branch into the active branch
+<ul>
+<li>git merge &lt;branchname&gt;</li>
+</ul></li>
+<li>Fetch and merge changes from remote to working repository
+<ul>
+<li>git pull</li>
+</ul></li>
+<li>Conflicts: a file has multiple versions (perhaps from multiple branches)</li>
+</ul>
+</div>
+<div id="pull-requests" class="section level3 unnumbered">
+<h3>Pull requests:</h3>
+<p>In a properly set up repository, can’t directly push to remote master. Instead, work on local branch, rebase or merge (preference) to resolve conflicts, push to remote branch, raise PR for someone to review and approve.</p>
+<p>To resolve conflicts:</p>
+<ol style="list-style-type: decimal">
+<li><p>Merging: Made changes to local branch. Merge local master into local branch, resolve conflicts.</p></li>
+<li><p>Rebase: <em>To reapply a series of changes from a branch to a different base, and reset the head of that branch to the result.</em><br />
+Made changes to local branch. Rebase changes onto local master: Make changes to local branch to effectively change starting point of local branch from where it was to current master branch location, resolve conflicts.</p></li>
+</ol>
+<p>Then, push local branch to remote branch, raise pull request from remote branch to remote master. Pull remote master into local master.</p>
 </div>
 </div>
 

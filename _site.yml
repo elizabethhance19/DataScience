@@ -13,8 +13,10 @@ navbar:
       href: Clustering.html
     - text: "Databases"
       href: Databases.html
-    - text: "Miscellaneous"
-      href: Miscellaneous.html
+    - text: "Cloud Computing"
+      href: CloudComputing.html
+    - text: "Shell/Git"
+      href: ShellGit.html
 output:
   html_document:
     theme: flatly

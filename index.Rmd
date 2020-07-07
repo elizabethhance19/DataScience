@@ -44,7 +44,8 @@ Content for these topics was gathered from a variety of sources including: DataC
 * [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
 * [Classification](https://elizabethhance19.github.io/DataScience/Classification.html) 
 * [Databases](https://elizabethhance19.github.io/DataScience/Databases.html)
-* [Miscellaneous](https://elizabethhance19.github.io/DataScience/Miscellaneous.html)
+* [Cloud Computing](https://elizabethhance19.github.io/DataScience/CloudComputing.html)
+* [Shell/Git](https://elizabethhance19.github.io/DataScience/ShellGit.html)
 
 
 # R Packages {-}
