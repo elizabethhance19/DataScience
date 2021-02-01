@@ -236,8 +236,8 @@ Decision trees are intuitive and easy to explain and visualize, but are not very
 ## How to Grow Trees {.tabset .tabset-fade .tabset-pills}
 ### Classification
 Classification trees use divide and conquer to create the most pure (homogeneous) partitions.  A common way to build these trees is to use the Gini index.  This is defined as 
-$$G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})$$
-where $\hat{p}_{mk}$ is the proportion of training observations in the *m*th region that are from the *k*th class.  The Gini index is a measure of total variance across the classes and is referred to as the nodes purity.  The index will be small if the $\hat{p}_{mk}$ are close to 0 or 1, and the split that produces the purest (largest *G*) will be chosen.
+$$G = 1 - \sum_{i=1}^np_i^2$$
+where $p_i^2$ is the probability of an object being classified to a particular class.  The Gini index is a measure of total variance across the classes and is referred to as the nodes purity.  The index will be small if the data is perfectly classified, and the split that produces the purest (smallest *G*) will be chosen.
 
 Other methods of growing classification decision trees include cross-entropy (similar to Gini index) and classification error rate (generally not sensitive enough for growing trees)
 

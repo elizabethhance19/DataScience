@@ -13,6 +13,7 @@
 
 <title>Classification</title>
 
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -22,6 +23,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -67,6 +77,7 @@ h6 {
   text-align: left;
 }
 </style>
+
 
 
 
@@ -311,18 +322,22 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview"><span class="toc-section-number">1</span> Overview</a></li>
-<li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a><ul>
+<li><a href="#logistic-regression"><span class="toc-section-number">2</span> Logistic Regression</a>
+<ul>
 <li><a href="#logistic-regression-income-example"><span class="toc-section-number">2.1</span> Logistic Regression: Income Example</a></li>
 </ul></li>
-<li><a href="#k-nearest-neighbors-knn"><span class="toc-section-number">3</span> K-Nearest Neighbors (KNN)</a><ul>
+<li><a href="#k-nearest-neighbors-knn"><span class="toc-section-number">3</span> K-Nearest Neighbors (KNN)</a>
+<ul>
 <li><a href="#knn-iris-example"><span class="toc-section-number">3.1</span> KNN: Iris Example</a></li>
 </ul></li>
-<li><a href="#naive-bayes"><span class="toc-section-number">4</span> Naive Bayes</a><ul>
+<li><a href="#naive-bayes"><span class="toc-section-number">4</span> Naive Bayes</a>
+<ul>
 <li><a href="#naive-bayes-classifier"><span class="toc-section-number">4.1</span> Naive Bayes Classifier</a></li>
 <li><a href="#naive-bayes-titanic-example"><span class="toc-section-number">4.2</span> Naive Bayes: Titanic Example</a></li>
 <li><a href="#laplace-correction"><span class="toc-section-number">4.3</span> Laplace Correction</a></li>
 </ul></li>
-<li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a><ul>
+<li><a href="#classification-trees"><span class="toc-section-number">5</span> Classification Trees</a>
+<ul>
 <li><a href="#how-to-grow-trees"><span class="toc-section-number">5.1</span> How to Grow Trees</a></li>
 <li><a href="#other-tree-based-methods"><span class="toc-section-number">5.2</span> Other Tree-Based Methods</a></li>
 <li><a href="#classification-tree-carseat-sales-example"><span class="toc-section-number">5.3</span> Classification Tree: Carseat Sales Example</a></li>
@@ -331,23 +346,23 @@ $(document).ready(function () {
 </ul>
 </div>
 
-<div id="overview" class="section level1">
-<h1><span class="header-section-number">1</span> Overview</h1>
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
 <p>Classification is used on data where the response variable is qualitative (categorical), unlike regression which has a quantitative (continuous) response variable. The response categories are known making this a supervised learning technique, unlike clustering where the categories are unknown.</p>
 <p>A common method to evaluate classification models is to calculate the accuracy: the proportion of correctly classified responses to the total number of classifications made. Other performance metrics are also useful, including sensitivity and specificity (explored with logistic regression).</p>
 <p>Some common classification techniques include: logistic regression, Naive Bayes classifier, k-nearest neighbor, decision trees, linear/quadratic discriminant analysis (not explored here), and support vector machines (not explored here).</p>
 </div>
-<div id="logistic-regression" class="section level1">
-<h1><span class="header-section-number">2</span> Logistic Regression</h1>
+<div id="logistic-regression" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Logistic Regression</h1>
 <p>Logistic regression is used for binary classification - when there are 2 possible predictor classes.</p>
 <p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
 <p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maximum likelihood estimation that requires an iterative process.</p>
 <p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
-<div id="logistic-regression-income-example" class="section level2 tabset tabset-fade tabset-pills">
-<h2><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
+<div id="logistic-regression-income-example" class="section level2 tabset tabset-fade tabset-pills" number="2.1">
+<h2 class="tabset tabset-fade tabset-pills" number="2.1"><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
 <p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income</a></p>
-<div id="traintest-set" class="section level3">
-<h3><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
+<div id="traintest-set" class="section level3" number="2.1.1">
+<h3 number="2.1.1"><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
 <p>Load data:</p>
 <pre class="r"><code>incomeData &lt;- read.table(&#39;adult.data&#39;, sep = &#39;,&#39;, fill = F, strip.white = T)
 colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
@@ -377,8 +392,8 @@ table(train$income)</code></pre>
 <pre class="r"><code>rm(dataAbove, dataBelow, dataAbove_trainingRows, dataBelow_trainingRows, trainAbove, trainBelow, testAbove, testBelow)</code></pre>
 <p>We have a similar proportion of &gt;50K to &lt;=50K in our training data as in the full data set.</p>
 </div>
-<div id="fit-and-test-logistic-model" class="section level3">
-<h3><span class="header-section-number">2.1.2</span> Fit and Test Logistic Model</h3>
+<div id="fit-and-test-logistic-model" class="section level3" number="2.1.2">
+<h3 number="2.1.2"><span class="header-section-number">2.1.2</span> Fit and Test Logistic Model</h3>
 <p>I chose variables I thought would predict <em>income</em>, however different variable choices or variable selection methods could be used.</p>
 <pre class="r"><code>mod.logit = glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data=train, family=&#39;binomial&#39;)
 summary(mod.logit)</code></pre>
@@ -456,8 +471,8 @@ confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50),
 <p>Generally raising one of the metrics lowers the other (trade-off), the context of the data will determine which is more important.</p>
 <p>The model prediction returns a probability of each observation having an income greater than 50K. Here, we classified observations with a probability &gt; 0.5 to have an income greater than 50K, however different threshold values are possible.</p>
 </div>
-<div id="roc-curve" class="section level3">
-<h3><span class="header-section-number">2.1.3</span> ROC Curve</h3>
+<div id="roc-curve" class="section level3" number="2.1.3">
+<h3 number="2.1.3"><span class="header-section-number">2.1.3</span> ROC Curve</h3>
 <p>A receiver operating characteristic (ROC) curve plots the true positive rate (sensitivity) against the false positive rate (1 - specificity). This can also be viewed as the percent of positive outcomes versus the percent of other outcomes.</p>
 <pre class="r"><code>library(ROCR)
 pred = prediction(predictedProbability, test$IncomeAbove50)
@@ -472,8 +487,8 @@ auc</code></pre>
 <pre><code>## [1] 0.8195055</code></pre>
 <p>“Better” models generally have AUC close to 1, though it’s important to consider many metrics when evaluating a model.</p>
 </div>
-<div id="model-assumptions" class="section level3">
-<h3><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
+<div id="model-assumptions" class="section level3" number="2.1.4">
+<h3 number="2.1.4"><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
 <p>We can check for multicollinearity among our independent variables by computing the variance inflation factor (VIF). All the variables should have a VIF less than 10 but ideally less than 5.</p>
 <pre class="r"><code>vif(mod.logit)</code></pre>
 <pre><code>##                    GVIF Df GVIF^(1/(2*Df))
@@ -485,11 +500,11 @@ auc</code></pre>
 </div>
 </div>
 </div>
-<div id="k-nearest-neighbors-knn" class="section level1">
-<h1><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
+<div id="k-nearest-neighbors-knn" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
 <p>KNN works by considering the K training data points that are closest (typically using Euclidean distance) to the test observation. Then, the test observation is predicted to be in the same class as the majority of the closest training points. In the event of a tie, one of the classes is randomly chosen. It is necessary to normalize (generally min-max normalization instead of standardization) the data first since we will be calculating distances.</p>
-<div id="knn-iris-example" class="section level2">
-<h2><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
+<div id="knn-iris-example" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
 <p>This example was inspired by <a href="https://towardsdatascience.com/k-nearest-neighbors-algorithm-with-examples-in-r-simply-explained-knn-1f2c88da405c">KNN Example</a>. Normalize the iris data and split into a training and test set</p>
 <pre class="r"><code>normalize &lt;- function(x) {
 return((x - min(x)) / (max(x) - min(x)))
@@ -528,17 +543,17 @@ table(test_prediction, test_class)</code></pre>
 <p>A general rule is to choose <span class="math inline">\(k=\sqrt{N}\)</span> where N is the number of samples in the training data.</p>
 </div>
 </div>
-<div id="naive-bayes" class="section level1">
-<h1><span class="header-section-number">4</span> Naive Bayes</h1>
+<div id="naive-bayes" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Naive Bayes</h1>
 <p>Bayes theorem is given as: <span class="math display">\[p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}\]</span> where  represents the features in the data, <span class="math inline">\(C_k\)</span> is a possible class, and <span class="math inline">\(p(C_k|\textbf{x})\)</span> is the probability of belonging to a class given the independent variables defined by . This is sometimes rewritten as <span class="math display">\[\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}\]</span></p>
 <p>The denominator of the fraction is constant, and the numerator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
 <p>If we assume all features in  are mutually independent (this assumption is what makes it <em>naive</em>), we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
-<div id="naive-bayes-classifier" class="section level2">
-<h2><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
+<div id="naive-bayes-classifier" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
 <p>Assign a class label <span class="math inline">\(\hat{y} = C_k\)</span> for some k where <span class="math display">\[\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)\]</span></p>
 </div>
-<div id="naive-bayes-titanic-example" class="section level2">
-<h2><span class="header-section-number">4.2</span> Naive Bayes: Titanic Example</h2>
+<div id="naive-bayes-titanic-example" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Naive Bayes: Titanic Example</h2>
 <p>Naive Bayes is good to use when all the predictors are categorical, but can also be used on continuous predictors. It also works well when there are more than 2 classes to predict, unlike other classification methods (e.g. logistic regression). This example was inspired by <a href="https://www.r-bloggers.com/understanding-naive-bayes-classifier-using-r/">Naive Bayes Blog Post</a></p>
 <p>We try to predict if a passenger survived on the Titanic given the predictors: Class (1st, 2nd, 3rd, crew), Sex (M,F), and Age (child, adult).</p>
 <pre class="r"><code>data(&quot;Titanic&quot;)
@@ -548,9 +563,8 @@ repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
 Titanic_df=Titanic[repeating_sequence,]
 Titanic_df = Titanic_df %&gt;% select(-Freq)</code></pre>
 <p>Fit Naive Bayes model</p>
-<pre class="r"><code>library(e1071)</code></pre>
-<pre><code>## Warning: package &#39;e1071&#39; was built under R version 3.6.3</code></pre>
-<pre class="r"><code>mod.NB = naiveBayes(Survived~., data=Titanic_df)
+<pre class="r"><code>library(e1071)
+mod.NB = naiveBayes(Survived~., data=Titanic_df)
 mod.NB</code></pre>
 <pre><code>## 
 ## Naive Bayes Classifier for Discrete Predictors
@@ -589,15 +603,15 @@ table(Titanic_df$PredictedSurvived, Titanic_df$Survived)</code></pre>
 <pre><code>## [1] 0.7782826</code></pre>
 <p>The model predicts if a passenger survives with about 77.8% accuracy.</p>
 </div>
-<div id="laplace-correction" class="section level2">
-<h2><span class="header-section-number">4.3</span> Laplace Correction</h2>
+<div id="laplace-correction" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Laplace Correction</h2>
 <p>Suppose there was a set of predictors with a 0 probability of one of the outcomes. For example, suppose none of the crew survived. Without any correction, our model will always predict a crew member will not survive, leaving no chance for an unforeseen circumstance.</p>
 <pre class="r"><code>missingData = unique(Titanic_df %&gt;% filter(Class==&#39;Crew&#39;, Survived==&#39;Yes&#39;) %&gt;% select(Class:Survived))
 Titanic_df_Less = Titanic_df %&gt;% select(Class:Survived) %&gt;% anti_join(missingData, by = c(&#39;Class&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;Survived&#39;))
 mod.NBNoLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=0)
 print(missingData[1,])</code></pre>
-<pre><code>##   Class  Sex   Age Survived
-## 1  Crew Male Adult      Yes</code></pre>
+<pre><code>##    Class  Sex   Age Survived
+## 28  Crew Male Adult      Yes</code></pre>
 <pre class="r"><code>predict(mod.NBNoLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
 <pre><code>##      No Yes
 ## [1,]  1 NaN</code></pre>
@@ -608,8 +622,8 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 ## [1,] 0.9994807 0.000519274</code></pre>
 </div>
 </div>
-<div id="classification-trees" class="section level1">
-<h1><span class="header-section-number">5</span> Classification Trees</h1>
+<div id="classification-trees" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Classification Trees</h1>
 <p>Decision trees create a set of ‘questions’ to partition the data set. The questions are chosen to provide the ‘best split’, and result in a flow chart to determine the category. Content and examples for this section were taken from <a href="https://www.datacamp.com/community/tutorials/decision-trees-R">DataCamp Decision Tree Example</a></p>
 <p>Terms:</p>
 <ul>
@@ -618,43 +632,43 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 <li>terminal node/leaf: a sub-node that does not split</li>
 </ul>
 <p>Decision trees are intuitive and easy to explain and visualize, but are not very robust as a small change in the data can drastically change the final tree.</p>
-<div id="how-to-grow-trees" class="section level2 tabset tabset-fade tabset-pills">
-<h2><span class="header-section-number">5.1</span> How to Grow Trees</h2>
-<div id="classification" class="section level3">
-<h3><span class="header-section-number">5.1.1</span> Classification</h3>
-<p>Classification trees use divide and conquer to create the most pure (homogeneous) partitions. A common way to build these trees is to use the Gini index. This is defined as <span class="math display">\[G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})\]</span> where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training observations in the <em>m</em>th region that are from the <em>k</em>th class. The Gini index is a measure of total variance across the classes and is referred to as the nodes purity. The index will be small if the <span class="math inline">\(\hat{p}_{mk}\)</span> are close to 0 or 1, and the split that produces the purest (largest <em>G</em>) will be chosen.</p>
+<div id="how-to-grow-trees" class="section level2 tabset tabset-fade tabset-pills" number="5.1">
+<h2 class="tabset tabset-fade tabset-pills" number="5.1"><span class="header-section-number">5.1</span> How to Grow Trees</h2>
+<div id="classification" class="section level3" number="5.1.1">
+<h3 number="5.1.1"><span class="header-section-number">5.1.1</span> Classification</h3>
+<p>Classification trees use divide and conquer to create the most pure (homogeneous) partitions. A common way to build these trees is to use the Gini index. This is defined as <span class="math display">\[G = 1 - \sum_{i=1}^np_i^2\]</span> where <span class="math inline">\(p_i^2\)</span> is the probability of an object being classified to a particular class. The Gini index is a measure of total variance across the classes and is referred to as the nodes purity. The index will be small if the data is perfectly classified, and the split that produces the purest (smallest <em>G</em>) will be chosen.</p>
 <p>Other methods of growing classification decision trees include cross-entropy (similar to Gini index) and classification error rate (generally not sensitive enough for growing trees)</p>
 </div>
-<div id="regression" class="section level3">
-<h3><span class="header-section-number">5.1.2</span> Regression</h3>
+<div id="regression" class="section level3" number="5.1.2">
+<h3 number="5.1.2"><span class="header-section-number">5.1.2</span> Regression</h3>
 <p>If our outcome variable were continuous, we could grow a regression tree. This uses Recursive Binary Splitting to minimize the Residual Sum of Squares (RSS), defined as <span class="math display">\[\sum_{m=1}^M\sum_{i\in R_m}(y_i-\hat{y}_{R_m})^2\]</span> where <span class="math inline">\(\hat{y}_{R_m}\)</span> is the mean response for the training observations in the <em>m</em>th region/box. In short, this is a top-down greedy approach that starts at the top of the tree and successively splits the predictor space to minimize the RSS at each split. (More details could be added but this section is focused on classification trees).</p>
 </div>
-<div id="pruning-trees" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> Pruning Trees</h3>
+<div id="pruning-trees" class="section level3" number="5.1.3">
+<h3 number="5.1.3"><span class="header-section-number">5.1.3</span> Pruning Trees</h3>
 <p>We can pre-prune the trees by defining a maximum depth/number of levels, or by defining a minimum number of observations needed in a sub-node to continue partitioning.</p>
 <p>We can also post-prune overly complicated branches when their reduction in error does not outweigh their added complexity.</p>
 </div>
 </div>
-<div id="other-tree-based-methods" class="section level2 tabset tabset-fade tabset-pills">
-<h2><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
+<div id="other-tree-based-methods" class="section level2 tabset tabset-fade tabset-pills" number="5.2">
+<h2 class="tabset tabset-fade tabset-pills" number="5.2"><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
 <p>The current methods of fitting our trees suffer from high variance, so different splits for the training/test sets can result in very different models. We briefly introduce 3 other methods of growing decision trees: Bagging, Random Forests, and Boosting.</p>
 <div id="bagging-bootstrap-aggregation" class="section level3 unnumbered">
-<h3>Bagging (bootstrap aggregation)</h3>
+<h3 class="unnumbered">Bagging (bootstrap aggregation)</h3>
 <p>Bagging randomly sample from the training data (with replacement) to split into multiple data sets, builds a decision tree classifier on each of them, then averages the resulting predictions.</p>
 <p>While each tree has high variance but low bias, averaging multiple trees together reduces the variance.</p>
 </div>
 <div id="random-forests" class="section level3 unnumbered">
-<h3>Random Forests</h3>
+<h3 class="unnumbered">Random Forests</h3>
 <p>This methods starts the same as bagging by splitting the training data. However, at each split a random subset of <em>m</em> predictors is chosen as a split candidate. If <em>m</em> equals the total number of predictors <em>p</em>, this method is equivalent to bagging.</p>
 <p>Generally for classification problems <span class="math inline">\(m = \sqrt{p}\)</span> and for regression problems <span class="math inline">\(m = p/3\)</span> (rounded down).</p>
 </div>
 <div id="boosting" class="section level3 unnumbered">
-<h3>Boosting</h3>
+<h3 class="unnumbered">Boosting</h3>
 <p>Boosting grows trees sequentially, where each tree is grown using information from previous trees. Given a current model, we fit a decision tree to the residuals from the model. This new trees is added into the fitted function to update the residuals. Boosting has three parameters: the number of tree, the shrinkage parameter (the rate at which boosting learns), and the number of splits in each tree.</p>
 </div>
 </div>
-<div id="classification-tree-carseat-sales-example" class="section level2 tabset tabset-fade tabset-pills">
-<h2><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
+<div id="classification-tree-carseat-sales-example" class="section level2 tabset tabset-fade tabset-pills" number="5.3">
+<h2 class="tabset tabset-fade tabset-pills" number="5.3"><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
 <p>Our goal is to predict if the carseat sales are greater than 8000 units or not.</p>
 <pre class="r"><code>library(ISLR)
 library(rpart)
@@ -674,14 +688,16 @@ mod.tree$cptable</code></pre>
 ## 7 0.01219512      8 0.3963415 0.6341463 0.05349198
 ## 8 0.01000000     10 0.3719512 0.5609756 0.05132104</code></pre>
 <pre class="r"><code>mod.tree$variable.importance</code></pre>
-<pre><code>##       Price   ShelveLoc         Age Advertising   CompPrice      Income  Population   Education          US 
-##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750   3.1669718   0.9670985   0.1411614</code></pre>
+<pre><code>##       Price   ShelveLoc         Age Advertising   CompPrice      Income 
+##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750 
+##  Population   Education          US 
+##   3.1669718   0.9670985   0.1411614</code></pre>
 <p>We can also visualize this tree:</p>
 <pre class="r"><code>library(rpart.plot)
 rpart.plot(mod.tree, type=4, extra=1)</code></pre>
 <p><img src="Classification_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<div id="making-predictions" class="section level3">
-<h3><span class="header-section-number">5.3.1</span> Making Predictions</h3>
+<div id="making-predictions" class="section level3" number="5.3.1">
+<h3 number="5.3.1"><span class="header-section-number">5.3.1</span> Making Predictions</h3>
 <p>Split into a training and test set and calculate accuracy</p>
 <pre class="r"><code>set.seed(123)
 train = sample(1:nrow(carseats), 250)
@@ -699,8 +715,8 @@ table(test$High, test$predicted)</code></pre>
 <pre class="r"><code>mean(test$High == test$predicted) #accuracy</code></pre>
 <pre><code>## [1] 0.7133333</code></pre>
 </div>
-<div id="pruning-tree" class="section level3">
-<h3><span class="header-section-number">5.3.2</span> Pruning Tree</h3>
+<div id="pruning-tree" class="section level3" number="5.3.2">
+<h3 number="5.3.2"><span class="header-section-number">5.3.2</span> Pruning Tree</h3>
 <p><strong>Pre-Pruning:</strong> This stops the growth of a tree depending on a given maximum size of the tree or a minimum number of observations needed in a sub-node to split.</p>
 <p>Make a tree with maximum depth = 3</p>
 <pre class="r"><code>mod.treeDepth = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(maxdepth=3))
@@ -734,8 +750,8 @@ mean(test$High == test$predicted) #accuracy</code></pre>
 <p>Despite being a simpler tree, this model still has similar accuracy to the full model.</p>
 </div>
 </div>
-<div id="regression-tree-random-forest-housing-example" class="section level2">
-<h2><span class="header-section-number">5.4</span> Regression Tree: Random Forest Housing Example</h2>
+<div id="regression-tree-random-forest-housing-example" class="section level2" number="5.4">
+<h2 number="5.4"><span class="header-section-number">5.4</span> Regression Tree: Random Forest Housing Example</h2>
 <pre class="r"><code>library(MASS)
 library(randomForest)
 boston = Boston
@@ -753,8 +769,8 @@ mod.rf</code></pre>
 ##           Mean of squared residuals: 12.68651
 ##                     % Var explained: 83.45</code></pre>
 <p>The <em>randomForest</em> function defaults to growing 500 trees (ntree) and using <em>floor(ncol(data)/3)</em> variables (mtry) at each split.</p>
-<div id="varying-the-number-of-variables" class="section level3">
-<h3><span class="header-section-number">5.4.1</span> Varying the Number of Variables</h3>
+<div id="varying-the-number-of-variables" class="section level3" number="5.4.1">
+<h3 number="5.4.1"><span class="header-section-number">5.4.1</span> Varying the Number of Variables</h3>
 <p>Fit a random forest model with a variable mtry, calculate the out-of-bag error (based on training set) and the test error:</p>
 <pre class="r"><code>oob.err = double(13)
 test.err = double(13)
@@ -782,7 +798,7 @@ ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line()
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

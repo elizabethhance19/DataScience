@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Cloud Computing</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data Science</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Regression.html">Regression</a>
+</li>
+<li>
+  <a href="Classification.html">Classification</a>
+</li>
+<li>
+  <a href="Clustering.html">Clustering</a>
+</li>
+<li>
+  <a href="Databases.html">Databases</a>
+</li>
+<li>
+  <a href="CloudComputing.html">Cloud Computing</a>
+</li>
+<li>
+  <a href="ShellGit.html">Shell/Git</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Cloud Computing</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a>
+<ul>
+<li><a href="#cloud-computing-services"><span class="toc-section-number">1.1</span> Cloud computing services</a></li>
+</ul></li>
+<li><a href="#bigquery"><span class="toc-section-number">2</span> BigQuery</a></li>
+<li><a href="#hadoop"><span class="toc-section-number">3</span> Hadoop</a>
+<ul>
+<li><a href="#mapreduce"><span class="toc-section-number">3.1</span> MapReduce</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
+<p>From Microsoft Azure: cloud computing is the delivery of computing services—including servers, storage, databases, networking, software, analytics, and intelligence—over the Internet (‘the cloud’) to offer faster innovation, flexible resources, and economies of scale.</p>
+<ul>
+<li>Types of cloud deployment: private (own hardware, can provide best security), public (using hardware/software you don’t own, can be less secure), hybrid</li>
+</ul>
+<div id="cloud-computing-services" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Cloud computing services</h2>
+<p><em>Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.</em></p>
+<p><strong>Infrastructure as a Service (IaaS)</strong></p>
+<ul>
+<li>IaaS provider manages hardware, software, servers, and storage</li>
+<li>Customer can add and manage any software (operating systems, applications, etc.)</li>
+<li>Examples: Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform</li>
+</ul>
+<p><strong>Software as a Service (SaaS)</strong></p>
+<ul>
+<li>SaaS provider manages infrastructure, operating systems, middleware, and data</li>
+<li>Applications typically run through web browsers, users may have subscriptions to access</li>
+<li>Examples: Salesforce (customer relationship management solution), Google Apps (provides storage, wood processing, spreadsheets, etc.), Microsoft Office 365</li>
+</ul>
+<p><strong>Platform as a Service (PaaS)</strong></p>
+<ul>
+<li>PaaS provides the framework to build, test, deploy, manage, and update software produces</li>
+<li>Typically combines with an IaaS by including operating system, development tools, database management systems, etc.</li>
+<li>Examples: AWS Elastic Beanstalk (PaaS cloud that run within an IaaS - AWS), Apache Stratos, Google App Engine, Microsoft Azure</li>
+</ul>
+</div>
+</div>
+<div id="bigquery" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> BigQuery</h1>
+<p>Google’s serverless data warehouse</p>
+<ul>
+<li>Run SQL queries on gigabytes to petabytes of data
+<ul>
+<li>Mostly SQL, but supports user defined functions (function written using SQL expressions or in other languages like Javascript)</li>
+</ul></li>
+<li>Transfer data from external sources like Youtube, Teradata, Amazon S3</li>
+<li>Can integrate with tools like Tableau</li>
+<li>Joins seem strange - converts to nested and repeated rows</li>
+</ul>
+<p>Conclusion: useful to store data or pull in data from 1 or more data sources and run SQL queries. More useful when working with big data (greater than a gigabyte), otherwise should just run locally. Seems challenging to use languages other than SQL, so not useful for deploying rigorous machine learning models (written in say Python or R).</p>
+</div>
+<div id="hadoop" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Hadoop</h1>
+<div id="mapreduce" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> MapReduce</h2>
+<ul>
+<li>Typically written in Java, C, or Python (some basic Java required).</li>
+</ul>
+<p>Alternatives:<br />
+* Pig: “Pig’s programming language referred to as Pig Latin is a coding approach that provides high degree of abstraction for MapReduce programming but is a procedural code not declarative” + Typically fewer lines and easier to write than MapReduce, less efficient * Hive: Uses a “SQL like query language known as HQL (Hive Query Language). Hive queries are converted to MapReduce programs in the background by the hive compiler for the jobs to be executed parallel across the Hadoop cluster”</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

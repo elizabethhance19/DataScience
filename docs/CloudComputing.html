@@ -13,6 +13,7 @@
 
 <title>Cloud Computing</title>
 
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -22,6 +23,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -67,6 +77,7 @@ h6 {
   text-align: left;
 }
 </style>
+
 
 
 
@@ -310,18 +321,26 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#cloud-computing-services"><span class="toc-section-number">1</span> Cloud computing services</a><ul>
-<li><a href="#bigquery"><span class="toc-section-number">1.1</span> BigQuery</a></li>
+<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a>
+<ul>
+<li><a href="#cloud-computing-services"><span class="toc-section-number">1.1</span> Cloud computing services</a></li>
+</ul></li>
+<li><a href="#bigquery"><span class="toc-section-number">2</span> BigQuery</a></li>
+<li><a href="#hadoop"><span class="toc-section-number">3</span> Hadoop</a>
+<ul>
+<li><a href="#mapreduce"><span class="toc-section-number">3.1</span> MapReduce</a></li>
 </ul></li>
 </ul>
 </div>
 
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
 <p>From Microsoft Azure: cloud computing is the delivery of computing services—including servers, storage, databases, networking, software, analytics, and intelligence—over the Internet (‘the cloud’) to offer faster innovation, flexible resources, and economies of scale.</p>
 <ul>
 <li>Types of cloud deployment: private (own hardware, can provide best security), public (using hardware/software you don’t own, can be less secure), hybrid</li>
 </ul>
-<div id="cloud-computing-services" class="section level1">
-<h1><span class="header-section-number">1</span> Cloud computing services</h1>
+<div id="cloud-computing-services" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Cloud computing services</h2>
 <p><em>Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.</em></p>
 <p><strong>Infrastructure as a Service (IaaS)</strong></p>
 <ul>
@@ -341,8 +360,10 @@ $(document).ready(function () {
 <li>Typically combines with an IaaS by including operating system, development tools, database management systems, etc.</li>
 <li>Examples: AWS Elastic Beanstalk (PaaS cloud that run within an IaaS - AWS), Apache Stratos, Google App Engine, Microsoft Azure</li>
 </ul>
-<div id="bigquery" class="section level2">
-<h2><span class="header-section-number">1.1</span> BigQuery</h2>
+</div>
+</div>
+<div id="bigquery" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> BigQuery</h1>
 <p>Google’s serverless data warehouse</p>
 <ul>
 <li>Run SQL queries on gigabytes to petabytes of data
@@ -355,6 +376,16 @@ $(document).ready(function () {
 </ul>
 <p>Conclusion: useful to store data or pull in data from 1 or more data sources and run SQL queries. More useful when working with big data (greater than a gigabyte), otherwise should just run locally. Seems challenging to use languages other than SQL, so not useful for deploying rigorous machine learning models (written in say Python or R).</p>
 </div>
+<div id="hadoop" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Hadoop</h1>
+<div id="mapreduce" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> MapReduce</h2>
+<ul>
+<li>Typically written in Java, C, or Python (some basic Java required).</li>
+</ul>
+<p>Alternatives:<br />
+* Pig: “Pig’s programming language referred to as Pig Latin is a coding approach that provides high degree of abstraction for MapReduce programming but is a procedural code not declarative” + Typically fewer lines and easier to write than MapReduce, less efficient * Hive: Uses a “SQL like query language known as HQL (Hive Query Language). Hive queries are converted to MapReduce programs in the background by the hive compiler for the jobs to be executed parallel across the Hadoop cluster”</p>
+</div>
 </div>
 
 
@@ -366,7 +397,7 @@ $(document).ready(function () {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
