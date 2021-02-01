@@ -310,17 +310,19 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#cloud-computing-services"><span class="toc-section-number">1</span> Cloud computing services</a></li>
+<li><a href="#cloud-computing-services"><span class="toc-section-number">1</span> Cloud computing services</a><ul>
+<li><a href="#bigquery"><span class="toc-section-number">1.1</span> BigQuery</a></li>
+</ul></li>
 </ul>
 </div>
 
-<p><em>Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.</em></p>
 <p>From Microsoft Azure: cloud computing is the delivery of computing services—including servers, storage, databases, networking, software, analytics, and intelligence—over the Internet (‘the cloud’) to offer faster innovation, flexible resources, and economies of scale.</p>
 <ul>
 <li>Types of cloud deployment: private (own hardware, can provide best security), public (using hardware/software you don’t own, can be less secure), hybrid</li>
 </ul>
 <div id="cloud-computing-services" class="section level1">
 <h1><span class="header-section-number">1</span> Cloud computing services</h1>
+<p><em>Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.</em></p>
 <p><strong>Infrastructure as a Service (IaaS)</strong></p>
 <ul>
 <li>IaaS provider manages hardware, software, servers, and storage</li>
@@ -339,6 +341,20 @@ $(document).ready(function () {
 <li>Typically combines with an IaaS by including operating system, development tools, database management systems, etc.</li>
 <li>Examples: AWS Elastic Beanstalk (PaaS cloud that run within an IaaS - AWS), Apache Stratos, Google App Engine, Microsoft Azure</li>
 </ul>
+<div id="bigquery" class="section level2">
+<h2><span class="header-section-number">1.1</span> BigQuery</h2>
+<p>Google’s serverless data warehouse</p>
+<ul>
+<li>Run SQL queries on gigabytes to petabytes of data
+<ul>
+<li>Mostly SQL, but supports user defined functions (function written using SQL expressions or in other languages like Javascript)</li>
+</ul></li>
+<li>Transfer data from external sources like Youtube, Teradata, Amazon S3</li>
+<li>Can integrate with tools like Tableau</li>
+<li>Joins seem strange - converts to nested and repeated rows</li>
+</ul>
+<p>Conclusion: useful to store data or pull in data from 1 or more data sources and run SQL queries. More useful when working with big data (greater than a gigabyte), otherwise should just run locally. Seems challenging to use languages other than SQL, so not useful for deploying rigorous machine learning models (written in say Python or R).</p>
+</div>
 </div>
 
 
