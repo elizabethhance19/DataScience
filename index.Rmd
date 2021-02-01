@@ -25,7 +25,7 @@ Hi! I'm Elizabeth Hance and I love data.  After getting my Master's degree in co
 
 * [GitHub](https://github.com/elizabethhance19)
 * [LinkedIn](www.linkedin.com/in/elizabeth-hance)
-* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
+* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-Elizabeth-Hance.pdf)
 
 </div>
 <div class="column-right">
