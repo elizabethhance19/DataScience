@@ -11,7 +11,7 @@
 
 
 
-<title>Cloud Computing</title>
+<title>Home</title>
 
 <script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -315,83 +315,91 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Cloud Computing</h1>
+<h1 class="title toc-ignore">Home</h1>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a>
-<ul>
-<li><a href="#cloud-computing-services"><span class="toc-section-number">1.1</span> Cloud computing services</a></li>
-</ul></li>
-<li><a href="#bigquery"><span class="toc-section-number">2</span> BigQuery</a></li>
-<li><a href="#hadoop"><span class="toc-section-number">3</span> Hadoop</a>
-<ul>
-<li><a href="#mapreduce"><span class="toc-section-number">3.1</span> MapReduce</a></li>
-</ul></li>
+<li><a href="#about-me">About Me</a></li>
+<li><a href="#topics-covered">Topics Covered</a></li>
+<li><a href="#r-packages">R Packages</a></li>
 </ul>
 </div>
 
-<div id="overview" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>From Microsoft Azure: cloud computing is the delivery of computing services—including servers, storage, databases, networking, software, analytics, and intelligence—over the Internet (‘the cloud’) to offer faster innovation, flexible resources, and economies of scale.</p>
+<div id="about-me" class="section level1 unnumbered">
+<h1 class="unnumbered">About Me</h1>
+<style>
+.column-left{
+  float: left;
+  width: 50%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 50%;
+  text-align: right;
+}
+</style>
+<div class="column-left">
+<p>Hi! I’m Elizabeth Hance and I love data. After getting my Master’s degree in computational mathematics, I joined the team at OSU focused on studying student academic success. Since graduating, I’ve expanded my knowledge of the data science world through my job and independent study. This site serves as a collection of some of the things I have learned. Feel free to reach out to my at my contact info below.</p>
 <ul>
-<li>Types of cloud deployment: private (own hardware, can provide best security), public (using hardware/software you don’t own, can be less secure), hybrid</li>
-</ul>
-<div id="cloud-computing-services" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Cloud computing services</h2>
-<p><em>Notes taken from the LinkedIn Learning Course, Learning Cloud Computing: Core Concepts, by David Linthicum, and various other online resources.</em></p>
-<p><strong>Infrastructure as a Service (IaaS)</strong></p>
-<ul>
-<li>IaaS provider manages hardware, software, servers, and storage</li>
-<li>Customer can add and manage any software (operating systems, applications, etc.)</li>
-<li>Examples: Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform</li>
-</ul>
-<p><strong>Software as a Service (SaaS)</strong></p>
-<ul>
-<li>SaaS provider manages infrastructure, operating systems, middleware, and data</li>
-<li>Applications typically run through web browsers, users may have subscriptions to access</li>
-<li>Examples: Salesforce (customer relationship management solution), Google Apps (provides storage, wood processing, spreadsheets, etc.), Microsoft Office 365</li>
-</ul>
-<p><strong>Platform as a Service (PaaS)</strong></p>
-<ul>
-<li>PaaS provides the framework to build, test, deploy, manage, and update software produces</li>
-<li>Typically combines with an IaaS by including operating system, development tools, database management systems, etc.</li>
-<li>Examples: AWS Elastic Beanstalk (PaaS cloud that run within an IaaS - AWS), Apache Stratos, Google App Engine, Microsoft Azure</li>
+<li><a href="https://github.com/elizabethhance19">GitHub</a></li>
+<li><a href="www.linkedin.com/in/elizabeth-hance">LinkedIn</a></li>
+<li><a href="https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf">Resume</a></li>
 </ul>
 </div>
+<div class="column-right">
+<div class="figure" style="text-align: center">
+<img src="Mia.png" alt="My dog, Mia" width="50%" angle=0 />
+<p class="caption">
+My dog, Mia
+</p>
 </div>
-<div id="bigquery" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> BigQuery</h1>
-<p>Google’s serverless data warehouse</p>
+</div>
+</div>
+<div id="topics-covered" class="section level1 unnumbered">
+<h1 class="unnumbered">Topics Covered</h1>
+<p>This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge. The explanations of the concepts are meant to be brief with simple examples.</p>
+<p>Content for these topics was gathered from a variety of sources including: DataCamp’s <em>Data Scientist with R</em> Career Track, Springer’s book: <em>An Introduction to Statistical Learning with Applications in R</em>, Wikipedia, various Medium articles, other online blogs, and my graduate coursework.</p>
 <ul>
-<li>Run SQL queries on gigabytes to petabytes of data
+<li><a href="https://elizabethhance19.github.io/DataScience/Regression.html">Regression</a></li>
+<li><a href="https://elizabethhance19.github.io/DataScience/Clustering.html">Clustering</a><br />
+</li>
+<li><a href="https://elizabethhance19.github.io/DataScience/Classification.html">Classification</a></li>
+<li><a href="https://elizabethhance19.github.io/DataScience/Databases.html">Databases</a></li>
+<li><a href="https://elizabethhance19.github.io/DataScience/CloudComputing.html">Cloud Computing</a></li>
+<li><a href="https://elizabethhance19.github.io/DataScience/ShellGit.html">Shell/Git</a></li>
+</ul>
+</div>
+<div id="r-packages" class="section level1 unnumbered">
+<h1 class="unnumbered">R Packages</h1>
+<p>Most of the examples are written in R, so here are some packages that are frequently used:</p>
+<p><a href="https://rstudio.com/resources/cheatsheets/">All cheat sheets</a></p>
 <ul>
-<li>Mostly SQL, but supports user defined functions (function written using SQL expressions or in other languages like Javascript)</li>
+<li><a href="https://www.tidyverse.org/packages/">tidyverse</a>
+<ul>
+<li><a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr</a> - data manipulation</li>
+<li><a href="https://ggplot2.tidyverse.org/reference/">ggplot2</a> - data visualization</li>
+<li><a href="https://tidyr.tidyverse.org/">tidyr</a> - to tidy/clean data</li>
+<li><a href="https://readr.tidyverse.org/">readr</a> - read rectangular data</li>
+<li><a href="https://stringr.tidyverse.org/">stringr</a> - working with strings</li>
+<li>haven - for SPSS, Stata, and SAS data</li>
+<li><a href="https://lubridate.tidyverse.org/">lubridate</a> - working with dates</li>
+<li>readxl</li>
+<li><a href="https://purrr.tidyverse.org/">purrr</a></li>
+<li>tibble</li>
+<li>forcats</li>
 </ul></li>
-<li>Transfer data from external sources like Youtube, Teradata, Amazon S3</li>
-<li>Can integrate with tools like Tableau</li>
-<li>Joins seem strange - converts to nested and repeated rows</li>
-</ul>
-<p>Conclusion: useful to store data or pull in data from 1 or more data sources and run SQL queries. More useful when working with big data (greater than a gigabyte), otherwise should just run locally. Seems challenging to use languages other than SQL, so not useful for deploying rigorous machine learning models (written in say Python or R).</p>
-</div>
-<div id="hadoop" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Hadoop</h1>
-<div id="mapreduce" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> MapReduce</h2>
+<li>data.table - <em>fread</em>: to read rectangular data</li>
+<li>broom - tidy data from R functions</li>
+<li>DBI - database connections
 <ul>
-<li>Typically written in Java, C, or Python (some basic Java required).</li>
-</ul>
-<p>Alternatives:</p>
-<ul>
-<li>Pig: “Pig’s programming language referred to as Pig Latin is a coding approach that provides high degree of abstraction for MapReduce programming but is a procedural code not declarative”
-<ul>
-<li>Typically fewer lines and easier to write than MapReduce, less efficient</li>
+<li>odbc</li>
 </ul></li>
-<li>Hive: Uses a “SQL like query language known as HQL (Hive Query Language). Hive queries are converted to MapReduce programs in the background by the hive compiler for the jobs to be executed parallel across the Hadoop cluster”</li>
+<li>sqldf - use SQL to manipulate a dataframe</li>
+<li><a href="https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf">RMarkdown</a></li>
 </ul>
-</div>
 </div>
 
 

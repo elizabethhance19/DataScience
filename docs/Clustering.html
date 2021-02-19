@@ -13,6 +13,7 @@
 
 <title>Clustering</title>
 
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -22,6 +23,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -67,6 +77,7 @@ h6 {
   text-align: left;
 }
 </style>
+
 
 
 
@@ -310,30 +321,34 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a><ul>
+<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a>
+<ul>
 <li><a href="#calculating-distance"><span class="toc-section-number">1.1</span> Calculating Distance</a></li>
 <li><a href="#clustering-techniques"><span class="toc-section-number">1.2</span> Clustering Techniques</a></li>
 </ul></li>
-<li><a href="#hierarchical-clustering"><span class="toc-section-number">2</span> Hierarchical Clustering</a><ul>
+<li><a href="#hierarchical-clustering"><span class="toc-section-number">2</span> Hierarchical Clustering</a>
+<ul>
 <li><a href="#linkage"><span class="toc-section-number">2.1</span> Linkage</a></li>
 <li><a href="#hierarchical-clustering-iris-example"><span class="toc-section-number">2.2</span> Hierarchical Clustering: Iris Example</a></li>
 </ul></li>
-<li><a href="#k-means-clustering"><span class="toc-section-number">3</span> K-Means Clustering</a><ul>
+<li><a href="#k-means-clustering"><span class="toc-section-number">3</span> K-Means Clustering</a>
+<ul>
 <li><a href="#k-means-iris-example"><span class="toc-section-number">3.1</span> K-Means: Iris Example</a></li>
 <li><a href="#parameters-for-k-means-and-determining-number-of-clusters"><span class="toc-section-number">3.2</span> Parameters for K-Means and Determining Number of Clusters</a></li>
 </ul></li>
-<li><a href="#principal-component-analysis"><span class="toc-section-number">4</span> Principal Component Analysis</a><ul>
+<li><a href="#principal-component-analysis"><span class="toc-section-number">4</span> Principal Component Analysis</a>
+<ul>
 <li><a href="#iris-example"><span class="toc-section-number">4.1</span> Iris Example</a></li>
 <li><a href="#pca-and-clustering"><span class="toc-section-number">4.2</span> PCA and Clustering</a></li>
 </ul></li>
 </ul>
 </div>
 
-<div id="overview" class="section level1">
-<h1><span class="header-section-number">1</span> Overview</h1>
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
 <p>Clustering looks for observations that are <em>similar</em> to one another and groups them together. It’s an unsupervised technique i.e. there aren’t defined/known groups. It is import to scale the data before analysis. There are different ways to calculate distance between observations, and methods to determine how many groups to have.</p>
-<div id="calculating-distance" class="section level2">
-<h2><span class="header-section-number">1.1</span> Calculating Distance</h2>
+<div id="calculating-distance" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Calculating Distance</h2>
 <p>Consider 3 points on a grid: (1,4), (3,2), (7,8) and calculate the distance between them</p>
 <pre class="r"><code>points = data.frame(x=c(1,3,7), y=c(4,2,8))
 dist(points) #defaults to euclidean</code></pre>
@@ -344,8 +359,8 @@ dist(points) #defaults to euclidean</code></pre>
 <pre><code>##    1  2
 ## 2  4   
 ## 3 10 10</code></pre>
-<div id="importance-of-scaling" class="section level3">
-<h3><span class="header-section-number">1.1.1</span> Importance of Scaling</h3>
+<div id="importance-of-scaling" class="section level3" number="1.1.1">
+<h3 number="1.1.1"><span class="header-section-number">1.1.1</span> Importance of Scaling</h3>
 <p>Consider calculating the distance between 3 height (inches) and weight (pounds) pairs.</p>
 <pre class="r"><code>height_weight = data.frame(height = c(65, 68, 60), weight = c(140, 175, 115))
 dist(height_weight)</code></pre>
@@ -360,8 +375,8 @@ dist(height_weight_scaled)</code></pre>
 ## 3 1.489525 2.807431</code></pre>
 <p>With the unscaled data, observations 1 and 3 are the closest, while with the scaled data observations 1 and 2 are the closest.</p>
 </div>
-<div id="calculating-distance-for-categorical-variables" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> Calculating Distance for Categorical Variables</h3>
+<div id="calculating-distance-for-categorical-variables" class="section level3" number="1.1.2">
+<h3 number="1.1.2"><span class="header-section-number">1.1.2</span> Calculating Distance for Categorical Variables</h3>
 <p>First convert to dummy variables</p>
 <pre class="r"><code>college_gender = data.frame(college = as.factor(c(&#39;ASC&#39;, &#39;ASC&#39;, &#39;BUS&#39;, &#39;BUS&#39;, &#39;BUS&#39;, &#39;ENG&#39;)), gender = as.factor(c(&#39;female&#39;,&#39;male&#39;,&#39;male&#39;,&#39;male&#39;,&#39;female&#39;,&#39;male&#39;)))
 #install.packages(&#39;dummies&#39;)
@@ -394,13 +409,13 @@ print(college_gender)</code></pre>
 ## 6 1.0000000 0.6666667 0.6666667 0.6666667 1.0000000</code></pre>
 </div>
 </div>
-<div id="clustering-techniques" class="section level2">
-<h2><span class="header-section-number">1.2</span> Clustering Techniques</h2>
+<div id="clustering-techniques" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Clustering Techniques</h2>
 <p>Some popular clustering techniques are: Hierarchical, K-means, Partition Around Medoids (PAM), and Principal Component Analysis (PCA)</p>
 </div>
 </div>
-<div id="hierarchical-clustering" class="section level1">
-<h1><span class="header-section-number">2</span> Hierarchical Clustering</h1>
+<div id="hierarchical-clustering" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Hierarchical Clustering</h1>
 <p>Generally agglomerative (“bottom-up”): each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy</p>
 <ul>
 <li>Put each data point in its own cluster<br />
@@ -410,16 +425,16 @@ print(college_gender)</code></pre>
 <li>Repeat the above step until all the data points are in a single cluster</li>
 </ul>
 <p>Alternatively divisive (“top-down”): all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy</p>
-<div id="linkage" class="section level2">
-<h2><span class="header-section-number">2.1</span> Linkage</h2>
+<div id="linkage" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Linkage</h2>
 <p>Linkage determines the distance between sets of observations as a function of the pairwise distances between observations<br />
 Complete/single/average = <span class="math inline">\(max/min/mean \{d(a,b) : a \in A, b \in B\}\)</span></p>
 <ul>
 <li>Complete/average tends to produce balanced trees while single produces less balanced</li>
 </ul>
 </div>
-<div id="hierarchical-clustering-iris-example" class="section level2">
-<h2><span class="header-section-number">2.2</span> Hierarchical Clustering: Iris Example</h2>
+<div id="hierarchical-clustering-iris-example" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Hierarchical Clustering: Iris Example</h2>
 <pre class="r"><code>head(iris)</code></pre>
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
@@ -439,29 +454,29 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Spec
 <p>Here we knew there were 3 species of flower, so it was easy to choose the number of clusters (k). We could alternatively cut at a height by specifying h in cutree. With complete linkage this tells us the maximum distance to all other members in a cluster is less than h</p>
 </div>
 </div>
-<div id="k-means-clustering" class="section level1">
-<h1><span class="header-section-number">3</span> K-Means Clustering</h1>
+<div id="k-means-clustering" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> K-Means Clustering</h1>
 <ul>
 <li>Choose number of clusters K</li>
 <li>Randomly generate/select K centroids and assign each data point to the nearest centroid</li>
 <li>Recalculate centroids and reassign data to nearest centroid until the cluster assignments don’t change</li>
 </ul>
-<div id="k-means-iris-example" class="section level2">
-<h2><span class="header-section-number">3.1</span> K-Means: Iris Example</h2>
+<div id="k-means-iris-example" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> K-Means: Iris Example</h2>
 <pre class="r"><code>model_km = kmeans(iris[,1:2], centers=3)
 iris$cluster = model_km$cluster
 library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
-<div id="parameters-for-k-means-and-determining-number-of-clusters" class="section level2 tabset tabset-fade tabset-pills">
-<h2><span class="header-section-number">3.2</span> Parameters for K-Means and Determining Number of Clusters</h2>
+<div id="parameters-for-k-means-and-determining-number-of-clusters" class="section level2 tabset tabset-fade tabset-pills" number="3.2">
+<h2 class="tabset tabset-fade tabset-pills" number="3.2"><span class="header-section-number">3.2</span> Parameters for K-Means and Determining Number of Clusters</h2>
 <ul>
 <li>nstart: how many random starts should be done? Run algorithm nstart times and choose the result with the lowest total within sum of squares. Default = 1 but larger value is generally recommended.</li>
 <li>iter.max: maximum number of iterations. Default is 10, change if convergence takes longer.</li>
 </ul>
-<div id="elbow-scree-plot" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Elbow (Scree) Plot</h3>
+<div id="elbow-scree-plot" class="section level3" number="3.2.1">
+<h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Elbow (Scree) Plot</h3>
 <p>Run many models with varying value of k, calculate total within-cluster sum of squares, find where ‘elbow’ occurs to determine optimal k to use</p>
 <pre class="r"><code>library(purrr)
 # Use map_dbl to run many models with varying value of k (centers)
@@ -482,8 +497,8 @@ ggplot(elbow_df, aes(x = k, y = tot_withinss)) +
   scale_x_continuous(breaks = 1:10)</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
-<div id="silhouette-analysis" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Silhouette Analysis</h3>
+<div id="silhouette-analysis" class="section level3" number="3.2.2">
+<h3 number="3.2.2"><span class="header-section-number">3.2.2</span> Silhouette Analysis</h3>
 <p>Calculate how similar each observation is with the cluster it’s assigned relative to other clusters. Ranges from -1 (observations may be assigned to the wrong cluster) to 1 (observation is well matched to the assigned cluster). A value of 0 suggests the observation is borderline matched between two clusters</p>
 <pre class="r"><code>library(cluster)
 # Use map_dbl to run many models with varying value of k
@@ -508,8 +523,8 @@ ggplot(sil_df, aes(x = k, y = sil_width)) +
 </div>
 </div>
 </div>
-<div id="principal-component-analysis" class="section level1">
-<h1><span class="header-section-number">4</span> Principal Component Analysis</h1>
+<div id="principal-component-analysis" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Principal Component Analysis</h1>
 <p>PCA finds structure in features and aids in visualization</p>
 <ul>
 <li>Find linear combination of variables to create principal components</li>
@@ -524,8 +539,8 @@ ggplot(sil_df, aes(x = k, y = sil_width)) +
 <ul>
 <li>First principal component is equal to eigenvector with largest eigenvalue. Eigenvalues tell you how much variance there is in the data in the direction of the eigenvector, so the eigenvector with the largest eigenvalue is the direction the data has the most variation.</li>
 </ul>
-<div id="iris-example" class="section level2">
-<h2><span class="header-section-number">4.1</span> Iris Example</h2>
+<div id="iris-example" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Iris Example</h2>
 <p>PCA function</p>
 <pre class="r"><code>rm(iris)
 pca.iris = prcomp(x=iris[-5], scale=T, center=T)
@@ -544,12 +559,15 @@ summary(pca.iris)</code></pre>
 ## Petal.Length  0.5804131 -0.02449161 -0.1421264 -0.8014492
 ## Petal.Width   0.5648565 -0.06694199 -0.6342727  0.5235971</code></pre>
 <p>Sepal.Width has little contribution to PC1 but almost all of PC2</p>
-<div id="visualization" class="section level3">
-<h3><span class="header-section-number">4.1.1</span> Visualization</h3>
+<div id="visualization" class="section level3" number="4.1.1">
+<h3 number="4.1.1"><span class="header-section-number">4.1.1</span> Visualization</h3>
 <p>Visualizing first two components</p>
-<pre class="r"><code>library(ggfortify)</code></pre>
-<pre><code>## Warning: package &#39;ggfortify&#39; was built under R version 3.6.3</code></pre>
-<pre class="r"><code>autoplot(pca.iris, data=iris, colour=&#39;Species&#39;, loadings = TRUE, loadings.colour = &#39;blue&#39;, loadings.label = TRUE, loadings.label.size = 3)</code></pre>
+<pre class="r"><code>library(ggfortify)
+autoplot(pca.iris, data=iris, colour=&#39;Species&#39;, loadings = TRUE, loadings.colour = &#39;blue&#39;, loadings.label = TRUE, loadings.label.size = 3)</code></pre>
+<pre><code>## Warning: `select_()` is deprecated as of dplyr 0.7.0.
+## Please use `select()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Petal.Width and Petal.Length are in the same direction indicated they are correlated in the original data</p>
 <p>Plot how much variation each principal component explains:</p>
@@ -559,13 +577,18 @@ plot(pve, xlab = &#39;Principal Component&#39;, ylab = &#39;Proportion of Varian
 <p><img src="Clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 </div>
-<div id="pca-and-clustering" class="section level2">
-<h2><span class="header-section-number">4.2</span> PCA and Clustering</h2>
+<div id="pca-and-clustering" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> PCA and Clustering</h2>
 <p>Perform K-Means clustering on the first two components. This differs from the previous k-means example because we now consider all 4 data columns for clustering (by consider the principal components) instead of just using the first 2 data columns. Plot data using first two components</p>
 <pre class="r"><code>library(ggfortify)
 iris_scaled = scale(iris[,-5]) #Scale data first for PCA
 iris_scaled = cbind(iris_scaled, iris[,5])
 autoplot(kmeans(iris_scaled[,-5],3), data=iris_scaled, frame=T)</code></pre>
+<pre><code>## Warning: `group_by_()` is deprecated as of dplyr 0.7.0.
+## Please use `group_by()` instead.
+## See vignette(&#39;programming&#39;) for more help
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="Clustering_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>
 </div>
@@ -579,7 +602,7 @@ autoplot(kmeans(iris_scaled[,-5],3), data=iris_scaled, frame=T)</code></pre>
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

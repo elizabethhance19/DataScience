@@ -54,6 +54,7 @@ Conclusion: useful to store data or pull in data from 1 or more data sources and
 * Typically written in Java, C, or Python (some basic Java required). 
 
 Alternatives:  
+
 * Pig: "Pig’s programming language referred to as Pig Latin is a coding approach that provides high degree of abstraction for MapReduce programming but is a procedural code not declarative"
   + Typically fewer lines and easier to write than MapReduce, less efficient
 * Hive: Uses a "SQL like query language known as HQL (Hive Query Language). Hive queries are converted to MapReduce programs in the background by the hive compiler for the jobs to be executed parallel across the Hadoop cluster"

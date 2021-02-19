@@ -13,6 +13,7 @@
 
 <title>Databases</title>
 
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -22,6 +23,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -67,6 +77,7 @@ h6 {
   text-align: left;
 }
 </style>
+
 
 
 
@@ -310,12 +321,14 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a><ul>
+<li><a href="#overview"><span class="toc-section-number">1</span> Overview</a>
+<ul>
 <li><a href="#relational-databases"><span class="toc-section-number">1.1</span> Relational Databases</a></li>
 <li><a href="#non-relational-databases"><span class="toc-section-number">1.2</span> Non-Relational Databases</a></li>
 </ul></li>
 <li><a href="#connecting-to-databases-in-r"><span class="toc-section-number">2</span> Connecting to Databases in R</a></li>
-<li><a href="#common-sql-commands"><span class="toc-section-number">3</span> Common SQL Commands</a><ul>
+<li><a href="#common-sql-commands"><span class="toc-section-number">3</span> Common SQL Commands</a>
+<ul>
 <li><a href="#aggregate-functions"><span class="toc-section-number">3.1</span> Aggregate Functions</a></li>
 <li><a href="#joining-tables"><span class="toc-section-number">3.2</span> Joining Tables</a></li>
 <li><a href="#set-operations"><span class="toc-section-number">3.3</span> Set Operations</a></li>
@@ -324,22 +337,22 @@ $(document).ready(function () {
 </ul>
 </div>
 
-<div id="overview" class="section level1">
-<h1><span class="header-section-number">1</span> Overview</h1>
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
 <p>Data is generally organized in a database that can be accessed, managed, and updated by users. Databases are often defined as relational or non-relational.</p>
-<div id="relational-databases" class="section level2">
-<h2><span class="header-section-number">1.1</span> Relational Databases</h2>
+<div id="relational-databases" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Relational Databases</h2>
 <p>A relational database model organizes data into a set of tables with rows (records) and columns (attributes) with a primary key (sometimes multiple columns) to uniquely identify each row. Primary keys that are found in other tables are called foreign keys and are often used to join the tables together.</p>
 <p>SQL (Structured Query Language) is a language used to query and maintain relational databases. Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.</p>
 </div>
-<div id="non-relational-databases" class="section level2">
-<h2><span class="header-section-number">1.2</span> Non-Relational Databases</h2>
+<div id="non-relational-databases" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Non-Relational Databases</h2>
 <p>Non-relational databases, sometimes called NoSQL (non SQL or not only SQL) databases, do not require the structure of rows and columns, but instead is optimized for the type of data it holds. They may contain JSON documents with key/value pairs, graph data with edges and vertices, time series data, etc.</p>
 <p>Some common non-relational databases include Apache Cassandra, MongoDB, and Oracle NoSQL.</p>
 </div>
 </div>
-<div id="connecting-to-databases-in-r" class="section level1">
-<h1><span class="header-section-number">2</span> Connecting to Databases in R</h1>
+<div id="connecting-to-databases-in-r" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Connecting to Databases in R</h1>
 <p>We are able to connect directly to a database in R. This is one example of connecting to a database (I used this to connect to an Oracle database).</p>
 <p>After setting up the connection to a database (in Windows using ODBC Data Source Administrator), we can connect to the database and query from one (or more) of the tables. After storing the queried data in a dataframe, we can disconnect from the database.</p>
 <pre class="r"><code>library(DBI)
@@ -348,8 +361,8 @@ con = dbConnect(odbc::odbc(), &quot;&lt;Data Source Name&gt;&quot;, UID = &quot;
 result.df = dbGetQuery(con, &quot;select * from &lt;Table Name&gt; &quot;)
 dbDisconnect(con)</code></pre>
 </div>
-<div id="common-sql-commands" class="section level1">
-<h1><span class="header-section-number">3</span> Common SQL Commands</h1>
+<div id="common-sql-commands" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Common SQL Commands</h1>
 <p>We explore some common SQL commands: <a href="https://www.w3schools.com/sql/default.asp">Link to more commands</a></p>
 <ul>
 <li><em>SELECT DISTINCT column_1 FROM table_name</em> - only returns distinct row values</li>
@@ -365,8 +378,8 @@ dbDisconnect(con)</code></pre>
 <li>If letters: inclusive of first not last</li>
 </ul></li>
 </ul>
-<div id="aggregate-functions" class="section level2">
-<h2><span class="header-section-number">3.1</span> Aggregate Functions</h2>
+<div id="aggregate-functions" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Aggregate Functions</h2>
 <ul>
 <li><em>SELECT &lt;&gt;(column_1) from table_name WHERE column_1</em> = ___
 <ul>
@@ -383,8 +396,8 @@ dbDisconnect(con)</code></pre>
 </ul></li>
 </ul>
 </div>
-<div id="joining-tables" class="section level2">
-<h2><span class="header-section-number">3.2</span> Joining Tables</h2>
+<div id="joining-tables" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Joining Tables</h2>
 <ul>
 <li><em>SELECT * FROM table_1 JOIN table_2 ON table_1.column = table_2.column</em>
 <ul>
@@ -412,8 +425,8 @@ ON t1.continent = t2.continent AND t1.country &lt;&gt; t2.country</em></li>
 </ul></li>
 </ul>
 </div>
-<div id="set-operations" class="section level2">
-<h2><span class="header-section-number">3.3</span> Set Operations</h2>
+<div id="set-operations" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Set Operations</h2>
 <p>Set operations combine columns</p>
 <ul>
 <li><em>UNION</em>
@@ -429,11 +442,11 @@ SELECT column_name(s) FROM table2</em></li>
 <li><em>EXCEPT</em>: Returns rows in first table that aren’t in second table</li>
 </ul>
 </div>
-<div id="subqueries" class="section level2">
-<h2><span class="header-section-number">3.4</span> Subqueries</h2>
+<div id="subqueries" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Subqueries</h2>
 <p>These examples were taken from the SQL courses on Codecademy</p>
-<div id="non-correlated-subqueries" class="section level3">
-<h3><span class="header-section-number">3.4.1</span> Non-Correlated Subqueries</h3>
+<div id="non-correlated-subqueries" class="section level3" number="3.4.1">
+<h3 number="3.4.1"><span class="header-section-number">3.4.1</span> Non-Correlated Subqueries</h3>
 <p>Subquery can be run independently of outer query. Used to complete multi-step transformation.</p>
 <p><strong>Example using airports and flights tables:</strong></p>
 <ul>
@@ -459,8 +472,8 @@ JOIN table1 ON previous_results.id = table1.id</em>
 </ul></li>
 </ul>
 </div>
-<div id="correlated-subqueries" class="section level3">
-<h3><span class="header-section-number">3.4.2</span> Correlated Subqueries</h3>
+<div id="correlated-subqueries" class="section level3" number="3.4.2">
+<h3 number="3.4.2"><span class="header-section-number">3.4.2</span> Correlated Subqueries</h3>
 <p>Subquery CANNOT be run independently of outer query</p>
 <ul>
 <li>Row is processed in outer query</li>
@@ -489,7 +502,7 @@ carrier = f.carrier)</em>
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();

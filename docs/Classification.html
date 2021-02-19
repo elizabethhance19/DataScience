@@ -688,10 +688,8 @@ mod.tree$cptable</code></pre>
 ## 7 0.01219512      8 0.3963415 0.6341463 0.05349198
 ## 8 0.01000000     10 0.3719512 0.5609756 0.05132104</code></pre>
 <pre class="r"><code>mod.tree$variable.importance</code></pre>
-<pre><code>##       Price   ShelveLoc         Age Advertising   CompPrice      Income 
-##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750 
-##  Population   Education          US 
-##   3.1669718   0.9670985   0.1411614</code></pre>
+<pre><code>##       Price   ShelveLoc         Age Advertising   CompPrice      Income  Population   Education          US 
+##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750   3.1669718   0.9670985   0.1411614</code></pre>
 <p>We can also visualize this tree:</p>
 <pre class="r"><code>library(rpart.plot)
 rpart.plot(mod.tree, type=4, extra=1)</code></pre>
