@@ -8,39 +8,43 @@ Clustering looks for observations that are *similar* to one another and groups t
 ## Calculating Distance
 Consider 3 points on a grid: (1,4), (3,2), (7,8) and calculate the distance between them
 ```{r}
-points = data.frame(x=c(1,3,7), y=c(4,2,8))
-dist(points) #defaults to euclidean
-dist(points, method="manhattan")
+points <- data.frame(x = c(1, 3, 7), y = c(4, 2, 8))
+dist(points) # defaults to euclidean
+dist(points, method = "manhattan")
 ```
 
 ### Importance of Scaling
 Consider calculating the distance between 3 height (inches) and weight (pounds) pairs.
 ```{r}
-height_weight = data.frame(height = c(65, 68, 60), weight = c(140, 175, 115))
+height_weight <- data.frame(height = c(65, 68, 60), weight = c(140, 175, 115))
 dist(height_weight)
 ```
 Now scale (normalize) the height and weight pairs to be centered at 0 with standard deviation 1 and calculate distance
 ```{r}
-height_weight_scaled = scale(height_weight)
+height_weight_scaled <- scale(height_weight)
 dist(height_weight_scaled)
 ```
 With the unscaled data, observations 1 and 3 are the closest, while with the scaled data observations 1 and 2 are the closest.
 
 ### Calculating Distance for Categorical Variables
+Note: `dummies` was removed from the CRAN repository
+
+TODO: look for alternative package
+
 First convert to dummy variables
 ```{r message=F, warning=F}
-college_gender = data.frame(college = as.factor(c('ASC', 'ASC', 'BUS', 'BUS', 'BUS', 'ENG')), gender = as.factor(c('female','male','male','male','female','male')))
-#install.packages('dummies')
-library(dummies)
-college_gender_dummy = dummy.data.frame(college_gender)
-print(college_gender)
-print(college_gender_dummy)
+college_gender <- data.frame(college = as.factor(c("ASC", "ASC", "BUS", "BUS", "BUS", "ENG")), gender = as.factor(c("female", "male", "male", "male", "female", "male")))
+# install.packages('dummies')
+# library(dummies)
+# college_gender_dummy <- dummy.data.frame(college_gender)
+# print(college_gender)
+# print(college_gender_dummy)
 ```
 This is just one example of creating dummy variables in R
 
 Then calculate distance
 ```{r}
-dist(college_gender_dummy, method='binary')
+# dist(college_gender_dummy, method = "binary")
 ```
 
 ## Clustering Techniques
@@ -65,14 +69,16 @@ Complete/single/average = $max/min/mean \{d(a,b) : a \in A, b \in B\}$
 ## Hierarchical Clustering: Iris Example
 ```{r}
 head(iris)
-iris_dist = dist(iris[,1:2]) #defaults to euclidean distance
-clusters = hclust(iris_dist) #defaults to complete linkage
-plot(clusters, hang=-1, cex=0.5)
+iris_dist <- dist(iris[, 1:2]) # defaults to euclidean distance
+clusters <- hclust(iris_dist) # defaults to complete linkage
+plot(clusters, hang = -1, cex = 0.5)
 ```
 ```{r}
-iris$cluster = cutree(clusters,k=3)
+iris$cluster <- cutree(clusters, k = 3)
 library(ggplot2)
-ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = as.factor(cluster), shape = Species)) +
+  geom_point(size = 2) +
+  theme(legend.title = element_blank())
 ```
 
 Here we knew there were 3 species of flower, so it was easy to choose the number of clusters (k).  We could alternatively cut at a height by specifying h in cutree.  With complete linkage this tells us the maximum distance to all other members in a cluster is less than h  
@@ -86,10 +92,12 @@ Here we knew there were 3 species of flower, so it was easy to choose the number
 
 ## K-Means: Iris Example
 ```{r}
-model_km = kmeans(iris[,1:2], centers=3)
-iris$cluster = model_km$cluster
+model_km <- kmeans(iris[, 1:2], centers = 3)
+iris$cluster <- model_km$cluster
 library(ggplot2)
-ggplot(iris, aes(Sepal.Length, Sepal.Width, color=as.factor(cluster), shape=Species)) + geom_point(size=2) + theme(legend.title = element_blank())
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = as.factor(cluster), shape = Species)) +
+  geom_point(size = 2) +
+  theme(legend.title = element_blank())
 ```
 
 ## Parameters for K-Means and Determining Number of Clusters {.tabset .tabset-fade .tabset-pills}
@@ -102,8 +110,8 @@ Run many models with varying value of k, calculate total within-cluster sum of s
 ```{r}
 library(purrr)
 # Use map_dbl to run many models with varying value of k (centers)
-tot_withinss <- map_dbl(1:10,  function(k){
-  model <- kmeans(x = iris[,1:2], centers = k)
+tot_withinss <- map_dbl(1:10, function(k) {
+  model <- kmeans(x = iris[, 1:2], centers = k)
   model$tot.withinss
 })
 
@@ -124,14 +132,14 @@ Calculate how similar each observation is with the cluster it's assigned relativ
 ```{r}
 library(cluster)
 # Use map_dbl to run many models with varying value of k
-sil_width = map_dbl(2:10,  function(k){
-  model = kmeans(x = iris[,1:2], centers = k)
-  ss = silhouette(model$cluster, dist(iris[,1:2]))
-  mean(ss[,3]) #sil_width
+sil_width <- map_dbl(2:10, function(k) {
+  model <- kmeans(x = iris[, 1:2], centers = k)
+  ss <- silhouette(model$cluster, dist(iris[, 1:2]))
+  mean(ss[, 3]) # sil_width
 })
 
 # Generate a data frame containing both k and sil_width
-sil_df = data.frame(
+sil_df <- data.frame(
   k = 2:10,
   sil_width = sil_width
 )
@@ -164,9 +172,8 @@ Important to scale/normalize data first, especially if input variables use diffe
 PCA function
 ```{r}
 rm(iris)
-pca.iris = prcomp(x=iris[-5], scale=T, center=T)
+pca.iris <- prcomp(x = iris[-5], scale = T, center = T)
 summary(pca.iris)
-
 ```
 The first two principal components account for over 95% of the variance.
 
@@ -180,7 +187,7 @@ Sepal.Width has little contribution to PC1 but almost all of PC2
 Visualizing first two components
 ```{r}
 library(ggfortify)
-autoplot(pca.iris, data=iris, colour='Species', loadings = TRUE, loadings.colour = 'blue', loadings.label = TRUE, loadings.label.size = 3)
+autoplot(pca.iris, data = iris, colour = "Species", loadings = TRUE, loadings.colour = "blue", loadings.label = TRUE, loadings.label.size = 3)
 ```
 
 Petal.Width and Petal.Length are in the same direction indicated they are correlated in the original data
@@ -188,9 +195,9 @@ Petal.Width and Petal.Length are in the same direction indicated they are correl
 
 Plot how much variation each principal component explains:
 ```{r}
-pca.iris.var = pca.iris$sdev^2
-pve = pca.iris.var/sum(pca.iris.var) #proportion of variance explained
-plot(pve, xlab = 'Principal Component', ylab = 'Proportion of Variance Explained', main='Scree Plot', ylim=c(0,1), type="b")
+pca.iris.var <- pca.iris$sdev^2
+pve <- pca.iris.var / sum(pca.iris.var) # proportion of variance explained
+plot(pve, xlab = "Principal Component", ylab = "Proportion of Variance Explained", main = "Scree Plot", ylim = c(0, 1), type = "b")
 ```
 
 ## PCA and Clustering
@@ -198,8 +205,7 @@ Perform K-Means clustering on the first two components.  This differs from the p
 Plot data using first two components
 ```{r}
 library(ggfortify)
-iris_scaled = scale(iris[,-5]) #Scale data first for PCA
-iris_scaled = cbind(iris_scaled, iris[,5])
-autoplot(kmeans(iris_scaled[,-5],3), data=iris_scaled, frame=T)
+iris_scaled <- scale(iris[, -5]) # Scale data first for PCA
+iris_scaled <- cbind(iris_scaled, iris[, 5])
+autoplot(kmeans(iris_scaled[, -5], 3), data = iris_scaled, frame = T)
 ```
-

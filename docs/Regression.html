@@ -13,13 +13,22 @@
 
 <title>Regression</title>
 
-<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -34,11 +43,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -51,32 +55,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 
@@ -87,10 +65,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -107,40 +81,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -168,7 +115,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -180,7 +127,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -191,10 +138,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -206,7 +166,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -285,23 +244,59 @@ $(document).ready(function () {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="Regression.html">Regression</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Modeling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Regression.html">Regression</a>
+    </li>
+    <li>
+      <a href="Classification.html">Classification</a>
+    </li>
+    <li>
+      <a href="Clustering.html">Clustering</a>
+    </li>
+    <li>
+      <a href="Gradient-Boosting.html">Gradient Boosting</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Classification.html">Classification</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Validation/Deployment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Model-Validation.html">Model Validation</a>
+    </li>
+    <li>
+      <a href="Model-Deployment.html">Model Deployment</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Clustering.html">Clustering</a>
-</li>
-<li>
-  <a href="Databases.html">Databases</a>
-</li>
-<li>
-  <a href="CloudComputing.html">Cloud Computing</a>
-</li>
-<li>
-  <a href="ShellGit.html">Shell/Git</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Additional Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Databases.html">Databases</a>
+    </li>
+    <li>
+      <a href="CloudComputing.html">Cloud Computing</a>
+    </li>
+    <li>
+      <a href="ShellGit.html">Shell/Git</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -311,7 +306,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -343,23 +338,27 @@ $(document).ready(function () {
 <li><a href="#multiple-comparisons"><span class="toc-section-number">4.2</span> Multiple Comparisons</a></li>
 <li><a href="#two-factor-anova-strength-example"><span class="toc-section-number">4.3</span> Two-Factor ANOVA: Strength Example</a></li>
 </ul></li>
+<li><a href="#binomial-regression"><span class="toc-section-number">5</span> Binomial Regression</a>
+<ul>
+<li><a href="#link-functions"><span class="toc-section-number">5.1</span> Link Functions</a></li>
+</ul></li>
 </ul>
 </div>
 
 <div id="overview" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
+<h1><span class="header-section-number">1</span> Overview</h1>
 <p>Regression typically refers to identifying a (linear) relationship between a set of explanatory variables and response variables. If the explanatory variable is categorical, this typically refers to an ANOVA model.</p>
 <div id="correlation" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Correlation</h2>
+<h2><span class="header-section-number">1.1</span> Correlation</h2>
 <p>Correlation describes the strength and direction of a straight-line (linear) relationship between pair of variables. The Pearson correlation coefficient is defined as <span class="math display">\[r = \frac{cov(X,Y)}{s_X s_Y}\]</span> where <span class="math inline">\(s_X\)</span> is the standard deviation of X, or equivalently, <span class="math display">\[r = \frac{1}{n-1} \sum z_xz_y\]</span> where <span class="math inline">\(z_x = \frac{x-\bar{x}}{s_x}\)</span>. We can think of each <span class="math inline">\(z_x\)</span> as the number of standard deviations the data is above the mean.</p>
 <p>Correlation ranges from -1 to 1, values with a larger magnitude indicate a stronger correlation, and the sign designates the direction. If the correlation is 0 we can conclude the variables are not linearly dependent. However, even if the correlation is small (in magnitude), there may exist a non-linear relationship between them. Correlation is unit free, unit invariant, and sensitive to outliers.</p>
 </div>
 </div>
 <div id="simple-linear-regression" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Simple Linear Regression</h1>
+<h1><span class="header-section-number">2</span> Simple Linear Regression</h1>
 <p>Simple linear regression occurs when there is one independent variable and one dependent variable (typically both continuous).</p>
 <div id="assumptions" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Assumptions</h2>
+<h2><span class="header-section-number">2.1</span> Assumptions</h2>
 <p>Simple linear regression assumes a model of the form: <span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \varepsilon_i\]</span></p>
 <p>We also make various assumptions when fitting a linear regression model:</p>
 <ol style="list-style-type: decimal">
@@ -374,7 +373,7 @@ $(document).ready(function () {
 <p>We generally assume assumptions 1 and 2 are true, and have methods of verifying assumptions 3 and 4 (explored with examples).</p>
 </div>
 <div id="fitting-the-model" class="section level2" number="2.2">
-<h2 number="2.2"><span class="header-section-number">2.2</span> Fitting the Model</h2>
+<h2><span class="header-section-number">2.2</span> Fitting the Model</h2>
 <p>To fit a linear regression model, we want to minimize the sum of squares residuals or sum of squared estimate of errors: <span class="math inline">\(SSE = \sum_{i=1}^n e_i^2 = \sum\limits_{i=1}^n(y_i-\hat{y}_i)^2\)</span> where <span class="math inline">\(\hat{y}_i\)</span> are the fitted values. Using calculus, it can be shown the solution to this criteria is:</p>
 <p><span class="math display">\[\hat{\beta_1} = \frac{\sum\limits_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})}{\sum\limits_{i=1}^n(X_i-\bar{X})^2}, \beta_0 = \bar{Y}-\hat{\beta}_1\bar{X}\]</span></p>
 <p>Alternatively, we can use a linear algebra approach and look for a least squares solution to <span class="math inline">\(A\bar{x} = \bar{b}\)</span> where <span class="math display">\[A = \begin{bmatrix}
@@ -394,7 +393,7 @@ y_n
 <p>However, <span class="math inline">\(\bar{b}\)</span> is not in the column space of <span class="math inline">\(A\)</span>, so we must search for a solution for <span class="math inline">\(A\bar{x} = \bar{b}_{||} = \bar{b}-\bar{b}_\perp\)</span>. Multiplying by the transpose of <span class="math inline">\(A\)</span> we have: <span class="math inline">\(A^TA\bar{x} = A^T\bar{b} - A^T\bar{b}_\perp = A^T\bar{b} + 0\)</span>. Finally, solving for <span class="math inline">\(\bar{x}\)</span> we have: <span class="math inline">\(\bar{x} = (A^TA)^{-1}A^T\bar{b}\)</span>.</p>
 </div>
 <div id="simple-linear-regression-cars-example" class="section level2 tabset tabset-fade tabset-pills" number="2.3">
-<h2 class="tabset tabset-fade tabset-pills" number="2.3"><span class="header-section-number">2.3</span> Simple Linear Regression: Cars Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">2.3</span> Simple Linear Regression: Cars Example</h2>
 <p>We will use the <em>cars</em> data to predict the stopping distance of a car given it’s speed. Begin by plotting the data and calculating the correlation:</p>
 <pre class="r"><code>library(ggplot2)
 ggplot(cars, aes(speed, dist)) + geom_point()</code></pre>
@@ -437,7 +436,7 @@ summary(mod.LinearCar)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>We see the model sum of squares (SSM) = <span class="math inline">\(\sum\limits_{i=1}^n(\hat{y}_i-\bar{y})^2\)</span> (in this case SSM = 21186). We are also shown SSE = <span class="math inline">\(\sum\limits_{i=1}^n(y_i-\hat{y})^2\)</span> (in this case SSE = 11354). We could calculate the sum of squares total as SST = SSM + SSE.</p>
 <div id="making-predictions" class="section level3" number="2.3.1">
-<h3 number="2.3.1"><span class="header-section-number">2.3.1</span> Making Predictions</h3>
+<h3><span class="header-section-number">2.3.1</span> Making Predictions</h3>
 <p>If we wanted to predicted the <em>average</em> stopping distance for a car with speed = 15, we can construct a <em>confidence</em> interval with:</p>
 <pre class="r"><code>predict(mod.LinearCar, data.frame(speed=15), se.fit=T, interval=&#39;confidence&#39;,level=0.95)$fit</code></pre>
 <pre><code>##        fit      lwr      upr
@@ -453,7 +452,7 @@ summary(mod.LinearCar)</code></pre>
 <p><img src="Regression_files/figure-html/carplot2-1.png" width="672" /></p>
 </div>
 <div id="checking-model-assumptions" class="section level3" number="2.3.2">
-<h3 number="2.3.2"><span class="header-section-number">2.3.2</span> Checking Model Assumptions</h3>
+<h3><span class="header-section-number">2.3.2</span> Checking Model Assumptions</h3>
 <p><strong>Homoscedasticity</strong></p>
 <p>We assumed the spread of y’s is the same at any value of x. To check this,</p>
 <pre class="r"><code>plot(fitted.values(mod.LinearCar), residuals(mod.LinearCar), pch=16, xlab=&#39;Predicted Value&#39;, ylab=&#39;Residual&#39;)
@@ -470,28 +469,21 @@ qqline(residuals(mod.LinearCar), col = &quot;red&quot;, lwd = 2)</code></pre>
 </div>
 </div>
 <div id="multiple-linear-regression" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Multiple Linear Regression</h1>
+<h1><span class="header-section-number">3</span> Multiple Linear Regression</h1>
 <p>Multiple linear regression is an extension of simple linear regression when there are several independent variables or functions of independent variables. For example, we could have two independent variables (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \varepsilon_i\)</span>), a quadratic term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \varepsilon_i\)</span>), or including an interaction term (<span class="math inline">\(y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i1}x_{i2} + \varepsilon_i\)</span>). There can be non-linearity in x as long as the coefficients (<span class="math inline">\(\beta_i\)</span>) maintain a linear relationship.</p>
 <div id="multiple-linear-regression-credit-example" class="section level2 tabset tabset-fade tabset-pills" number="3.1">
-<h2 class="tabset tabset-fade tabset-pills" number="3.1"><span class="header-section-number">3.1</span> Multiple Linear Regression: Credit Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">3.1</span> Multiple Linear Regression: Credit Example</h2>
 <p>We explore various models to predict credit card balance. This example was inspired by Springer’s book: <em>An Introduction to Statistical Learning</em></p>
 <p>We start with a model using all the available variables (except for ID). Note categorical variables are formatted as factors and are automatically converted to indicator/dummy variables.</p>
 <pre class="r"><code>library(ISLR)
 head(Credit)</code></pre>
-<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity
-## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian
-## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian
-## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian
-## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian
-## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian
-## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian
-##   Balance
-## 1     333
-## 2     903
-## 3     580
-## 4     964
-## 5     331
-## 6    1151</code></pre>
+<pre><code>##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity Balance
+## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian     333
+## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian     903
+## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian     580
+## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian     964
+## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian     331
+## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian    1151</code></pre>
 <pre class="r"><code>mod.Full = lm(Balance ~ Cards + Limit + Rating + Age + Gender + Student + Income + Education + Married + Ethnicity, data=Credit)
 summary(mod.Full)</code></pre>
 <pre><code>## 
@@ -552,7 +544,7 @@ summary(mod.Less)</code></pre>
 ## F-statistic:  1380 on 6 and 393 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Removing these variables results in a simpler model without sacrificing performance (<span class="math inline">\(R^2\)</span> is similar).</p>
 <div id="consider-multicollinearity" class="section level3" number="3.1.1">
-<h3 number="3.1.1"><span class="header-section-number">3.1.1</span> Consider Multicollinearity</h3>
+<h3><span class="header-section-number">3.1.1</span> Consider Multicollinearity</h3>
 <p>It is important our variables are not highly correlated with each other so that we have a design matrix of full rank and a unique solution to our minimization problem. To check this, we can compute the variance inflation factor for our variables, defined as <span class="math display">\[VIF(X_m) = \frac{1}{1-R^2_m}\]</span> where <span class="math inline">\(R^2_m\)</span> is the coefficient of determination when <span class="math inline">\(X_m\)</span> is regressed on all of the other predictors. We want <span class="math inline">\(VIF(X_m)\)</span> to be close to 1, and a general rule is if it is larger than 5 or 10 there is a problem of multicollinearity.</p>
 <p>For our simpler model, we calculate the VIF for each variable:</p>
 <pre class="r"><code>library(car)
@@ -589,7 +581,7 @@ summary(mod.LessNoRating)</code></pre>
 ## F-statistic:  1638 on 5 and 394 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div id="checking-model-assumptions-1" class="section level3" number="3.1.2">
-<h3 number="3.1.2"><span class="header-section-number">3.1.2</span> Checking Model Assumptions</h3>
+<h3><span class="header-section-number">3.1.2</span> Checking Model Assumptions</h3>
 <p>Just like with the simple linear example, we need to verify our assumptions. We can plot our model to look for evidence of heteroscedasticity and non-normality:</p>
 <pre class="r"><code>plot(mod.LessNoRating, which=1)</code></pre>
 <p><img src="Regression_files/figure-html/assumptions-1.png" width="672" /></p>
@@ -628,7 +620,7 @@ summary(mod.LessNoIncome)</code></pre>
 </div>
 </div>
 <div id="adding-an-interaction-cars-example" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Adding an Interaction: Cars Example</h2>
+<h2><span class="header-section-number">3.2</span> Adding an Interaction: Cars Example</h2>
 <p>So far we have assumed the effect of one predictor variable is independent of another, so all of our predictor variables are additive. However, it’s possible the variables are not independent and there is instead an interaction effect.</p>
 <p>Using the <em>mtcars</em> data set, we try to predict miles per gallon (<em>mpg</em>) using horsepower (<em>hp</em>) and engine type (<em>vs</em>: v-shaped/straight). Without an interaction effect, our model produces two parallel lines, depending on the value of <em>vs</em>.</p>
 <pre class="r"><code>mod.NoInt = lm(mpg~hp+vs, mtcars)
@@ -687,9 +679,9 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 <p>A <em>non-rigorous</em> way to tell if an interaction variable is needed is to plot the data and visually fit a line by group. If the lines are parallel, no interaction is needed, but if they intersect (in this case), then an interaction should be considered.</p>
 </div>
 <div id="some-other-regression-topics" class="section level2 tabset tabset-fade tabset-pills" number="3.3">
-<h2 class="tabset tabset-fade tabset-pills" number="3.3"><span class="header-section-number">3.3</span> Some Other Regression Topics</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">3.3</span> Some Other Regression Topics</h2>
 <div id="model-selection" class="section level3" number="3.3.1">
-<h3 number="3.3.1"><span class="header-section-number">3.3.1</span> Model Selection</h3>
+<h3><span class="header-section-number">3.3.1</span> Model Selection</h3>
 <p>We have been using <span class="math inline">\(R^2\)</span> to determine the percent of variation in the data is described by the model. We are also given the residual standard error, or root mean squared error (RMSE), in the model summary output.</p>
 <p><strong>Other model metrics</strong></p>
 <ul>
@@ -702,7 +694,7 @@ ggplot(mtcarsInt, aes(x = hp, y = mpg, colour = factor(vs))) + geom_point() + ge
 <p><code>Stepwise algorithms</code> add/remove independent variables one at a time before converging to a <em>best</em> model. They can be either forward selection, backward elimination, or both. The algorithm may converge to different <em>best</em> models depending on the direction and initial model.</p>
 </div>
 <div id="leverage-and-influence" class="section level3" number="3.3.2">
-<h3 number="3.3.2"><span class="header-section-number">3.3.2</span> Leverage and Influence</h3>
+<h3><span class="header-section-number">3.3.2</span> Leverage and Influence</h3>
 <ul>
 <li>Leverage: Distance of an observation from the mean of the explanatory variables. The inclusion/exclusion of this observation has a large change on the fitted line
 <ul>
@@ -759,7 +751,7 @@ ggplot(df, aes(x,y)) + geom_point() + geom_smooth(method = &#39;lm&#39;, se = F)
 </div>
 </div>
 <div id="comparing-means" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Comparing Means</h1>
+<h1><span class="header-section-number">4</span> Comparing Means</h1>
 <p>One-way analysis of variance (one-way ANOVA) allows us to compare means between two or more samples, where the repose variable is numeric and there is one explanatory variable (hence, one-way) that is generally categorical.</p>
 <p>The one-factor ANOVA model is given by either the <em>means model</em> <span class="math display">\[Y_{i,j} = \mu_i + \varepsilon_{i,j}\]</span> or by the <em>main effects model</em> <span class="math display">\[Y_{i,j} = \mu + \alpha_i + \varepsilon_{i,j}\]</span> where <span class="math inline">\(Y_{i,j}\)</span> is the jth observation at the ith treatment level, <span class="math inline">\(\mu\)</span> is the grand mean, <span class="math inline">\(\mu_i\)</span> is the mean of the observation for the ith treatment group, and <span class="math inline">\(\alpha_i\)</span> is the ith treatment effect (deviation from the grand mean).</p>
 <p>We have a balanced design if <span class="math inline">\(n_i\)</span> is the same for all groups. If we think some treatment group has more variation we could use an unbalanced design.</p>
@@ -767,10 +759,10 @@ ggplot(df, aes(x,y)) + geom_point() + geom_smooth(method = &#39;lm&#39;, se = F)
 <p>ANOVA models perform an F-test to determine if all the group means are the same, or if at least one is statistically different. Various comparison and confidence interval methods allow us to determine which group is different.</p>
 <p>The ANOVA model is a generalization of the simple linear regression model so it follows the same assumptions.</p>
 <div id="one-factor-anova-plant-growth-example" class="section level2 tabset tabset-fade tabset-pills" number="4.1">
-<h2 class="tabset tabset-fade tabset-pills" number="4.1"><span class="header-section-number">4.1</span> One-Factor ANOVA: Plant Growth Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">4.1</span> One-Factor ANOVA: Plant Growth Example</h2>
 <p>This example was inspired by <a href="http://www.sthda.com/english/wiki/one-way-anova-test-in-r#visualize-your-data-and-compute-one-way-anova-in-r">One-way ANOVA</a></p>
 <div id="fitting-anova-model" class="section level3" number="4.1.1">
-<h3 number="4.1.1"><span class="header-section-number">4.1.1</span> Fitting ANOVA Model</h3>
+<h3><span class="header-section-number">4.1.1</span> Fitting ANOVA Model</h3>
 <p>Our dataset include the weights of plants in a control group and two treatment groups. Notice the <em>group</em> column is formatted as a factor.</p>
 <pre class="r"><code>library(ggplot2)
 growth = PlantGrowth
@@ -791,7 +783,7 @@ summary(mod.aov)</code></pre>
 <p>The p-value is less than 0.05 (our significance level), so there is evidence of a difference between some of the group means.</p>
 </div>
 <div id="checking-assumptions" class="section level3" number="4.1.2">
-<h3 number="4.1.2"><span class="header-section-number">4.1.2</span> Checking Assumptions</h3>
+<h3><span class="header-section-number">4.1.2</span> Checking Assumptions</h3>
 <p><strong>Homoscedasticity</strong></p>
 <p>Like with the regression examples, we look for homogeneity of variances with a plot.</p>
 <pre class="r"><code>plot(mod.aov, which=1)</code></pre>
@@ -823,7 +815,7 @@ leveneTest(weight~group, data=growth)</code></pre>
 <p>A large p-value means that we don’t reject the null hypothesis that our residuals are normally distributed.</p>
 </div>
 <div id="nonparametric-alternative" class="section level3" number="4.1.3">
-<h3 number="4.1.3"><span class="header-section-number">4.1.3</span> Nonparametric Alternative</h3>
+<h3><span class="header-section-number">4.1.3</span> Nonparametric Alternative</h3>
 <p>If the assumptions of the ANOVA are not met, we could use the <em>Kruskal-Wallis</em> test that does not assume a normal distribution of residuals. This test ranks all the data (ignoring group membership), computes a test statistic, then tests if all the groups have the same distribution.</p>
 <p>The Dunn test can then be used to compute all pairwise comparisons (similar to Tukey’s pairwise comparisons method for ANOVA).</p>
 <pre class="r"><code>kruskal.test(weight~group, data=growth)</code></pre>
@@ -849,11 +841,11 @@ cldList(P.adj~Comparison, data = DT$res, threshold=0.05)</code></pre>
 </div>
 </div>
 <div id="multiple-comparisons" class="section level2 tabset tabset-fade tabset-pills" number="4.2">
-<h2 class="tabset tabset-fade tabset-pills" number="4.2"><span class="header-section-number">4.2</span> Multiple Comparisons</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">4.2</span> Multiple Comparisons</h2>
 <p>The ANOVA test will determine if there is a difference between some of the groups, but won’t immediately tell us what groups are different. We can compute <em>pairwise confidence intervals</em> to determine which groups are different.</p>
 <p>The general structure of a confidence interval is <span class="math inline">\(estimate \pm t_{dfe}*SE\)</span>, and various <span class="math inline">\(t_{dfe}\)</span> and standard errors are possible.</p>
 <div id="t-interval" class="section level3" number="4.2.1">
-<h3 number="4.2.1"><span class="header-section-number">4.2.1</span> T-Interval</h3>
+<h3><span class="header-section-number">4.2.1</span> T-Interval</h3>
 <p><strong>Welch’s t-interval</strong> (Unpooled)</p>
 <p>Welch’s t-interval is useful if we don’t think the population variances of the groups are equal. The standard error is given by <span class="math inline">\(\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}\)</span> where the standard deviations of the groups are kept separated.</p>
 <p>In R, we calculate this by</p>
@@ -903,14 +895,14 @@ t.test(control, treat1, var.equal=F, alternative = &#39;two.sided&#39;)$conf.int
 <p>Using the standard t confidence interval to construct all the pair-wise confidence intervals is generally not recommended because it doesn’t consider the family-wise error rate, and results in artificially small intervals. This method should only be used if we’re interested in one pairwise contrast which was decided upon before looking at the data.</p>
 </div>
 <div id="family-wise-error-rate" class="section level3" number="4.2.2">
-<h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Family-wise error rate</h3>
+<h3><span class="header-section-number">4.2.2</span> Family-wise error rate</h3>
 <p>Suppose our significance level (<span class="math inline">\(\alpha\)</span>) is 0.05. If we construct one 95% confidence interval, the probability of making a type I error is 0.05.</p>
 <p>The family-wise error rate is the probability of making at least one type I error in the family, defined as <span class="math display">\[FWER \leq 1-(1-\alpha)^{I \choose 2} \]</span> where <span class="math inline">\(\alpha\)</span> is the significance level for an individual test and <span class="math inline">\({I \choose 2}\)</span> is the number of pairwise comparisons given the total number of groups I.</p>
 <p>If there are 3 groups, then there are 3 pairwise comparisons, and <span class="math inline">\(FWER \leq 0.1426\)</span>. If there are 5 groups, then there are 10 pairwise comparisons, and <span class="math inline">\(FWER \leq 0.4013\)</span>, etc.</p>
 <p>As the number of groups grows, the upper bound for FWER also grows. So, as increase groups, the probability of a type I error becomes very high. Some ways to control this include the Bonferroni correction, Tukey’s procedure, and Scheffe’s method</p>
 </div>
 <div id="bonferonni-correction" class="section level3" number="4.2.3">
-<h3 number="4.2.3"><span class="header-section-number">4.2.3</span> Bonferonni Correction</h3>
+<h3><span class="header-section-number">4.2.3</span> Bonferonni Correction</h3>
 <p>The Bonferroni correction constructs each individual confidence interval at a higher level to result in a higher family-wise confidence level. The individual confidence level is <span class="math inline">\(\frac{\alpha}{m}\)</span> where m is the total number of intervals to construct (often <span class="math inline">\(m = {I \choose 2}\)</span>). So, each confidence interval will have a <span class="math inline">\(1-\frac{\alpha}{m}\)</span> level of confidence. The Bonferonni correction is typically only recommended for 3 or 4 groups.</p>
 <p>For our example, we had 3 groups so each pairwise confidence interval will be constructed at the 98.3% confidence level.</p>
 <pre class="r"><code>library(DescTools)
@@ -930,7 +922,7 @@ PostHocTest(mod.aov, method=&#39;bonferroni&#39;)</code></pre>
 <p>These intervals tell us only the difference between treatment 1 and treatment 2 are statically significant.</p>
 </div>
 <div id="tukey-procedure" class="section level3" number="4.2.4">
-<h3 number="4.2.4"><span class="header-section-number">4.2.4</span> Tukey Procedure</h3>
+<h3><span class="header-section-number">4.2.4</span> Tukey Procedure</h3>
 <p>The Tukey method uses the studentized range distribution to create simultaneous comparisons for all pairwise comparisons.</p>
 <p>We can compute all the pairwise Tukey intervals in R.</p>
 <pre class="r"><code>TukeyHSD(mod.aov)</code></pre>
@@ -950,7 +942,7 @@ PostHocTest(mod.aov, method=&#39;bonferroni&#39;)</code></pre>
 <p>The conclusion is the same as with the Bonferonni correction (treatment 1 and 2 are different), however the Tukey method works well for many groups.</p>
 </div>
 <div id="scheffes-method" class="section level3" number="4.2.5">
-<h3 number="4.2.5"><span class="header-section-number">4.2.5</span> Scheffe’s Method</h3>
+<h3><span class="header-section-number">4.2.5</span> Scheffe’s Method</h3>
 <p>Scheffe’s method is useful for any type of contrast, not just pairwise differences. A confidence interval for contrast <span class="math inline">\(\Psi = \sum\limits_{i=1}^Ic_iy_i\)</span> is given by <span class="math display">\[\sum\limits_{i=1}^Ic_i\hat{y}_i \pm \sqrt{(I-1)F_{I-1,n-1}^\alpha}*\hat{\sigma}\sqrt{\sum\limits_{i=1}^I\frac{c_i^2}{n_i}}\]</span> For example, suppose we want a confidence interval for <span class="math inline">\(y_{control} - \frac{y_{treat1} + y_{treat2}}{2}\)</span> which compares control to the average of the treatments.</p>
 <pre class="r"><code>ScheffeTest(mod.aov, contrasts = matrix(c(1,-0.5,-0.5,
                                           -0.5,1,-0.5,
@@ -973,10 +965,10 @@ PostHocTest(mod.aov, method=&#39;bonferroni&#39;)</code></pre>
 </div>
 </div>
 <div id="two-factor-anova-strength-example" class="section level2 tabset tabset-fade tabset-pills" number="4.3">
-<h2 class="tabset tabset-fade tabset-pills" number="4.3"><span class="header-section-number">4.3</span> Two-Factor ANOVA: Strength Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">4.3</span> Two-Factor ANOVA: Strength Example</h2>
 <p>Data for this example were modified from an assignment in one of my graduate courses. Our goal is to determine if substrate or bonding material are useful in predicting strength.</p>
 <div id="analyzing-the-data" class="section level3" number="4.3.1">
-<h3 number="4.3.1"><span class="header-section-number">4.3.1</span> Analyzing the Data</h3>
+<h3><span class="header-section-number">4.3.1</span> Analyzing the Data</h3>
 <pre class="r"><code>library(tidyverse)
 strength = c(1.51,1.96,1.83,1.98, 2.62,2.82,2.69,2.93, 2.96,2.82,3.11,3.11, 3.67,3.4,3.25,2.9,
              1.63,1.8,1.92,1.71, 3.12,2.94,3.23,2.99, 2.91,2.93,3.01,2.93, 3.48,3.51,3.24,3.45,
@@ -996,7 +988,7 @@ plot(strength~substrate,bonds) </code></pre>
 <p>The lines are not parallel indicating interaction may be significant.</p>
 </div>
 <div id="anova-model" class="section level3" number="4.3.2">
-<h3 number="4.3.2"><span class="header-section-number">4.3.2</span> ANOVA Model</h3>
+<h3><span class="header-section-number">4.3.2</span> ANOVA Model</h3>
 <p>We fit the full 2-way ANOVA model. Any of the fitting methods can be used and produce the same results.</p>
 <pre class="r"><code>mod.aov2Full = lm(strength ~ material + substrate + material*substrate, data = bonds)
 #mod.aov2Full = lm(strength~material*substrate, data=bonds)
@@ -1022,7 +1014,7 @@ summary(mod.aov2Full)</code></pre>
 ## substrateB            -5.500e-02  1.578e-01  -0.348    0.730    
 ## substrateC             1.377e+00  1.578e-01   8.728 2.06e-10 ***
 ## materialE2:substrateB  3.600e-01  2.232e-01   1.613    0.115    
-## materialS1:substrateB  1.041e-15  2.232e-01   0.000    1.000    
+## materialS1:substrateB  3.150e-16  2.232e-01   0.000    1.000    
 ## materialS2:substrateB  1.700e-01  2.232e-01   0.762    0.451    
 ## materialE2:substrateC -2.310e+00  2.232e-01 -10.349 2.46e-12 ***
 ## materialS1:substrateC -1.562e+00  2.232e-01  -7.000 3.28e-08 ***
@@ -1053,7 +1045,7 @@ pvalue</code></pre>
 <p>The small p-value means we reject the null hypothesis and conclude we cannot drop the substrate and interaction terms.</p>
 </div>
 <div id="checking-assumptions-1" class="section level3" number="4.3.3">
-<h3 number="4.3.3"><span class="header-section-number">4.3.3</span> Checking Assumptions</h3>
+<h3><span class="header-section-number">4.3.3</span> Checking Assumptions</h3>
 <p><strong>Homoscedasticity</strong></p>
 <p>We check the assumption of homoscedasticity with a plot (we could also use Levene’s test)</p>
 <pre class="r"><code>plot(mod.aov2Full, which=1)</code></pre>
@@ -1065,7 +1057,7 @@ pvalue</code></pre>
 <p><img src="Regression_files/figure-html/normality2-1.png" width="672" /></p>
 </div>
 <div id="making-predictions-1" class="section level3" number="4.3.4">
-<h3 number="4.3.4"><span class="header-section-number">4.3.4</span> Making Predictions</h3>
+<h3><span class="header-section-number">4.3.4</span> Making Predictions</h3>
 <p>If we want to determine which combination(s) of material and substrate produce the greatest strength, we could start by computing all bonding material pairwise confidence intervals.</p>
 <pre class="r"><code>mod.aov2Full = aov(strength ~ material + substrate + material:substrate, data = bonds)
 TukeyHSD(mod.aov2Full,which = &#39;material&#39;, conf.level = 0.95) #TukeyHSD requires an ANOVA object</code></pre>
@@ -1098,6 +1090,24 @@ ggplot(meanData, aes(x=substrate, y=strength, colour=material, group=material)) 
 </div>
 </div>
 </div>
+<div id="binomial-regression" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Binomial Regression</h1>
+<p><a href="https://towardsdatascience.com/the-binomial-regression-model-everything-you-need-to-know-5216f1a483d3">A nice article</a></p>
+<p>Goal: predict odds of seeing an event given a vector of regression variables. GLMs model relationship between E(y) and linear combination of vector X.</p>
+<ul>
+<li><p>Probability mass function of binomially distributed y: <span class="math display">\[Pr(y_i = k | X = x_i) = {m \choose k} \pi_i^k  (1-\pi_i)^{m-k}\]</span></p></li>
+<li><p>Probability of success <span class="math inline">\(\pi_i\)</span> for some <span class="math inline">\(X = x_i\)</span> given by some function g(.) <span class="math display">\[ \pi_i = g(x_i)\]</span></p></li>
+<li><p>Relationship between E(y|X) and X expressed by link function: <span class="math display">\[ g(E(y = y_i|X = x_i)) = \sum_{j=0}^p \beta_j x_{ij} \]</span> where X is (nXp), n = number of rows, p = regression variables, <span class="math inline">\(\beta\)</span> is (pX1)</p></li>
+<li><p>When y is binomially distributed, fix relation between conditional expectation of the probability <span class="math inline">\(\pi\)</span> of a single Bernoulli trial on a particular value of <span class="math inline">\(X = x_i\)</span>. GLM for binomial regression model: <span class="math display">\[ g(E(\pi = \pi_i|X = x_i)) = g(\pi_i|x_i) = \sum_{j=0}^p \beta_i x_{ij} \]</span> with various possible link functions.</p></li>
+</ul>
+<div id="link-functions" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Link Functions</h2>
+<p>*Logistic (logit, log-odds): <span class="math inline">\(g(\pi_i) = ln \left( \frac{\pi_i}{1-\pi_i} \right)\)</span> -&gt; <span class="math inline">\(\pi_i = \frac{e^{\beta x_i}}{1+e^{\beta x_i}}\)</span></p>
+<p>*Probit: <span class="math inline">\(g(\pi_i) = \Phi^{-1}(\pi_i)\)</span></p>
+<p>*Log-log: <span class="math inline">\(g(\pi_i) = ln(-ln(pi_i))\)</span></p>
+<p>*Complementary log-log: <span class="math inline">\(g(\pi_i) = ln(-ln(1-\pi_i))\)</span></p>
+</div>
+</div>
 
 
 
@@ -1126,7 +1136,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

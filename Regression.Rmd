@@ -571,5 +571,34 @@ To obtain the greatest strength we should use material S2 with any substrate.
 
 
 
+# Binomial Regression
+[A nice article](https://towardsdatascience.com/the-binomial-regression-model-everything-you-need-to-know-5216f1a483d3)
+
+Goal: predict odds of seeing an event given a vector of regression variables.  GLMs model relationship between E(y) and linear combination of vector X.
+
+* Probability mass function of binomially distributed y:
+$$Pr(y_i = k | X = x_i) = {m \choose k} \pi_i^k  (1-\pi_i)^{m-k}$$
+
+* Probability of success $\pi_i$ for some $X = x_i$ given by some function g(.)
+$$ \pi_i = g(x_i)$$
+
+* Relationship between E(y|X) and X expressed by link function:
+$$ g(E(y = y_i|X = x_i)) = \sum_{j=0}^p \beta_j x_{ij} $$
+where X is (nXp), n = number of rows, p = regression variables, $\beta$ is (pX1)
+
+* When y is binomially distributed, fix relation between conditional expectation of the probability $\pi$ of a single Bernoulli trial on a particular value of $X = x_i$.  GLM for binomial regression model:
+$$ g(E(\pi = \pi_i|X = x_i)) = g(\pi_i|x_i) = \sum_{j=0}^p \beta_i x_{ij} $$
+with various possible link functions.
+
+## Link Functions
+
+*Logistic (logit, log-odds): $g(\pi_i) = ln \left( \frac{\pi_i}{1-\pi_i} \right)$ -> $\pi_i = \frac{e^{\beta x_i}}{1+e^{\beta x_i}}$
+
+*Probit: $g(\pi_i) = \Phi^{-1}(\pi_i)$
+
+*Log-log: $g(\pi_i) = ln(-ln(pi_i))$
+
+*Complementary log-log: $g(\pi_i) = ln(-ln(1-\pi_i))$
+
 
 

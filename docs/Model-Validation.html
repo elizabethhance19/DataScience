@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Model Validation</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data Science</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Modeling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Regression.html">Regression</a>
+    </li>
+    <li>
+      <a href="Classification.html">Classification</a>
+    </li>
+    <li>
+      <a href="Clustering.html">Clustering</a>
+    </li>
+    <li>
+      <a href="Gradient-Boosting.html">Gradient Boosting</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Validation/Deployment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Model-Validation.html">Model Validation</a>
+    </li>
+    <li>
+      <a href="Model-Deployment.html">Model Deployment</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Additional Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Databases.html">Databases</a>
+    </li>
+    <li>
+      <a href="CloudComputing.html">Cloud Computing</a>
+    </li>
+    <li>
+      <a href="ShellGit.html">Shell/Git</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Model Validation</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#r-squared"><span class="toc-section-number">1</span> R-squared</a></li>
+<li><a href="#gini"><span class="toc-section-number">2</span> Gini</a></li>
+<li><a href="#lift-chart"><span class="toc-section-number">3</span> Lift Chart</a>
+<ul>
+<li><a href="#single-lift"><span class="toc-section-number">3.1</span> Single Lift</a></li>
+<li><a href="#double-lift"><span class="toc-section-number">3.2</span> Double Lift</a></li>
+</ul></li>
+<li><a href="#binomial-deviance"><span class="toc-section-number">4</span> Binomial Deviance</a></li>
+<li><a href="#metrics-from-confusion-matrix"><span class="toc-section-number">5</span> Metrics from Confusion Matrix</a></li>
+<li><a href="#confidence-intervals-for-machine-learning"><span class="toc-section-number">6</span> Confidence Intervals for Machine Learning</a></li>
+<li><a href="#nested-cross-validation"><span class="toc-section-number">7</span> Nested Cross Validation</a></li>
+</ul>
+</div>
+
+<div id="r-squared" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> R-squared</h1>
+<p><span class="math display">\[R^2 = \frac{\sum(y_i - \bar{y})^2 - \sum(y_i - \hat{y_i})^2}{\sum(y_i - \bar{y})^2}\]</span> Perfect model: <span class="math inline">\(\hat{y_i} = y_i\)</span> so <span class="math inline">\(R^2 = 1\)</span></p>
+</div>
+<div id="gini" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Gini</h1>
+<p>Ratio of how close model is to perfect model and how far it is from a random model. Gini = 1 → perfect model, Gini = 0 → random model</p>
+<p><a href="https://towardsdatascience.com/using-the-gini-coefficient-to-evaluate-the-performance-of-credit-score-models-59fe13ef420">This article</a> derives Gini using three methods: from the CAP curve, from the Lorenz curve, and from the ROC curve.</p>
+<ul>
+<li><p>In all cases, order data by prediction, plot cumulative response vs cumulative proportion of sample</p></li>
+<li><p>Red line: random model, blue line: actual model, green line: perfect model</p>
+<ul>
+<li>Gini = A/(A+B) = 2*AUC - 1</li>
+</ul></li>
+</ul>
+<p>From CAP curve:</p>
+<p><img src="images/paste-6E613102.png" width="406" /></p>
+<p>From Lorenz curve:</p>
+<p><img src="images/paste-AF1F8D25.png" width="428" /></p>
+<p>From ROC curve:</p>
+<p><img src="images/paste-972C10B4.png" width="409" /></p>
+</div>
+<div id="lift-chart" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Lift Chart</h1>
+<div id="single-lift" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Single Lift</h2>
+<ul>
+<li><p>Order data by prediction/weight, group into bins (e.g. deciles) with equal weight (e.g. earned car years)</p></li>
+<li><p>Within each bin, get average predicted and actual value</p></li>
+</ul>
+</div>
+<div id="double-lift" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Double Lift</h2>
+<p>For comparing 2 predictions to actual</p>
+<ul>
+<li><p>Order data by prediction_1/prediction_2, group into bins</p></li>
+<li><p>Within each bin, get averaged prediction_1, prediction_2, and actual value</p></li>
+</ul>
+</div>
+</div>
+<div id="binomial-deviance" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Binomial Deviance</h1>
+<p><a href="https://data.princeton.edu/wws509/notes/a2s4">Deviance</a> = <span class="math inline">\(2 \sum o_i log \left( \frac{o_i}{e_i} \right)\)</span> where <span class="math inline">\(o_i\)</span> denotes observed, <span class="math inline">\(e_i\)</span> denotes expected, and the sum is over both successes and failures for each i</p>
+<ul>
+<li><p>Gives measure of deviance of fitted glm with respect to perfect model (aka saturated model, a model that perfectly fits the data)</p></li>
+<li><p><a href="https://bookdown.org/egarpor/PM-UC3M/glm-deviance.html">Alternate definitions</a>: Deviance = <span class="math inline">\(-2 \left[ l(\hat{\beta}) - l_s \right]\)</span> where the log-likelihood of the fitted model <span class="math inline">\(l(\hat{\beta})\)</span> is always smaller than the saturated model</p>
+<ul>
+<li><p>For a linear model, Deviance = <span class="math inline">\(RSS(\hat{\beta})\)</span> = SSE</p></li>
+<li><p>Deviance is always greater than or equal to 0, if 0 then the fit is perfect</p></li>
+</ul></li>
+<li><p>Generally compared to null deviance <span class="math inline">\(D_0 = -2 \left[ l(\hat{\beta}_0) - l_s \right]\)</span> which compares a model without predictors (intercept only) to the perfect model</p>
+<ul>
+<li>For a linear model, <span class="math inline">\(D_0\)</span> = SST</li>
+</ul></li>
+<li><p>To quantify the percent of deviance explained (ratio indicating how close the fit is to being perfect) use <span class="math inline">\(R^2 = 1- \frac{D}{D_0}\)</span></p>
+<ul>
+<li><p>For a linear model, <span class="math inline">\(R^2 = 1-\frac{SSE}{SST}\)</span></p></li>
+<li><p>Also known as <a href="https://thestatsgeek.com/2014/02/08/r-squared-in-logistic-regression/">McFadden’s R<sup>2</sup></a>= <span class="math inline">\(1 - \frac{log(L_{full})}{log(L_{intercept})}\)</span> where L<sub>full</sub> is the likelihood value from the fitted model.</p>
+<ul>
+<li><p>The likelihood contribution of each observation is between 0 and 1, so the log likelihood is always negative</p></li>
+<li><p>If the model has no predictive ability → likelihood of model similar to likelihood of intercept → R<sup>2</sup> close to 0</p></li>
+<li><p>If model explains almost everything → likelihood value for each observation close to 1 → log(1) = 0 → R<sup>2</sup> close to 1</p></li>
+</ul></li>
+</ul></li>
+<li><p>In R, deviance is returned in <code>summary</code> as “Residual deviance” and “Null deviance”</p></li>
+<li><p>To calculate log likelihood of fitted model: <span class="math inline">\(\sum \left( log(\hat{y}_i)*y_i + log(1-\hat{y}_i)*(1-y_i) \right)\)</span> where <span class="math inline">\(\hat{y_i}\)</span> is the fitted probability and <span class="math inline">\(y_i\)</span> is the actual response value</p>
+<ul>
+<li>For the null model: use <span class="math inline">\(\hat{y} = mean(y)\)</span> using the y values from the training data</li>
+</ul></li>
+</ul>
+</div>
+<div id="metrics-from-confusion-matrix" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Metrics from Confusion Matrix</h1>
+<p><img src="images/Screen%20Shot%202023-01-05%20at%202.27.57%20PM.png" /></p>
+<ul>
+<li><p>Precision = positive predictive value = TP / (TP + FP)</p></li>
+<li><p>Sensitivity = recall = true positive rate = TP / (TP + FN)</p></li>
+<li><p>Specificity = true negative rate = TN / (TN + FP)</p></li>
+<li><p>F1 score = <span class="math inline">\(2 \frac{Precision * Recall}{Precision + Recall}\)</span></p></li>
+<li><p>Matthew’s correlation coefficient = MCC = <span class="math inline">\(\frac{TP * TN - FP * FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}\)</span></p>
+<ul>
+<li>Between -1 and 1: 1 → perfect prediction, 0 → no better than random, -1 → total disagreement between prediction and observation</li>
+</ul></li>
+</ul>
+</div>
+<div id="confidence-intervals-for-machine-learning" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Confidence Intervals for Machine Learning</h1>
+<p>See <a href="https://machinelearningmastery.com/confidence-intervals-for-machine-learning/">here</a> for more details</p>
+<ul>
+<li><p>For classification accuracy: assume Gaussian distribution of the proportion, use Binomial proportion confidence interval</p>
+<ul>
+<li>intervals = z*sqrt( (accuracy * (1-accuracy)) / n)</li>
+</ul></li>
+</ul>
+<p><strong>Nonparametric Confidence Interval</strong></p>
+<ul>
+<li><p>Use bootstrap resampling:</p>
+<ul>
+<li><p>Sample with replacement to get dataset of size n</p></li>
+<li><p>Calculate statistic on sample</p></li>
+<li><p>Repeat (maybe 100 times)</p></li>
+<li><p>Calculate central tendency (median) of 100 sample statistics, and 2.5th and 97.5th percentile</p></li>
+</ul></li>
+</ul>
+</div>
+<div id="nested-cross-validation" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Nested Cross Validation</h1>
+<p><a href="https://machinelearningmastery.com/nested-cross-validation-for-machine-learning-with-python/">Motivation/Theory</a>, <a href="https://weina.me/nested-cross-validation/">Method/Figure</a></p>
+<p>K-fold cross-validation is used both in the selection of model hyperparameters to configure each model and in the selection of configured model and can lead to overfitting. Each time a model with different model hyperparameters is evaluated on a dataset, it provides information about the dataset.</p>
+<p><strong>Method</strong></p>
+<p><img src="images/paste-9F188098.png" /></p>
+<ul>
+<li><p>Split into K fold (outer folds)</p></li>
+<li><p>Within each K fold:</p>
+<ul>
+<li><p>Split the outer training set (dark green) into L folds (blue/gray)</p></li>
+<li><p>For each L fold:</p>
+<ul>
+<li><p>Train each hyperparameter on inner training (blue), test on inner test (gray)</p></li>
+<li><p>For each hyperparameter: average metrics across L folds, choose best</p></li>
+</ul></li>
+<li><p>Train on outer training (dark green) with best hyperparameter</p></li>
+<li><p>Test on outer test (light green)</p></li>
+</ul></li>
+<li><p>Calculate mean metrics over all K folds</p></li>
+</ul>
+<p>Cost of validation</p>
+<ul>
+<li><p>Cross-validation = n*k = hyperparameters * models</p></li>
+<li><p>Nested cross-validation = L*n*k = inner models * hyperparameters * outer models</p></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

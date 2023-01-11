@@ -5,18 +5,30 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Regression"
-      href: Regression.html
-    - text: "Classification"
-      href: Classification.html    
-    - text: "Clustering"
-      href: Clustering.html
-    - text: "Databases"
-      href: Databases.html
-    - text: "Cloud Computing"
-      href: CloudComputing.html
-    - text: "Shell/Git"
-      href: ShellGit.html
+    - text: "Modeling"
+      menu: 
+        - text: "Regression"
+          href: Regression.html
+        - text: "Classification"
+          href: Classification.html    
+        - text: "Clustering"
+          href: Clustering.html
+        - text: "Gradient Boosting"
+          href: Gradient-Boosting.html
+    - text: "Validation/Deployment"
+      menu: 
+        - text: "Model Validation"
+          href: Model-Validation.html
+        - text: "Model Deployment"
+          href: Model-Deployment.html
+    - text: "Additional Topics"
+      menu:
+       - text: "Databases"
+         href: Databases.html
+       - text: "Cloud Computing"
+         href: CloudComputing.html
+       - text: "Shell/Git"
+         href: ShellGit.html
 output:
   html_document:
     theme: flatly

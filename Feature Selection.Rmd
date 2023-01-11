@@ -1,0 +1,109 @@
+---
+title: "Feature Selection"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[Feature Selection](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/): Select a subset of input features from the dataset.
+
+-   Unsupervised: Do not use the target variable (e.g. remove redundant variables).
+
+    -   Correlation
+
+-   Supervised: Use the target variable (e.g. remove irrelevant variables).
+
+    -   Wrapper: Search for well-performing subsets of features.
+
+        -   Create many models with different subsets of input features, select features that result in best performing models (e.g. recursive feature elimination)
+
+    -   Filter: Select subsets of features based on their relationship with the target.
+
+        -   Statistical methods, feature importance methods
+
+        -   E.g. Peason's/Spearman's (numerical input & output), ANOVA/rank coefficient (numerical/categorical input & output), chi-squared test (categorical input & output)
+
+    -   Intrinsic: Algorithms that perform automatic feature selection during training.
+
+        -   Decision trees, lasso/regularization
+
+-   Dimensionality Reduction: Project input data into a lower-dimensional feature space (e.g. PCA).
+
+# Regularization
+
+Regularization avoids overfitting by penalizing large regression coefficients. It shrinks the coefficient estimates toward zero to discourage learning a complex/flexible model.
+
+-   Regularization significantly reduces the variance of the model without substantially increasing bias
+
+Most info taken from [Regularization in Machine Learning](https://towardsdatascience.com/regularization-in-machine-learning-76441ddcf99a)
+
+## Linear Regression
+
+For ordinary least squares linear regression, coefficients are chosen to minimize the loss function:
+
+$$
+RSS = \sum_{i=1}^n \left( y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij} \right) ^2
+$$
+
+-   In R, the glmnet package can be used for regularization, a [good example](https://www.pluralsight.com/guides/linear-lasso-and-ridge-regression-with-r).
+
+### Ridge Regression
+
+For ridge regression a shrinkage quantity is added
+
+$$
+RSS + \lambda \sum_{j=1}^p \beta_j^2
+$$
+
+where the shrinkage parameter $\lambda$ $\geq$ 0 decides how much to penalize the flexibility of the model, as $\lambda$ increases the coefficients approach 0. Cross validation is generally used to determine $\lambda$.
+
+-   Ridge regression requires the predictors to be standardized
+
+-   The coefficient estimates produced are also known as the L2 norm
+
+-   The coefficients can be close to 0 but will never reach 0
+
+In ordinary least squares the coefficients are given by $\hat{\beta} = (X'X)^{-1}X'y$ , while the ridge regression estimator is $\hat{\beta}_{ridge} = (X'X + \lambda I_p)^{-1} X'y$
+
+-   Geometric interpretation: if there are 2 parameters, we have $\beta_1^2 + \beta_2^2 \leq s$
+
+    -   So ridge regression coefficients have the smallest RSS for all points within the circle given above
+
+### Lasso (Least absolute shrinkage and selection operator)
+
+Similar to ridge regression, lasso also adds a shrinkage quantity
+
+$$
+RSS + \lambda \sum_{j=1}^p |\beta_j|
+$$
+
+-   The predictors must still be standardize
+
+-   The use of the absolute value/modulus is known as the L1 norm
+
+-   Geometric interpretation: if there are 2 parameters, we have $|\beta_1| + |\beta_2| \leq s$
+
+    -   So lasso coefficients have the smallest RSS for all points within the diamond given above
+
+    -   Often the coefficient ellipse intersects the constraint region at an axis → then one of the coefficients will be 0
+
+#### Lambda
+
+-   Lambda = 0 → no regularization, all variables used
+
+    -   As lambda increases, some coefficients become 0, error increases
+
+    -   Often choose largest lambda with minimum error (simplest model with similar error to full model)
+
+    -   See plot [here](https://eight2late.wordpress.com/2017/07/11/a-gentle-introduction-to-logistic-regression-and-lasso-regularisation-using-r/)
+
+### Elastic Net
+
+Elastic net combine ridge regression and lasso
+
+$$
+RSS + \lambda_2 ||\beta||^2 + \lambda_1 ||\beta||_1
+$$
+
+-   Lasso doesn't work well with high-dimensional data with few examples making elastic net a better choice in these cases

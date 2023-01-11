@@ -21,11 +21,10 @@ header-includes:
 </style>
 
 <div class="column-left">
-Hi! I'm Elizabeth Hance and I love data.  After getting my Master's degree in computational mathematics, I joined the team at OSU focused on studying student academic success.  Since graduating, I've expanded my knowledge of the data science world through my job and independent study.  This site serves as a collection of some of the things I have learned.  Feel free to reach out to my at my contact info below.
+Hi! I'm Elizabeth Hance and I love data. After getting my Master's degree in computational mathematics, I started this page as a way to document what I've learned about data science. This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge.  The explanations of the concepts are meant to be brief with simple examples. Feel free to reach out to me at my contact info below!
 
 * [GitHub](https://github.com/elizabethhance19)
 * [LinkedIn](www.linkedin.com/in/elizabeth-hance)
-* [Resume](https://github.com/elizabethhance19/DataScience/blob/master/Resume-ElizabethHance.pdf)
 
 </div>
 <div class="column-right">
@@ -36,16 +35,27 @@ knitr::include_graphics("Mia.png")
 
 
 # Topics Covered {-}
-This site is a work in progress and the topics explored here do not display the full depth and breadth of my knowledge.  The explanations of the concepts are meant to be brief with simple examples. 
-
 Content for these topics was gathered from a variety of sources including: DataCamp's *Data Scientist with R* Career Track, Springer's book: *An Introduction to Statistical Learning with Applications in R*, Wikipedia, various Medium articles, other online blogs, and my graduate coursework.
 
-* [Regression](https://elizabethhance19.github.io/DataScience/Regression.html)
-* [Clustering](https://elizabethhance19.github.io/DataScience/Clustering.html)  
-* [Classification](https://elizabethhance19.github.io/DataScience/Classification.html) 
-* [Databases](https://elizabethhance19.github.io/DataScience/Databases.html)
-* [Cloud Computing](https://elizabethhance19.github.io/DataScience/CloudComputing.html)
-* [Shell/Git](https://elizabethhance19.github.io/DataScience/ShellGit.html)
+* Modeling: 
+  - Regression
+  - Classification
+  - Clustering
+  - Gradient Boosting
+* Validation/Deployment:
+  - Model Validation
+  - Model Deployment
+* Additional Topics:
+  - Databases
+  - Cloud Computing
+  - Shell/Git
+  
+Also see [Additional_Topics](https://github.com/elizabethhance19/DataScience/tree/master/Additional_Topics) for resources not covered on this page including:
+
+* Causal inferences notes
+* Notes from a deep learning coursear course
+* Exploring interactions in a GAM
+* Brief notes from a pandas tutorial
 
 
 # R Packages {-}

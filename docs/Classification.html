@@ -13,13 +13,22 @@
 
 <title>Classification</title>
 
-<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -34,11 +43,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -51,32 +55,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 
@@ -87,10 +65,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -107,40 +81,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -168,7 +115,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -180,7 +127,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -191,10 +138,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -206,7 +166,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -285,23 +244,59 @@ $(document).ready(function () {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="Regression.html">Regression</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Modeling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Regression.html">Regression</a>
+    </li>
+    <li>
+      <a href="Classification.html">Classification</a>
+    </li>
+    <li>
+      <a href="Clustering.html">Clustering</a>
+    </li>
+    <li>
+      <a href="Gradient-Boosting.html">Gradient Boosting</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Classification.html">Classification</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Validation/Deployment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Model-Validation.html">Model Validation</a>
+    </li>
+    <li>
+      <a href="Model-Deployment.html">Model Deployment</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Clustering.html">Clustering</a>
-</li>
-<li>
-  <a href="Databases.html">Databases</a>
-</li>
-<li>
-  <a href="CloudComputing.html">Cloud Computing</a>
-</li>
-<li>
-  <a href="ShellGit.html">Shell/Git</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Additional Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Databases.html">Databases</a>
+    </li>
+    <li>
+      <a href="CloudComputing.html">Cloud Computing</a>
+    </li>
+    <li>
+      <a href="ShellGit.html">Shell/Git</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -311,7 +306,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -347,43 +342,43 @@ $(document).ready(function () {
 </div>
 
 <div id="overview" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
+<h1><span class="header-section-number">1</span> Overview</h1>
 <p>Classification is used on data where the response variable is qualitative (categorical), unlike regression which has a quantitative (continuous) response variable. The response categories are known making this a supervised learning technique, unlike clustering where the categories are unknown.</p>
 <p>A common method to evaluate classification models is to calculate the accuracy: the proportion of correctly classified responses to the total number of classifications made. Other performance metrics are also useful, including sensitivity and specificity (explored with logistic regression).</p>
 <p>Some common classification techniques include: logistic regression, Naive Bayes classifier, k-nearest neighbor, decision trees, linear/quadratic discriminant analysis (not explored here), and support vector machines (not explored here).</p>
 </div>
 <div id="logistic-regression" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Logistic Regression</h1>
+<h1><span class="header-section-number">2</span> Logistic Regression</h1>
 <p>Logistic regression is used for binary classification - when there are 2 possible predictor classes.</p>
 <p>Logistic regression assumes a linear relationship between the predictors variables and the log-odds of the event Y=1: <span class="math display">\[log_b\frac{p}{1-p} = \beta_0 + \beta_1x_1 + \beta_2x_2\]</span> where <span class="math inline">\(p = P(Y=1).\)</span> We can solve for <span class="math inline">\(p\)</span>: <span class="math display">\[p = \frac{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}}{b^{\beta_0 + \beta_1x_1 + \beta_2x_2}+1} = \frac{1}{1+b^{-(\beta_0 + \beta_1x_1 + \beta_2x_2)}}\]</span></p>
 <p>Generally <span class="math inline">\(e\)</span> is chosen for the base <span class="math inline">\(b\)</span>, though other bases are possible. The regression coefficients are often found with a maximum likelihood estimation that requires an iterative process.</p>
 <p><strong>Assumptions:</strong> logistic regression requires the observations to be independent, little to no multicollinearity among independent variables, and linearity of independent variables and log odds.</p>
 <div id="logistic-regression-income-example" class="section level2 tabset tabset-fade tabset-pills" number="2.1">
-<h2 class="tabset tabset-fade tabset-pills" number="2.1"><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">2.1</span> Logistic Regression: Income Example</h2>
 <p>We want to predict if an individual will earn more than $50K using various predictors. This example was inspired by <a href="http://r-statistics.co/Logistic-Regression-With-R.html">Logistic Regression Income</a></p>
 <div id="traintest-set" class="section level3" number="2.1.1">
-<h3 number="2.1.1"><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
+<h3><span class="header-section-number">2.1.1</span> Train/Test Set</h3>
 <p>Load data:</p>
-<pre class="r"><code>incomeData &lt;- read.table(&#39;adult.data&#39;, sep = &#39;,&#39;, fill = F, strip.white = T)
-colnames(incomeData) &lt;- c(&#39;age&#39;, &#39;workclass&#39;, &#39;fnlwgt&#39;, &#39;education&#39;, &#39;education_num&#39;, &#39;marital_status&#39;, &#39;occupation&#39;, &#39;relationship&#39;, &#39;race&#39;, &#39;sex&#39;, &#39;capital_gain&#39;, &#39;capital_loss&#39;, &#39;hours_per_week&#39;, &#39;native_country&#39;, &#39;income&#39;)
-incomeData$IncomeAbove50 = as.numeric(incomeData$income == &#39;&gt;50K&#39;)
+<pre class="r"><code>incomeData &lt;- read.table(&quot;adult.data&quot;, sep = &quot;,&quot;, fill = F, strip.white = T)
+colnames(incomeData) &lt;- c(&quot;age&quot;, &quot;workclass&quot;, &quot;fnlwgt&quot;, &quot;education&quot;, &quot;education_num&quot;, &quot;marital_status&quot;, &quot;occupation&quot;, &quot;relationship&quot;, &quot;race&quot;, &quot;sex&quot;, &quot;capital_gain&quot;, &quot;capital_loss&quot;, &quot;hours_per_week&quot;, &quot;native_country&quot;, &quot;income&quot;)
+incomeData$IncomeAbove50 &lt;- as.numeric(incomeData$income == &quot;&gt;50K&quot;)
 table(incomeData$income)</code></pre>
 <pre><code>## 
 ## &lt;=50K  &gt;50K 
 ## 24720  7841</code></pre>
 <p>We see there are significantly more cases of &lt;=50K than &gt;50K. Because of this class bias, we will select our training data proportionately from each of these classes.</p>
-<pre class="r"><code>dataAbove = incomeData %&gt;% filter(IncomeAbove50 == 1)
-dataBelow = incomeData %&gt;% filter(IncomeAbove50 == 0)
+<pre class="r"><code>dataAbove &lt;- incomeData %&gt;% filter(IncomeAbove50 == 1)
+dataBelow &lt;- incomeData %&gt;% filter(IncomeAbove50 == 0)
 set.seed(123)
-dataAbove_trainingRows = sample(1:nrow(dataAbove), 0.75*nrow(dataAbove))
-dataBelow_trainingRows = sample(1:nrow(dataBelow), 0.75*nrow(dataBelow))
-trainAbove = dataAbove[dataAbove_trainingRows,]
-trainBelow = dataBelow[dataBelow_trainingRows,]
-train = rbind(trainAbove, trainBelow)
+dataAbove_trainingRows &lt;- sample(1:nrow(dataAbove), 0.75 * nrow(dataAbove))
+dataBelow_trainingRows &lt;- sample(1:nrow(dataBelow), 0.75 * nrow(dataBelow))
+trainAbove &lt;- dataAbove[dataAbove_trainingRows, ]
+trainBelow &lt;- dataBelow[dataBelow_trainingRows, ]
+train &lt;- rbind(trainAbove, trainBelow)
 
-testAbove = dataAbove[-dataAbove_trainingRows,]
-testBelow = dataBelow[-dataBelow_trainingRows,]
-test = rbind(testAbove, testBelow)
+testAbove &lt;- dataAbove[-dataAbove_trainingRows, ]
+testBelow &lt;- dataBelow[-dataBelow_trainingRows, ]
+test &lt;- rbind(testAbove, testBelow)
 
 table(train$income)</code></pre>
 <pre><code>## 
@@ -393,9 +388,9 @@ table(train$income)</code></pre>
 <p>We have a similar proportion of &gt;50K to &lt;=50K in our training data as in the full data set.</p>
 </div>
 <div id="fit-and-test-logistic-model" class="section level3" number="2.1.2">
-<h3 number="2.1.2"><span class="header-section-number">2.1.2</span> Fit and Test Logistic Model</h3>
+<h3><span class="header-section-number">2.1.2</span> Fit and Test Logistic Model</h3>
 <p>I chose variables I thought would predict <em>income</em>, however different variable choices or variable selection methods could be used.</p>
-<pre class="r"><code>mod.logit = glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data=train, family=&#39;binomial&#39;)
+<pre class="r"><code>mod.logit &lt;- glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data = train, family = &quot;binomial&quot;)
 summary(mod.logit)</code></pre>
 <pre><code>## 
 ## Call:
@@ -432,9 +427,9 @@ summary(mod.logit)</code></pre>
 ## 
 ## Number of Fisher Scoring iterations: 12</code></pre>
 <p>Predict for the test data</p>
-<pre class="r"><code>predictedProbability = predict(mod.logit, test, type=&#39;response&#39;)
-test$PredictedIncomeAbove50 = ifelse(predictedProbability &gt; 0.5,1,0)
-confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = &#39;1&#39;)</code></pre>
+<pre class="r"><code>predictedProbability &lt;- predict(mod.logit, test, type = &quot;response&quot;)
+test$PredictedIncomeAbove50 &lt;- ifelse(predictedProbability &gt; 0.5, 1, 0)
+confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = &quot;1&quot;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -472,23 +467,23 @@ confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50),
 <p>The model prediction returns a probability of each observation having an income greater than 50K. Here, we classified observations with a probability &gt; 0.5 to have an income greater than 50K, however different threshold values are possible.</p>
 </div>
 <div id="roc-curve" class="section level3" number="2.1.3">
-<h3 number="2.1.3"><span class="header-section-number">2.1.3</span> ROC Curve</h3>
+<h3><span class="header-section-number">2.1.3</span> ROC Curve</h3>
 <p>A receiver operating characteristic (ROC) curve plots the true positive rate (sensitivity) against the false positive rate (1 - specificity). This can also be viewed as the percent of positive outcomes versus the percent of other outcomes.</p>
 <pre class="r"><code>library(ROCR)
-pred = prediction(predictedProbability, test$IncomeAbove50)
-perf = performance(pred, measure = &#39;tpr&#39;, x.measure = &#39;fpr&#39;)
+pred &lt;- prediction(predictedProbability, test$IncomeAbove50)
+perf &lt;- performance(pred, measure = &quot;tpr&quot;, x.measure = &quot;fpr&quot;)
 plot(perf)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="Classification_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>The curve will generally be above the line <span class="math inline">\(y=x\)</span> and curves of “better” models are typically close to the upper left corner.</p>
 <p>We can also calculate the area under the ROC curve (AUC)</p>
-<pre class="r"><code>auc = performance(pred, measure = &quot;auc&quot;)
-auc = auc@y.values[[1]]
+<pre class="r"><code>auc &lt;- performance(pred, measure = &quot;auc&quot;)
+auc &lt;- auc@y.values[[1]]
 auc</code></pre>
 <pre><code>## [1] 0.8195055</code></pre>
 <p>“Better” models generally have AUC close to 1, though it’s important to consider many metrics when evaluating a model.</p>
 </div>
 <div id="model-assumptions" class="section level3" number="2.1.4">
-<h3 number="2.1.4"><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
+<h3><span class="header-section-number">2.1.4</span> Model Assumptions</h3>
 <p>We can check for multicollinearity among our independent variables by computing the variance inflation factor (VIF). All the variables should have a VIF less than 10 but ideally less than 5.</p>
 <pre class="r"><code>vif(mod.logit)</code></pre>
 <pre><code>##                    GVIF Df GVIF^(1/(2*Df))
@@ -501,24 +496,24 @@ auc</code></pre>
 </div>
 </div>
 <div id="k-nearest-neighbors-knn" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
+<h1><span class="header-section-number">3</span> K-Nearest Neighbors (KNN)</h1>
 <p>KNN works by considering the K training data points that are closest (typically using Euclidean distance) to the test observation. Then, the test observation is predicted to be in the same class as the majority of the closest training points. In the event of a tie, one of the classes is randomly chosen. It is necessary to normalize (generally min-max normalization instead of standardization) the data first since we will be calculating distances.</p>
 <div id="knn-iris-example" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
+<h2><span class="header-section-number">3.1</span> KNN: Iris Example</h2>
 <p>This example was inspired by <a href="https://towardsdatascience.com/k-nearest-neighbors-algorithm-with-examples-in-r-simply-explained-knn-1f2c88da405c">KNN Example</a>. Normalize the iris data and split into a training and test set</p>
 <pre class="r"><code>normalize &lt;- function(x) {
-return((x - min(x)) / (max(x) - min(x)))
+  return((x - min(x)) / (max(x) - min(x)))
 }
 set.seed(123)
-irisNormalized = as.data.frame(lapply(iris[,c(1,2,3,4)], normalize))
-training_ind = sample(1:nrow(iris), 0.75 * nrow(iris))
-train = irisNormalized[training_ind,]
-test = irisNormalized[-training_ind,]
-train_class = iris[training_ind,5]
-test_class = iris[-training_ind,5]</code></pre>
+irisNormalized &lt;- as.data.frame(lapply(iris[, c(1, 2, 3, 4)], normalize))
+training_ind &lt;- sample(1:nrow(iris), 0.75 * nrow(iris))
+train &lt;- irisNormalized[training_ind, ]
+test &lt;- irisNormalized[-training_ind, ]
+train_class &lt;- iris[training_ind, 5]
+test_class &lt;- iris[-training_ind, 5]</code></pre>
 <p>Now run knn function</p>
 <pre class="r"><code>library(class)
-test_prediction = knn(train, test, cl=train_class, k=3)</code></pre>
+test_prediction &lt;- knn(train, test, cl = train_class, k = 3)</code></pre>
 <p>Calculate accuracy of test data</p>
 <pre class="r"><code>table(test_prediction, test_class)</code></pre>
 <pre><code>##                test_class
@@ -526,17 +521,17 @@ test_prediction = knn(train, test, cl=train_class, k=3)</code></pre>
 ##      setosa         12          0         0
 ##      versicolor      0         16         1
 ##      virginica       0          1         8</code></pre>
-<pre class="r"><code>mean(test_prediction == test_class)*100 #accuracy</code></pre>
+<pre class="r"><code>mean(test_prediction == test_class) * 100 # accuracy</code></pre>
 <pre><code>## [1] 94.73684</code></pre>
 <p>Try a larger value of k (consider more neighbors)</p>
-<pre class="r"><code>test_prediction = knn(train, test, cl=train_class, k=11)
+<pre class="r"><code>test_prediction &lt;- knn(train, test, cl = train_class, k = 11)
 table(test_prediction, test_class)</code></pre>
 <pre><code>##                test_class
 ## test_prediction setosa versicolor virginica
 ##      setosa         12          0         0
 ##      versicolor      0         16         0
 ##      virginica       0          1         9</code></pre>
-<pre class="r"><code>mean(test_prediction == test_class)*100 #accuracy</code></pre>
+<pre class="r"><code>mean(test_prediction == test_class) * 100 # accuracy</code></pre>
 <pre><code>## [1] 97.36842</code></pre>
 <p>In this case, a larger k increased the accuracy of the model, however this was inconsistent across different splits of the training and test sets. We could use cross-validation to test different values of k (and different train/test sets) to determine the optimal number of neighbors to use.</p>
 <p>In general, a smaller value of k means noise in the data will have a higher influence on the boundary causing the boundary to be more flexible. A larger value of k will have smoother decision boundaries which may not pick up on some boundaries of the data, and is more computationally expensive.</p>
@@ -544,27 +539,27 @@ table(test_prediction, test_class)</code></pre>
 </div>
 </div>
 <div id="naive-bayes" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Naive Bayes</h1>
+<h1><span class="header-section-number">4</span> Naive Bayes</h1>
 <p>Bayes theorem is given as: <span class="math display">\[p(C_k|\textbf{x}) = \frac{p(C_k)p(\textbf{x}|C_k)}{p(\textbf{x})}\]</span> where  represents the features in the data, <span class="math inline">\(C_k\)</span> is a possible class, and <span class="math inline">\(p(C_k|\textbf{x})\)</span> is the probability of belonging to a class given the independent variables defined by . This is sometimes rewritten as <span class="math display">\[\text{posterior} = \frac{\text{prior}\times \text{likelihood}}{\text{evidence}}\]</span></p>
 <p>The denominator of the fraction is constant, and the numerator is equivalent to the joint probability model <span class="math inline">\(p(C_k,x_1,...,x_n)\)</span>.</p>
 <p>If we assume all features in  are mutually independent (this assumption is what makes it <em>naive</em>), we can rewrite Bayes theorem as <span class="math display">\[p(C_k|x_1,...,x_n) \propto p(C_k) \prod_{i=1}^n p(x_i|C_k)\]</span></p>
 <div id="naive-bayes-classifier" class="section level2" number="4.1">
-<h2 number="4.1"><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
+<h2><span class="header-section-number">4.1</span> Naive Bayes Classifier</h2>
 <p>Assign a class label <span class="math inline">\(\hat{y} = C_k\)</span> for some k where <span class="math display">\[\hat{y} = \text{argmax}_{k \in \{1,...,K\}}p(C_k)\prod_{i=1}^n p(x_i|C_k)\]</span></p>
 </div>
 <div id="naive-bayes-titanic-example" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Naive Bayes: Titanic Example</h2>
+<h2><span class="header-section-number">4.2</span> Naive Bayes: Titanic Example</h2>
 <p>Naive Bayes is good to use when all the predictors are categorical, but can also be used on continuous predictors. It also works well when there are more than 2 classes to predict, unlike other classification methods (e.g. logistic regression). This example was inspired by <a href="https://www.r-bloggers.com/understanding-naive-bayes-classifier-using-r/">Naive Bayes Blog Post</a></p>
 <p>We try to predict if a passenger survived on the Titanic given the predictors: Class (1st, 2nd, 3rd, crew), Sex (M,F), and Age (child, adult).</p>
 <pre class="r"><code>data(&quot;Titanic&quot;)
-Titanic = as.data.frame(Titanic)
-#Data currently summary data, expand for analysis
-repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
-Titanic_df=Titanic[repeating_sequence,]
-Titanic_df = Titanic_df %&gt;% select(-Freq)</code></pre>
+Titanic &lt;- as.data.frame(Titanic)
+# Data currently summary data, expand for analysis
+repeating_sequence &lt;- rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
+Titanic_df &lt;- Titanic[repeating_sequence, ]
+Titanic_df &lt;- Titanic_df[, -5]</code></pre>
 <p>Fit Naive Bayes model</p>
 <pre class="r"><code>library(e1071)
-mod.NB = naiveBayes(Survived~., data=Titanic_df)
+mod.NB &lt;- naiveBayes(Survived ~ ., data = Titanic_df)
 mod.NB</code></pre>
 <pre><code>## 
 ## Naive Bayes Classifier for Discrete Predictors
@@ -593,37 +588,39 @@ mod.NB</code></pre>
 ##   No  0.03489933 0.96510067
 ##   Yes 0.08016878 0.91983122</code></pre>
 <p>Make predictions and check accuracy</p>
-<pre class="r"><code>Titanic_df$PredictedSurvived = predict(mod.NB, Titanic_df)
+<pre class="r"><code>Titanic_df$PredictedSurvived &lt;- predict(mod.NB, Titanic_df)
 table(Titanic_df$PredictedSurvived, Titanic_df$Survived)</code></pre>
 <pre><code>##      
 ##         No  Yes
 ##   No  1364  362
 ##   Yes  126  349</code></pre>
-<pre class="r"><code>mean(Titanic_df$PredictedSurvived==Titanic_df$Survived)</code></pre>
+<pre class="r"><code>mean(Titanic_df$PredictedSurvived == Titanic_df$Survived)</code></pre>
 <pre><code>## [1] 0.7782826</code></pre>
 <p>The model predicts if a passenger survives with about 77.8% accuracy.</p>
 </div>
 <div id="laplace-correction" class="section level2" number="4.3">
-<h2 number="4.3"><span class="header-section-number">4.3</span> Laplace Correction</h2>
+<h2><span class="header-section-number">4.3</span> Laplace Correction</h2>
 <p>Suppose there was a set of predictors with a 0 probability of one of the outcomes. For example, suppose none of the crew survived. Without any correction, our model will always predict a crew member will not survive, leaving no chance for an unforeseen circumstance.</p>
-<pre class="r"><code>missingData = unique(Titanic_df %&gt;% filter(Class==&#39;Crew&#39;, Survived==&#39;Yes&#39;) %&gt;% select(Class:Survived))
-Titanic_df_Less = Titanic_df %&gt;% select(Class:Survived) %&gt;% anti_join(missingData, by = c(&#39;Class&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;Survived&#39;))
-mod.NBNoLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=0)
-print(missingData[1,])</code></pre>
+<pre class="r"><code>missingData &lt;- unique(Titanic_df %&gt;% filter(Class == &quot;Crew&quot;, Survived == &quot;Yes&quot;) %&gt;% select(Class:Survived))
+Titanic_df_Less &lt;- Titanic_df %&gt;%
+  select(Class:Survived) %&gt;%
+  anti_join(missingData, by = c(&quot;Class&quot;, &quot;Sex&quot;, &quot;Age&quot;, &quot;Survived&quot;))
+mod.NBNoLaplace &lt;- naiveBayes(Survived ~ ., data = Titanic_df_Less, laplace = 0)
+print(missingData[1, ])</code></pre>
 <pre><code>##    Class  Sex   Age Survived
 ## 28  Crew Male Adult      Yes</code></pre>
-<pre class="r"><code>predict(mod.NBNoLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
+<pre class="r"><code>predict(mod.NBNoLaplace, missingData[1, ], type = &quot;raw&quot;, threshold = 0)</code></pre>
 <pre><code>##      No Yes
 ## [1,]  1 NaN</code></pre>
 <p>We introduce the Laplace correction, which adds 1 (or whatever defined value) to all the classes. This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.</p>
-<pre class="r"><code>mod.NBLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=1)
-predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code></pre>
+<pre class="r"><code>mod.NBLaplace &lt;- naiveBayes(Survived ~ ., data = Titanic_df_Less, laplace = 1)
+predict(mod.NBLaplace, missingData[1, ], type = &quot;raw&quot;, threshold = 0)</code></pre>
 <pre><code>##             No         Yes
 ## [1,] 0.9994807 0.000519274</code></pre>
 </div>
 </div>
 <div id="classification-trees" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Classification Trees</h1>
+<h1><span class="header-section-number">5</span> Classification Trees</h1>
 <p>Decision trees create a set of ‘questions’ to partition the data set. The questions are chosen to provide the ‘best split’, and result in a flow chart to determine the category. Content and examples for this section were taken from <a href="https://www.datacamp.com/community/tutorials/decision-trees-R">DataCamp Decision Tree Example</a></p>
 <p>Terms:</p>
 <ul>
@@ -633,24 +630,24 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 </ul>
 <p>Decision trees are intuitive and easy to explain and visualize, but are not very robust as a small change in the data can drastically change the final tree.</p>
 <div id="how-to-grow-trees" class="section level2 tabset tabset-fade tabset-pills" number="5.1">
-<h2 class="tabset tabset-fade tabset-pills" number="5.1"><span class="header-section-number">5.1</span> How to Grow Trees</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">5.1</span> How to Grow Trees</h2>
 <div id="classification" class="section level3" number="5.1.1">
-<h3 number="5.1.1"><span class="header-section-number">5.1.1</span> Classification</h3>
+<h3><span class="header-section-number">5.1.1</span> Classification</h3>
 <p>Classification trees use divide and conquer to create the most pure (homogeneous) partitions. A common way to build these trees is to use the Gini index. This is defined as <span class="math display">\[G = 1 - \sum_{i=1}^np_i^2\]</span> where <span class="math inline">\(p_i^2\)</span> is the probability of an object being classified to a particular class. The Gini index is a measure of total variance across the classes and is referred to as the nodes purity. The index will be small if the data is perfectly classified, and the split that produces the purest (smallest <em>G</em>) will be chosen.</p>
 <p>Other methods of growing classification decision trees include cross-entropy (similar to Gini index) and classification error rate (generally not sensitive enough for growing trees)</p>
 </div>
 <div id="regression" class="section level3" number="5.1.2">
-<h3 number="5.1.2"><span class="header-section-number">5.1.2</span> Regression</h3>
+<h3><span class="header-section-number">5.1.2</span> Regression</h3>
 <p>If our outcome variable were continuous, we could grow a regression tree. This uses Recursive Binary Splitting to minimize the Residual Sum of Squares (RSS), defined as <span class="math display">\[\sum_{m=1}^M\sum_{i\in R_m}(y_i-\hat{y}_{R_m})^2\]</span> where <span class="math inline">\(\hat{y}_{R_m}\)</span> is the mean response for the training observations in the <em>m</em>th region/box. In short, this is a top-down greedy approach that starts at the top of the tree and successively splits the predictor space to minimize the RSS at each split. (More details could be added but this section is focused on classification trees).</p>
 </div>
 <div id="pruning-trees" class="section level3" number="5.1.3">
-<h3 number="5.1.3"><span class="header-section-number">5.1.3</span> Pruning Trees</h3>
+<h3><span class="header-section-number">5.1.3</span> Pruning Trees</h3>
 <p>We can pre-prune the trees by defining a maximum depth/number of levels, or by defining a minimum number of observations needed in a sub-node to continue partitioning.</p>
 <p>We can also post-prune overly complicated branches when their reduction in error does not outweigh their added complexity.</p>
 </div>
 </div>
 <div id="other-tree-based-methods" class="section level2 tabset tabset-fade tabset-pills" number="5.2">
-<h2 class="tabset tabset-fade tabset-pills" number="5.2"><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">5.2</span> Other Tree-Based Methods</h2>
 <p>The current methods of fitting our trees suffer from high variance, so different splits for the training/test sets can result in very different models. We briefly introduce 3 other methods of growing decision trees: Bagging, Random Forests, and Boosting.</p>
 <div id="bagging-bootstrap-aggregation" class="section level3 unnumbered">
 <h3 class="unnumbered">Bagging (bootstrap aggregation)</h3>
@@ -668,15 +665,15 @@ predict(mod.NBLaplace, missingData[1,], type=&quot;raw&quot;, threshold=0)</code
 </div>
 </div>
 <div id="classification-tree-carseat-sales-example" class="section level2 tabset tabset-fade tabset-pills" number="5.3">
-<h2 class="tabset tabset-fade tabset-pills" number="5.3"><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
+<h2 class="tabset tabset-fade tabset-pills"><span class="header-section-number">5.3</span> Classification Tree: Carseat Sales Example</h2>
 <p>Our goal is to predict if the carseat sales are greater than 8000 units or not.</p>
 <pre class="r"><code>library(ISLR)
 library(rpart)
-set.seed(123) #rpart performs cross validation so we set our random number seed
-carseats = Carseats
-carseats$High = factor(ifelse(carseats$Sales&lt;=8, &quot;No&quot;, &quot;Yes&quot;))
-mod.tree = rpart(High~.-Sales, data=carseats) #could alternatively use tree
-#summary(mod.tree)
+set.seed(123) # rpart performs cross validation so we set our random number seed
+carseats &lt;- Carseats
+carseats$High &lt;- factor(ifelse(carseats$Sales &lt;= 8, &quot;No&quot;, &quot;Yes&quot;))
+mod.tree &lt;- rpart(High ~ . - Sales, data = carseats) # could alternatively use tree
+# summary(mod.tree)
 mod.tree$cptable</code></pre>
 <pre><code>##           CP nsplit rel error    xerror       xstd
 ## 1 0.28658537      0 1.0000000 1.0000000 0.05997967
@@ -692,70 +689,70 @@ mod.tree$cptable</code></pre>
 ##  39.3458304  28.9918954  13.0761815  12.7110483  10.2253806   6.2611750   3.1669718   0.9670985   0.1411614</code></pre>
 <p>We can also visualize this tree:</p>
 <pre class="r"><code>library(rpart.plot)
-rpart.plot(mod.tree, type=4, extra=1)</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+rpart.plot(mod.tree, type = 4, extra = 1)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <div id="making-predictions" class="section level3" number="5.3.1">
-<h3 number="5.3.1"><span class="header-section-number">5.3.1</span> Making Predictions</h3>
+<h3><span class="header-section-number">5.3.1</span> Making Predictions</h3>
 <p>Split into a training and test set and calculate accuracy</p>
 <pre class="r"><code>set.seed(123)
-train = sample(1:nrow(carseats), 250)
-mod.treeTrain = rpart(High~.-Sales, carseats, subset=train)
+train &lt;- sample(1:nrow(carseats), 250)
+mod.treeTrain &lt;- rpart(High ~ . - Sales, carseats, subset = train)
 rpart.plot(mod.treeTrain)</code></pre>
 <p><img src="Classification_files/figure-html/train-1.png" width="672" /></p>
 <p>Now predict the class for the test set</p>
-<pre class="r"><code>test = carseats[-train,]
-test$predicted = predict(mod.treeTrain, test, type=&#39;class&#39;)
+<pre class="r"><code>test &lt;- carseats[-train, ]
+test$predicted &lt;- predict(mod.treeTrain, test, type = &quot;class&quot;)
 table(test$High, test$predicted)</code></pre>
 <pre><code>##      
 ##       No Yes
 ##   No  63  26
 ##   Yes 17  44</code></pre>
-<pre class="r"><code>mean(test$High == test$predicted) #accuracy</code></pre>
+<pre class="r"><code>mean(test$High == test$predicted) # accuracy</code></pre>
 <pre><code>## [1] 0.7133333</code></pre>
 </div>
 <div id="pruning-tree" class="section level3" number="5.3.2">
-<h3 number="5.3.2"><span class="header-section-number">5.3.2</span> Pruning Tree</h3>
+<h3><span class="header-section-number">5.3.2</span> Pruning Tree</h3>
 <p><strong>Pre-Pruning:</strong> This stops the growth of a tree depending on a given maximum size of the tree or a minimum number of observations needed in a sub-node to split.</p>
 <p>Make a tree with maximum depth = 3</p>
-<pre class="r"><code>mod.treeDepth = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(maxdepth=3))
+<pre class="r"><code>mod.treeDepth &lt;- rpart(High ~ . - Sales, carseats, subset = train, method = &quot;class&quot;, control = rpart.control(maxdepth = 3))
 rpart.plot(mod.treeDepth)</code></pre>
 <p><img src="Classification_files/figure-html/depth-1.png" width="672" /></p>
-<pre class="r"><code>test$predicted = predict(mod.treeDepth, test, type=&#39;class&#39;)
-mean(test$High == test$predicted) #accuracy</code></pre>
+<pre class="r"><code>test$predicted &lt;- predict(mod.treeDepth, test, type = &quot;class&quot;)
+mean(test$High == test$predicted) # accuracy</code></pre>
 <pre><code>## [1] 0.7066667</code></pre>
 <p>There is a small reduction in accuracy for this simpler model compared to the previous model.</p>
 <p>Only split a sub-node if it contains at least 30 observations</p>
-<pre class="r"><code>mod.treeObserve = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(minsplit=30))
+<pre class="r"><code>mod.treeObserve &lt;- rpart(High ~ . - Sales, carseats, subset = train, method = &quot;class&quot;, control = rpart.control(minsplit = 30))
 rpart.plot(mod.treeObserve)</code></pre>
 <p><img src="Classification_files/figure-html/observe-1.png" width="672" /></p>
-<pre class="r"><code>test$predicted = predict(mod.treeObserve, test, type=&#39;class&#39;)
-mean(test$High == test$predicted) #accuracy</code></pre>
+<pre class="r"><code>test$predicted &lt;- predict(mod.treeObserve, test, type = &quot;class&quot;)
+mean(test$High == test$predicted) # accuracy</code></pre>
 <pre><code>## [1] 0.7333333</code></pre>
 <p>This model has similar accuracy to the un-pruned model, but is a less complicated tree.</p>
 <p><strong>Post-Pruning:</strong> Here we grow a large tree then prune to balance error and complexity. Choose the left most value of complexity plot that lies below the line for the cp cutoff.</p>
 <pre class="r"><code>set.seed(123)
-mod.treeComplex = rpart(High~.-Sales, carseats, subset=train, method=&#39;class&#39;, control=rpart.control(cp=0))
+mod.treeComplex &lt;- rpart(High ~ . - Sales, carseats, subset = train, method = &quot;class&quot;, control = rpart.control(cp = 0))
 rpart.plot(mod.treeComplex)</code></pre>
 <p><img src="Classification_files/figure-html/post-1.png" width="672" /></p>
 <pre class="r"><code>plotcp(mod.treeComplex)</code></pre>
 <p><img src="Classification_files/figure-html/post-2.png" width="672" /></p>
-<pre class="r"><code>mod.treeComplexPruned = prune(mod.treeComplex, cp=0.044)
+<pre class="r"><code>mod.treeComplexPruned &lt;- prune(mod.treeComplex, cp = 0.044)
 rpart.plot(mod.treeComplexPruned)</code></pre>
 <p><img src="Classification_files/figure-html/post-3.png" width="672" /></p>
-<pre class="r"><code>test$predicted = predict(mod.treeComplexPruned, test, type=&#39;class&#39;)
-mean(test$High == test$predicted) #accuracy</code></pre>
+<pre class="r"><code>test$predicted &lt;- predict(mod.treeComplexPruned, test, type = &quot;class&quot;)
+mean(test$High == test$predicted) # accuracy</code></pre>
 <pre><code>## [1] 0.7133333</code></pre>
 <p>Despite being a simpler tree, this model still has similar accuracy to the full model.</p>
 </div>
 </div>
 <div id="regression-tree-random-forest-housing-example" class="section level2" number="5.4">
-<h2 number="5.4"><span class="header-section-number">5.4</span> Regression Tree: Random Forest Housing Example</h2>
+<h2><span class="header-section-number">5.4</span> Regression Tree: Random Forest Housing Example</h2>
 <pre class="r"><code>library(MASS)
 library(randomForest)
-boston = Boston
+boston &lt;- Boston
 set.seed(101)
-train = sample(1:nrow(boston), 300)
-mod.rf = randomForest(medv~., data = boston, subset = train)
+train &lt;- sample(1:nrow(boston), 300)
+mod.rf &lt;- randomForest(medv ~ ., data = boston, subset = train)
 mod.rf</code></pre>
 <pre><code>## 
 ## Call:
@@ -768,20 +765,23 @@ mod.rf</code></pre>
 ##                     % Var explained: 83.45</code></pre>
 <p>The <em>randomForest</em> function defaults to growing 500 trees (ntree) and using <em>floor(ncol(data)/3)</em> variables (mtry) at each split.</p>
 <div id="varying-the-number-of-variables" class="section level3" number="5.4.1">
-<h3 number="5.4.1"><span class="header-section-number">5.4.1</span> Varying the Number of Variables</h3>
+<h3><span class="header-section-number">5.4.1</span> Varying the Number of Variables</h3>
 <p>Fit a random forest model with a variable mtry, calculate the out-of-bag error (based on training set) and the test error:</p>
-<pre class="r"><code>oob.err = double(13)
-test.err = double(13)
-for (mtry in 1:13){
-  mod.fit = randomForest(medv~., data=boston, subset=train, mtry=mtry, ntree=350)
-  oob.err[mtry] = mod.fit$mse[350]
-  pred = predict(mod.fit, boston[-train,])
-  test.err[mtry] = with(boston[-train,], mean( (medv-pred)^2 ))
+<pre class="r"><code>oob.err &lt;- double(13)
+test.err &lt;- double(13)
+for (mtry in 1:13) {
+  mod.fit &lt;- randomForest(medv ~ ., data = boston, subset = train, mtry = mtry, ntree = 350)
+  oob.err[mtry] &lt;- mod.fit$mse[350]
+  pred &lt;- predict(mod.fit, boston[-train, ])
+  test.err[mtry] &lt;- with(boston[-train, ], mean((medv - pred)^2))
 }</code></pre>
 <pre class="r"><code>library(ggplot2)
-mtryData = data.frame(mtry = 1:mtry, test.err, oob.err) %&gt;% pivot_longer(-mtry, names_to = &#39;ErrorType&#39;, values_to = &#39;Error&#39;)
-ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line() + theme(legend.position = c(0.9, 0.8))</code></pre>
-<p><img src="Classification_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+mtryData &lt;- data.frame(mtry = 1:mtry, test.err, oob.err) %&gt;% pivot_longer(-mtry, names_to = &quot;ErrorType&quot;, values_to = &quot;Error&quot;)
+ggplot(mtryData, aes(mtry, Error, color = ErrorType)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = c(0.9, 0.8))</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Mtry around 4 seems to be the most optimal choice, which is equivalent to <em>floor(13/3)</em>, the default choice for mtry.</p>
 </div>
 </div>
@@ -814,7 +814,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

@@ -1,0 +1,145 @@
+---
+title: "GAM Interaction Example"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mgcv)
+```
+
+## Setup
+
+```{r}
+f2 <- function(x) 0.2 * x^11 * (10 * (1 - x))^6 + 10 *
+  (10 * x)^3 * (1 - x)^10
+n <- 300
+xa <- runif(n)
+xb = c(rep(1, 100), rep(2,100), rep(3,100))
+mu <- exp(f2(xa)/3+.1);xa <- xa*10 - 4
+y <- rTweedie(mu,p=1.5,phi=1.3)
+xc = pmin(xb, 2)
+
+summary(xa)
+table(xb)
+table(xc)
+```
+
+## All numeric features
+
+```{r}
+# 2 main effects + interaction
+summary(gam(y~xa+xb+xa*xb,family=Tweedie(p=1.5)))
+summary(gam(y~xa+xb+xa:xb,family=Tweedie(p=1.5)))
+summary(gam(y~xa*xb,family=Tweedie(p=1.5)))
+
+# Just interaction
+summary(gam(y~xa:xb,family=Tweedie(p=1.5)))
+
+
+
+# xa, xb, xc, xa:xb
+summary(gam(y~xa+xc+xa*xb,family=Tweedie(p=1.5)))
+# xa, xc, xa:xb
+summary(gam(y~xa+xc+xa:xb,family=Tweedie(p=1.5)))
+
+# Conclusion:
+# xa*xb adds main effects if not already there (but doesn't double if they are there with same name)
+# xa:xb just adds interaction
+```
+
+## Numeric and factor
+```{r}
+xb = factor(xb)
+xc = factor(xc)
+# xa, xb2, xb3, xa:xb2, xa:xb3 -> just adds main effects/interactions for n-1 levels
+summary(gam(y~xa+xb+xa*xb,family=Tweedie(p=1.5)))
+summary(gam(y~xa+xb+xa:xb,family=Tweedie(p=1.5)))
+summary(gam(y~xa*xb,family=Tweedie(p=1.5)))
+
+# xa:xb1, xa:xb2, xa:xb3 -> interactions for all n levels
+summary(gam(y~xa:xb,family=Tweedie(p=1.5)))
+
+
+# xa, xb2, xb3, xc2, xa:xb2, xa:xb3 -> main effects/interactions for n-1 levels (adds missing main)
+summary(gam(y~xa+xc+xa*xb,family=Tweedie(p=1.5)))
+# xa, xc2, xa:xb2, xa:xb3 -> main effects/interactions for n-1 levels (doesn't add missing main)
+summary(gam(y~xa+xc+xa:xb,family=Tweedie(p=1.5)))
+
+# Conclusion:
+# Interactions/main effects added for n-1 levels, unless xa:xb, then all n levels
+  # *** if xa:xb and xa, xb don't show up exactly anywhere else, all n levels are created ***
+```
+
+## Factor and poly
+
+```{r}
+xb = factor(xb)
+xc = factor(xc)
+# xa, xb2, xb3, xa:xb2, xa:xb3 -> just adds main effects/interactions for n-1 levels
+summary(gam(y~poly(xa,2)+xb+poly(xa,2)*xb,family=Tweedie(p=1.5)))
+summary(gam(y~poly(xa,2)+xb+poly(xa,2):xb,family=Tweedie(p=1.5)))
+summary(gam(y~poly(xa,2)*xb,family=Tweedie(p=1.5)))
+
+# xa:xb1, xa:xb2, xa:xb3 -> interactions for all n levels
+summary(gam(y~poly(xa,2):xb,family=Tweedie(p=1.5)))
+
+
+# xa, xb2, xb3, xc2, xa:xb2, xa:xb3 -> main effects/interactions for n-1 levels (adds missing main)
+summary(gam(y~poly(xa,2)+xc+poly(xa,2)*xb,family=Tweedie(p=1.5)))
+# xa, xc2, xa:xb2, xa:xb3 -> main effects/interactions for n-1 levels (doesn't add missing main)
+summary(gam(y~poly(xa,2)+xc+poly(xa,2):xb,family=Tweedie(p=1.5)))
+
+# *** if xa:xb and xa, xb don't show up exactly anywhere else, all n levels are created ***
+# *** this is similar to num_drivers3 + num_drivers2:poly(frt) or deductible + deductible_grouped*poly(model_year) ***
+summary(gam(y~xc+poly(xa,2):xb,family=Tweedie(p=1.5)))
+
+summary(gam(y~xb+xc+poly(xa,2):xb,family=Tweedie(p=1.5)))
+
+```
+
+## Manual interaction implementation
+```{r}
+xb = factor(xb)
+xc = factor(xc)
+
+summary(gam(y~poly(xa,2,raw=T)+xb+poly(xa,2,raw=T)*xb,family=Tweedie(p=1.5)))
+
+# Manual implementation
+xa_sq = xa^2
+xb1 = as.numeric(xb == 1)
+xb2 = as.numeric(xb == 2)
+xb3 = as.numeric(xb == 3)
+xc1 = as.numeric(xb == 1)
+xc1 = as.numeric(xb == 2)
+summary(gam(y~xa + xa_sq + xb2 + xb3 + xa:xb2 + xa:xb3 + xa_sq:xb2 + xa_sq:xb3,family=Tweedie(p=1.5)))
+
+
+# *** if xa:xb and xa, xb don't show up exactly anywhere else, all n levels are created ***
+# *** this is similar to num_drivers3 + num_drivers2:poly(frt) or deductible + deductible_grouped*poly(model_year) ***
+summary(gam(y~xc+poly(xa,2):xb,family=Tweedie(p=1.5)))
+
+```
+
+## GLM and VIF
+```{r}
+xb = factor(xb)
+xc = factor(xc)
+
+summary(glm(y~xa+xb+xa*xb,family=Tweedie(p=1.5)))
+car::vif(glm(y~xa+xb+xa*xb,family=Tweedie(p=1.5)))
+
+summary(glm(y~xa+xc+xa*xb,family=Tweedie(p=1.5)))
+#car::vif(glm(y~xa+xc+xa*xb,family=Tweedie(p=1.5))) #error: there are aliased coefficients in the model
+```
+
+
+# Similar to Simultaneous Model
+```{r}
+xc = factor(xc)
+
+summary(glm(y~xc+xc:poly(xa,1),family=Tweedie(p=1.5)))
+summary(glm(y~xc+xc:xa,family=Tweedie(p=1.5)))
+```

@@ -38,25 +38,25 @@ We want to predict if an individual will earn more than $50K using various predi
 ### Train/Test Set
 Load data:
 ```{r}
-incomeData <- read.table('adult.data', sep = ',', fill = F, strip.white = T)
-colnames(incomeData) <- c('age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 'occupation', 'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week', 'native_country', 'income')
-incomeData$IncomeAbove50 = as.numeric(incomeData$income == '>50K')
+incomeData <- read.table("adult.data", sep = ",", fill = F, strip.white = T)
+colnames(incomeData) <- c("age", "workclass", "fnlwgt", "education", "education_num", "marital_status", "occupation", "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country", "income")
+incomeData$IncomeAbove50 <- as.numeric(incomeData$income == ">50K")
 table(incomeData$income)
 ```
 We see there are significantly more cases of <=50K than >50K.  Because of this class bias, we will select our training data proportionately from each of these classes.
 ```{r}
-dataAbove = incomeData %>% filter(IncomeAbove50 == 1)
-dataBelow = incomeData %>% filter(IncomeAbove50 == 0)
+dataAbove <- incomeData %>% filter(IncomeAbove50 == 1)
+dataBelow <- incomeData %>% filter(IncomeAbove50 == 0)
 set.seed(123)
-dataAbove_trainingRows = sample(1:nrow(dataAbove), 0.75*nrow(dataAbove))
-dataBelow_trainingRows = sample(1:nrow(dataBelow), 0.75*nrow(dataBelow))
-trainAbove = dataAbove[dataAbove_trainingRows,]
-trainBelow = dataBelow[dataBelow_trainingRows,]
-train = rbind(trainAbove, trainBelow)
+dataAbove_trainingRows <- sample(1:nrow(dataAbove), 0.75 * nrow(dataAbove))
+dataBelow_trainingRows <- sample(1:nrow(dataBelow), 0.75 * nrow(dataBelow))
+trainAbove <- dataAbove[dataAbove_trainingRows, ]
+trainBelow <- dataBelow[dataBelow_trainingRows, ]
+train <- rbind(trainAbove, trainBelow)
 
-testAbove = dataAbove[-dataAbove_trainingRows,]
-testBelow = dataBelow[-dataBelow_trainingRows,]
-test = rbind(testAbove, testBelow)
+testAbove <- dataAbove[-dataAbove_trainingRows, ]
+testBelow <- dataBelow[-dataBelow_trainingRows, ]
+test <- rbind(testAbove, testBelow)
 
 table(train$income)
 rm(dataAbove, dataBelow, dataAbove_trainingRows, dataBelow_trainingRows, trainAbove, trainBelow, testAbove, testBelow)
@@ -67,15 +67,15 @@ We have a similar proportion of >50K to <=50K in our training data as in the ful
 ### Fit and Test Logistic Model
 I chose variables I thought would predict *income*, however different variable choices or variable selection methods could be used.
 ```{r}
-mod.logit = glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data=train, family='binomial')
+mod.logit <- glm(IncomeAbove50 ~ age + workclass + education_num + sex + hours_per_week, data = train, family = "binomial")
 summary(mod.logit)
 ```
 
 Predict for the test data
 ```{r}
-predictedProbability = predict(mod.logit, test, type='response')
-test$PredictedIncomeAbove50 = ifelse(predictedProbability > 0.5,1,0)
-confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = '1')
+predictedProbability <- predict(mod.logit, test, type = "response")
+test$PredictedIncomeAbove50 <- ifelse(predictedProbability > 0.5, 1, 0)
+confusionMatrix(factor(test$PredictedIncomeAbove50), factor(test$IncomeAbove50), positive = "1")
 ```
 Our model predicts our test data with 81% accuracy where accuracy = $\frac{TP + FN}{Total}$  Some other interesting metrics: 
 
@@ -91,8 +91,8 @@ A receiver operating characteristic (ROC) curve plots the true positive rate (se
 
 ```{r warning = FALSE, message=FALSE}
 library(ROCR)
-pred = prediction(predictedProbability, test$IncomeAbove50)
-perf = performance(pred, measure = 'tpr', x.measure = 'fpr')
+pred <- prediction(predictedProbability, test$IncomeAbove50)
+perf <- performance(pred, measure = "tpr", x.measure = "fpr")
 plot(perf)
 ```
 
@@ -100,8 +100,8 @@ The curve will generally be above the line $y=x$ and curves of "better" models a
 
 We can also calculate the area under the ROC curve (AUC)
 ```{r}
-auc = performance(pred, measure = "auc")
-auc = auc@y.values[[1]]
+auc <- performance(pred, measure = "auc")
+auc <- auc@y.values[[1]]
 auc
 ```
 "Better" models generally have AUC close to 1, though it's important to consider many metrics when evaluating a model.
@@ -122,34 +122,34 @@ KNN works by considering the K training data points that are closest (typically 
 This example was inspired by [KNN Example ](https://towardsdatascience.com/k-nearest-neighbors-algorithm-with-examples-in-r-simply-explained-knn-1f2c88da405c).  Normalize the iris data and split into a training and test set
 ```{r}
 normalize <- function(x) {
-return((x - min(x)) / (max(x) - min(x)))
+  return((x - min(x)) / (max(x) - min(x)))
 }
 set.seed(123)
-irisNormalized = as.data.frame(lapply(iris[,c(1,2,3,4)], normalize))
-training_ind = sample(1:nrow(iris), 0.75 * nrow(iris))
-train = irisNormalized[training_ind,]
-test = irisNormalized[-training_ind,]
-train_class = iris[training_ind,5]
-test_class = iris[-training_ind,5]
+irisNormalized <- as.data.frame(lapply(iris[, c(1, 2, 3, 4)], normalize))
+training_ind <- sample(1:nrow(iris), 0.75 * nrow(iris))
+train <- irisNormalized[training_ind, ]
+test <- irisNormalized[-training_ind, ]
+train_class <- iris[training_ind, 5]
+test_class <- iris[-training_ind, 5]
 ```
 
 Now run knn function
 ```{r}
 library(class)
-test_prediction = knn(train, test, cl=train_class, k=3)
+test_prediction <- knn(train, test, cl = train_class, k = 3)
 ```
 
 Calculate accuracy of test data
 ```{r}
 table(test_prediction, test_class)
-mean(test_prediction == test_class)*100 #accuracy
+mean(test_prediction == test_class) * 100 # accuracy
 ```
 
 Try a larger value of k (consider more neighbors)
 ```{r}
-test_prediction = knn(train, test, cl=train_class, k=11)
+test_prediction <- knn(train, test, cl = train_class, k = 11)
 table(test_prediction, test_class)
-mean(test_prediction == test_class)*100 #accuracy
+mean(test_prediction == test_class) * 100 # accuracy
 ```
 In this case, a larger k increased the accuracy of the model, however this was inconsistent across different splits of the training and test sets.  We could use cross-validation to test different values of k (and different train/test sets) to determine the optimal number of neighbors to use.
 
@@ -178,23 +178,23 @@ Naive Bayes is good to use when all the predictors are categorical, but can also
 We try to predict if a passenger survived on the Titanic given the predictors: Class (1st, 2nd, 3rd, crew), Sex (M,F), and Age (child, adult).
 ```{r }
 data("Titanic")
-Titanic = as.data.frame(Titanic)
-#Data currently summary data, expand for analysis
-repeating_sequence=rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
-Titanic_df=Titanic[repeating_sequence,]
-Titanic_df = Titanic_df %>% select(-Freq)
+Titanic <- as.data.frame(Titanic)
+# Data currently summary data, expand for analysis
+repeating_sequence <- rep.int(seq_len(nrow(Titanic)), Titanic$Freq)
+Titanic_df <- Titanic[repeating_sequence, ]
+Titanic_df <- Titanic_df[, -5]
 ```
 Fit Naive Bayes model
 ```{r}
 library(e1071)
-mod.NB = naiveBayes(Survived~., data=Titanic_df)
+mod.NB <- naiveBayes(Survived ~ ., data = Titanic_df)
 mod.NB
 ```
 Make predictions and check accuracy
 ```{r}
-Titanic_df$PredictedSurvived = predict(mod.NB, Titanic_df)
+Titanic_df$PredictedSurvived <- predict(mod.NB, Titanic_df)
 table(Titanic_df$PredictedSurvived, Titanic_df$Survived)
-mean(Titanic_df$PredictedSurvived==Titanic_df$Survived)
+mean(Titanic_df$PredictedSurvived == Titanic_df$Survived)
 ```
 The model predicts if a passenger survives with about 77.8% accuracy.
 
@@ -202,17 +202,19 @@ The model predicts if a passenger survives with about 77.8% accuracy.
 Suppose there was a set of predictors with a 0 probability of one of the outcomes.  For example, suppose none of the crew survived.  Without any correction, our model will always predict a crew member will not survive, leaving no chance for an unforeseen circumstance.
 
 ```{r, warning=F}
-missingData = unique(Titanic_df %>% filter(Class=='Crew', Survived=='Yes') %>% select(Class:Survived))
-Titanic_df_Less = Titanic_df %>% select(Class:Survived) %>% anti_join(missingData, by = c('Class', 'Sex', 'Age', 'Survived'))
-mod.NBNoLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=0)
-print(missingData[1,])
-predict(mod.NBNoLaplace, missingData[1,], type="raw", threshold=0)
+missingData <- unique(Titanic_df %>% filter(Class == "Crew", Survived == "Yes") %>% select(Class:Survived))
+Titanic_df_Less <- Titanic_df %>%
+  select(Class:Survived) %>%
+  anti_join(missingData, by = c("Class", "Sex", "Age", "Survived"))
+mod.NBNoLaplace <- naiveBayes(Survived ~ ., data = Titanic_df_Less, laplace = 0)
+print(missingData[1, ])
+predict(mod.NBNoLaplace, missingData[1, ], type = "raw", threshold = 0)
 ```
  We introduce the Laplace correction, which adds 1 (or whatever defined value) to all the classes.  This forces all joint probabilities to be greater than 0 and allows a (sometimes small) possibility for all outcomes.
 
 ```{r, warning=F}
-mod.NBLaplace = naiveBayes(Survived ~ ., data=Titanic_df_Less, laplace=1)
-predict(mod.NBLaplace, missingData[1,], type="raw", threshold=0)
+mod.NBLaplace <- naiveBayes(Survived ~ ., data = Titanic_df_Less, laplace = 1)
+predict(mod.NBLaplace, missingData[1, ], type = "raw", threshold = 0)
 ```
 
 
@@ -273,11 +275,11 @@ Our goal is to predict if the carseat sales are greater than 8000 units or not.
 ```{r classification tree example, warning=F}
 library(ISLR)
 library(rpart)
-set.seed(123) #rpart performs cross validation so we set our random number seed
-carseats = Carseats
-carseats$High = factor(ifelse(carseats$Sales<=8, "No", "Yes"))
-mod.tree = rpart(High~.-Sales, data=carseats) #could alternatively use tree
-#summary(mod.tree)
+set.seed(123) # rpart performs cross validation so we set our random number seed
+carseats <- Carseats
+carseats$High <- factor(ifelse(carseats$Sales <= 8, "No", "Yes"))
+mod.tree <- rpart(High ~ . - Sales, data = carseats) # could alternatively use tree
+# summary(mod.tree)
 mod.tree$cptable
 mod.tree$variable.importance
 ```
@@ -285,24 +287,24 @@ mod.tree$variable.importance
 We can also visualize this tree:
 ```{r, warning=F}
 library(rpart.plot)
-rpart.plot(mod.tree, type=4, extra=1)
+rpart.plot(mod.tree, type = 4, extra = 1)
 ```
 
 ### Making Predictions
 Split into a training and test set and calculate accuracy
 ```{r train}
 set.seed(123)
-train = sample(1:nrow(carseats), 250)
-mod.treeTrain = rpart(High~.-Sales, carseats, subset=train)
+train <- sample(1:nrow(carseats), 250)
+mod.treeTrain <- rpart(High ~ . - Sales, carseats, subset = train)
 rpart.plot(mod.treeTrain)
 ```
 
 Now predict the class for the test set
 ```{r test}
-test = carseats[-train,]
-test$predicted = predict(mod.treeTrain, test, type='class')
+test <- carseats[-train, ]
+test$predicted <- predict(mod.treeTrain, test, type = "class")
 table(test$High, test$predicted)
-mean(test$High == test$predicted) #accuracy
+mean(test$High == test$predicted) # accuracy
 ```
 
 ### Pruning Tree
@@ -310,20 +312,20 @@ mean(test$High == test$predicted) #accuracy
 
 Make a tree with maximum depth = 3
 ```{r depth}
-mod.treeDepth = rpart(High~.-Sales, carseats, subset=train, method='class', control=rpart.control(maxdepth=3))
+mod.treeDepth <- rpart(High ~ . - Sales, carseats, subset = train, method = "class", control = rpart.control(maxdepth = 3))
 rpart.plot(mod.treeDepth)
-test$predicted = predict(mod.treeDepth, test, type='class')
-mean(test$High == test$predicted) #accuracy
+test$predicted <- predict(mod.treeDepth, test, type = "class")
+mean(test$High == test$predicted) # accuracy
 ```
 
 There is a small reduction in accuracy for this simpler model compared to the previous model.
 
 Only split a sub-node if it contains at least 30 observations
 ```{r observe}
-mod.treeObserve = rpart(High~.-Sales, carseats, subset=train, method='class', control=rpart.control(minsplit=30))
+mod.treeObserve <- rpart(High ~ . - Sales, carseats, subset = train, method = "class", control = rpart.control(minsplit = 30))
 rpart.plot(mod.treeObserve)
-test$predicted = predict(mod.treeObserve, test, type='class')
-mean(test$High == test$predicted) #accuracy
+test$predicted <- predict(mod.treeObserve, test, type = "class")
+mean(test$High == test$predicted) # accuracy
 ```
 
 This model has similar accuracy to the un-pruned model, but is a less complicated tree.
@@ -332,13 +334,13 @@ This model has similar accuracy to the un-pruned model, but is a less complicate
 **Post-Pruning:**  Here we grow a large tree then prune to balance error and complexity.  Choose the left most value of complexity plot that lies below the line for the cp cutoff.
 ```{r post}
 set.seed(123)
-mod.treeComplex = rpart(High~.-Sales, carseats, subset=train, method='class', control=rpart.control(cp=0))
+mod.treeComplex <- rpart(High ~ . - Sales, carseats, subset = train, method = "class", control = rpart.control(cp = 0))
 rpart.plot(mod.treeComplex)
 plotcp(mod.treeComplex)
-mod.treeComplexPruned = prune(mod.treeComplex, cp=0.044)
+mod.treeComplexPruned <- prune(mod.treeComplex, cp = 0.044)
 rpart.plot(mod.treeComplexPruned)
-test$predicted = predict(mod.treeComplexPruned, test, type='class')
-mean(test$High == test$predicted) #accuracy
+test$predicted <- predict(mod.treeComplexPruned, test, type = "class")
+mean(test$High == test$predicted) # accuracy
 ```
 
 Despite being a simpler tree, this model still has similar accuracy to the full model.
@@ -348,10 +350,10 @@ Despite being a simpler tree, this model still has similar accuracy to the full 
 ```{r regression tree, warning=F, message=F}
 library(MASS)
 library(randomForest)
-boston = Boston
+boston <- Boston
 set.seed(101)
-train = sample(1:nrow(boston), 300)
-mod.rf = randomForest(medv~., data = boston, subset = train)
+train <- sample(1:nrow(boston), 300)
+mod.rf <- randomForest(medv ~ ., data = boston, subset = train)
 mod.rf
 ```
 
@@ -360,20 +362,23 @@ The *randomForest* function defaults to growing 500 trees (ntree) and using *flo
 ### Varying the Number of Variables
 Fit a random forest model with a variable mtry, calculate the out-of-bag error (based on training set) and the test error:
 ```{r rf multiple mtry}
-oob.err = double(13)
-test.err = double(13)
-for (mtry in 1:13){
-  mod.fit = randomForest(medv~., data=boston, subset=train, mtry=mtry, ntree=350)
-  oob.err[mtry] = mod.fit$mse[350]
-  pred = predict(mod.fit, boston[-train,])
-  test.err[mtry] = with(boston[-train,], mean( (medv-pred)^2 ))
+oob.err <- double(13)
+test.err <- double(13)
+for (mtry in 1:13) {
+  mod.fit <- randomForest(medv ~ ., data = boston, subset = train, mtry = mtry, ntree = 350)
+  oob.err[mtry] <- mod.fit$mse[350]
+  pred <- predict(mod.fit, boston[-train, ])
+  test.err[mtry] <- with(boston[-train, ], mean((medv - pred)^2))
 }
 ```
 
 ```{r}
 library(ggplot2)
-mtryData = data.frame(mtry = 1:mtry, test.err, oob.err) %>% pivot_longer(-mtry, names_to = 'ErrorType', values_to = 'Error')
-ggplot(mtryData, aes(mtry, Error, color=ErrorType)) + geom_point() + geom_line() + theme(legend.position = c(0.9, 0.8))
+mtryData <- data.frame(mtry = 1:mtry, test.err, oob.err) %>% pivot_longer(-mtry, names_to = "ErrorType", values_to = "Error")
+ggplot(mtryData, aes(mtry, Error, color = ErrorType)) +
+  geom_point() +
+  geom_line() +
+  theme(legend.position = c(0.9, 0.8))
 ```
 
 Mtry around 4 seems to be the most optimal choice, which is equivalent to *floor(13/3)*, the default choice for mtry.

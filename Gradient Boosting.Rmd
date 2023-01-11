@@ -1,0 +1,172 @@
+---
+title: "Gradient Boosting"
+---
+
+# Overview
+
+Gradient boosting creates an ensemble of weak learners (typically decision trees), where each new tree is fit on a modified version of the original data set. At each stage we have an imperfect model $F_m$ and some new estimator (what the algorithm is adding) $h_m(x)$, so $$F_{m+1}(x) = F_m(x) + h_m(x) = y $$
+
+We fit h to the residual, $h_m(x) = y-F_m(x)$.
+
+Many models are trained in a gradual, additive, and sequential manner. Gradient boosting identifies the shortcomings of the weak models using the gradients in the loss function.
+
+## LightGBM Parameters
+
+Building off the table [here](https://neptune.ai/blog/lightgbm-parameters-guide)
+
+Also see:
+
+-   [LightGBM parameter tuning doc](https://lightgbm.readthedocs.io/en/latest/Parameters-Tuning.html)
+
+-   [LightGBM R package](https://github.com/microsoft/LightGBM/tree/master/R-package/demo)
+
+-   [EIX: Using boosting to identify interactions](https://modeloriented.github.io/EIX/reference/interactions.html)
+
+-   [Bayesian Hyperparameter Optimization](https://towardsdatascience.com/a-conceptual-explanation-of-bayesian-model-based-hyperparameter-optimization-for-machine-learning-b8172278050f)
+
+### Fixed Parameters
+
+| **Name of parameter** | **Default value** | **Ranges**                          | **Notes**                                                                |
+|:--------------|:--------------|:--------------|:--------------------------|
+| objective             | regression        | Regression, binary                  | Affects other parameters                                                 |
+| metric                | null              | +20 different metrics               | Null means that metric corresponding to specified objective will be used |
+| boosting              | gbdt              | gbdt, rf, dart, goss                | RF → bagging approach                                                    |
+| categorical_feature   | Empty string      | Specify a number for a column index | Handle categorical features                                              |
+| bagging_freq          | 0.0               | [0, ∞]                              | 0 means disable bagging; k means perform bagging at every k iteration    |
+
+
+### Regularization/Training Parameters
+| **Name of parameter** | **Default value** | **Ranges**                          | **Notes**                                                                | **Tuning** |
+|:--------------|:--------------|:--------------|:--------------------------|:--------------------------|
+|bagging_fraction/subsample | 1.0 | [0, 1] | Randomly select part of data without resampling | Improves generalization and speed of training |
+| feature_fraction | 1.0 | [0, 1] | % of features on each tree | Speeds up training, deals with overfitting|
+|num_leaves | 31 | [1, ∞] | Max number of leaves in one tree | Generally num_leaves = 2^(max_depth), but these too should be tuned together|
+|max_depth|-1|[-1, ∞]|Larger is usually better|Too large → over fit|
+|max_bin|255|[2, ∞]|Each continuous feature split into discrete bins|Small is faster, larger more accurate|
+|min_data_in_leaf|20|[0, ∞]|
+
+
+### Other Parameters
+| **Name of parameter** | **Default value** | **Ranges**                          | **Notes**                                                                | **Tuning** |
+|:--------------|:--------------|:--------------|:--------------------------|:--------------------------|
+|learning_rate|0.1|[0 1]|Typical: 0.05|Larger reduces training time|
+|num_iterations/num_rounds/nrounds|100|[1, ∞]|Number of trees to build|Start small then increase, use smaller learning_rate and larger num_iterations|
+|early_stopping_round|0|[0, ∞]|Will stop training if validation doesn’t improve in last early_stopping_round|Generally 10% num_iterations|
+
+
+# CatBoost vs LightGBM vs XGBoost
+CatBoost and LightGBM are both gradient boosting methods, but differ in how they grow trees/make splits, handle missing data, and handle categorical data.
+
+## Growing trees/making splits
+**LightGBM:**
+
+* (not default method) uses gradient based one side sampling (GOSS): selects splits using all the instances with large gradients/large errors and a random sample of instances with small gradients
+
+  + Also introduces a constant multiplier for the data with small gradients to keep the same data distribution when computing the information gain
+
+  + Reduces number of data instances but keeps accuracy
+
+  + Quickly finds the most influential cuts
+
+* Uses leaf-wise (best-fit) tree growth:  allows for imbalanced trees by choosing the leaf that minimizes the loss
+
+  + Overfitting can happen when data is small - control tree depth in this case
+
+**CatBoost:**
+
+* Grows oblivious trees: trees are grown by testing the same predictor with the same conditions on all nodes at the same level
+
+  + Minimal Variance Sampling (MVS): weighted sampling version of stochastic gradient boosting, weighted sampling happens in the tree-level and not in the split-level
+
+* Default give symmetric/balanced trees: the feature-split pair that brings the lowest loss is selected and used for all the level’s nodes
+
+**XGBoost:**
+
+* Similar to LightGBM it uses the gradients of different cuts to select the next cut, but also uses the hessian/second derivative to rank the cuts
+
+  + It uses a histogram based algorithm to split all the data points for a feature into discrete bins and uses these bins to find the split value of histogram
+
+* Splits trees up to max_depth, then prunes backwards to remove splits without positive gain
+
+  + Can also grow leaf-wise
+
+## Handling Data
+### Missing Data
+**Catboost:**
+
+* Two options: min and max
+
+  + Missing values are processed as the minimum/maximum value for a feature (given a value less than/greater than all others)
+
+  + Guaranteed to consider a split that separates missing values from all other values
+
+**LightGBM/XGBoost:**
+
+* Missing values are allocated to the side that reduces the loss in each split
+
+### Categorical Data
+**XGBoost:**
+
+* Encoding (one-hot, target encoding, etc) must be performed before training
+
+**LightGBM:**
+
+* Could encode before training, or use built in method (gradient statistics) that doesn’t one-hot encode to find the split value of categorical features
+
+  + Encode categories during training instead of before: at each split decision for a node, categories are ordered by the amount of error they weigh in this node
+
+    + Compute gradients for every observation in the node
+
+    + Summed squared gradients by category, use this to order the categories
+
+    + Evaluate split possibilities in regard to gradient statistics
+
+  + Cons: computationally expensive, uses a lot of memory, gets worse with many categories
+
+    + Can group tail categories into one cluster if high cardinality
+
+  + This method isn’t necessarily better than encoding
+
+**CatBoost:**
+
+* Uses a combination of one-hot encoding (for features with a low number of categories) and advanced mean encoding:
+
+  + Permute set of input observation, multiple random permutations are generated
+
+  + Convert label from floating point/category to integer
+
+  + Iterate sequentially through the observations respecting new order: compute statistic using only observations seen in the past
+
+    + Statistic (for classification model) = $avg target = \frac{count in class + prior}{total count + 1}$
+
+    + count_in_class = number of times in past training data the target = 1 for current categorical feature 
+
+    + total_count = total number of current categorical features in the past training
+
+    + prior = constant number defined by starting parameters
+
+  + First observations have high variance because there’s little training data at the start of the iterations
+
+    + To fix: generate several random permutations, produce encoding for each, the average encodings
+
+## Performance
+* From reference 1: LightGBM, CatBoost and XGBoost were ~15x, 5x and 3x faster than GBM; 
+
+  + In the baseline dataset, CatBoost outperforms the rest by 0.8–1%, other datasets had less significant differences
+
+* From reference 2: CatBoost had best accuracy, minimum overfitting, and minimum prediction/tuning time → only worked well because there were categorical variables and they tuned one_hot_max_size
+
+  + XGBoost had good performance but very slow
+
+## References
+1. [CatBoost vs LightGBM vs XGBoost (better explanations)](https://medium.com/riskified-technology/xgboost-lightgbm-or-catboost-which-boosting-algorithm-should-i-use-e7fda7bb36bc)
+
+2. [CatBoost vs LightGBM vs XGBoost (with code example)](https://towardsdatascience.com/catboost-vs-light-gbm-vs-xgboost-5f93620723db)
+
+3. [Intro to CatBoost (with example)](https://towardsdatascience.com/catboost-regression-in-6-minutes-3487f3e5b329)
+
+4. [CatBoost docs (parameter tuning)](https://catboost.ai/en/docs/concepts/parameter-tuning)
+
+5. [Catboost categorical encoding](https://towardsdatascience.com/how-catboost-encodes-categorical-variables-3866fb2ae640)
+
+

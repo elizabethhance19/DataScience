@@ -1,0 +1,80 @@
+---
+title: "Model Deployment"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Once model is finalized, how to get it into production i.e. store predictions in data warehouse/s3 -\> use Amazon Sagemaker
+
+-   Could also use Sagemaker for model training/development
+-   Sagemaker has built in algorithms (linear/logistic regression, gradient boosting, etc), but also support custom training algorithms through Docker images
+
+# SageMaker Custom Algorithm: Creating an Inference Handler
+
+-   **model_fn** Function: loads model
+
+    -   Points to a pre-trained model (stored in s3), likely a model with a specified training date
+
+        -   Manually re-train model, could automatically re-train (using either Django/celery tasks or by doing entire process in Sagemaker), but more likely to see potentially issues with model if manually training
+
+    -   Use a pickled object to easily load/dump: preserves structure of data/object
+
+    -   If multiple models: have a single model object (dict) with each model type (dict) containing trained model (e.g. CatBoostClassifier)
+
+-   **input_fn** Function: pre-process input data
+
+    -   Deserializes input data to be passed to model
+
+    -   Reads in string of data to make predictions on, reformats to dataframe using defined schema (adds column names and defines data types)
+
+-   **predict_fn** Function: gets predictions from the model
+
+    -   Uses output from model_fn and input_fn as it's arguments
+
+    -   Makes predictions and returns dataframe
+
+-   **output_fn** Function: process the output data
+
+    -   Serializes data from predict_fn and saves to s3
+
+    -   Likely just save a subset of dataframe (may not need every column used for predictions in final dataset)
+
+## How to make trained model and code available for production
+
+Docker: packages up code and it's dependencies (software, packages, etc) into a docker container image that's a standalone executable package of software containing everything needed to run an application (i.e. model)
+
+-   Process: create Docker container, tell SageMaker which container to use for predicting
+
+    -   Sagemaker starts ec3 instance and downloads Docker container
+
+### Creating Docker Container
+
+-   Start with base image, set environment variables, install necessary software, copy code from directory into container, copy/install python package requirements, set variables/run tests
+
+-   Built into CI/CD (continuous integration/continuous delivery) pipeline in Buildkite
+
+    -   A container is create for every commit in the repo
+
+    -   The git sha is used by Sagemaker to reference the Docker Container to use for the model run
+
+### Input Data Sourcing
+
+-   Each query is given 4 files:
+
+    -   \_ddl.sql - Defines schema
+
+    -   \_etl.sql - Actual query to run
+
+    -   \_test.sql - Tests
+
+    -   upload\_\<\>\_script.rb - Script to run above
+
+# Testing
+
+[A nice overview of Pytest](https://towardsdatascience.com/pytest-for-data-scientists-2990319e55e6)
+
+-   Fixtures: gets data/objects needed for tests
+
+-   Unit tests: E.g. does model have at least 1 day in training period? are all columns needed for predictions in the data set?

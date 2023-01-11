@@ -13,13 +13,22 @@
 
 <title>Databases</title>
 
-<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -34,11 +43,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -51,32 +55,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 
@@ -87,10 +65,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -107,40 +81,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -168,7 +115,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -180,7 +127,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -191,10 +138,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -206,7 +166,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -285,23 +244,59 @@ $(document).ready(function () {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="Regression.html">Regression</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Modeling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Regression.html">Regression</a>
+    </li>
+    <li>
+      <a href="Classification.html">Classification</a>
+    </li>
+    <li>
+      <a href="Clustering.html">Clustering</a>
+    </li>
+    <li>
+      <a href="Gradient-Boosting.html">Gradient Boosting</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Classification.html">Classification</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Validation/Deployment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Model-Validation.html">Model Validation</a>
+    </li>
+    <li>
+      <a href="Model-Deployment.html">Model Deployment</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="Clustering.html">Clustering</a>
-</li>
-<li>
-  <a href="Databases.html">Databases</a>
-</li>
-<li>
-  <a href="CloudComputing.html">Cloud Computing</a>
-</li>
-<li>
-  <a href="ShellGit.html">Shell/Git</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Additional Topics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Databases.html">Databases</a>
+    </li>
+    <li>
+      <a href="CloudComputing.html">Cloud Computing</a>
+    </li>
+    <li>
+      <a href="ShellGit.html">Shell/Git</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -311,7 +306,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -338,21 +333,21 @@ $(document).ready(function () {
 </div>
 
 <div id="overview" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
+<h1><span class="header-section-number">1</span> Overview</h1>
 <p>Data is generally organized in a database that can be accessed, managed, and updated by users. Databases are often defined as relational or non-relational.</p>
 <div id="relational-databases" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Relational Databases</h2>
+<h2><span class="header-section-number">1.1</span> Relational Databases</h2>
 <p>A relational database model organizes data into a set of tables with rows (records) and columns (attributes) with a primary key (sometimes multiple columns) to uniquely identify each row. Primary keys that are found in other tables are called foreign keys and are often used to join the tables together.</p>
 <p>SQL (Structured Query Language) is a language used to query and maintain relational databases. Some common relational databases include Microsoft SQL Server, Oracle Database, and MySQL.</p>
 </div>
 <div id="non-relational-databases" class="section level2" number="1.2">
-<h2 number="1.2"><span class="header-section-number">1.2</span> Non-Relational Databases</h2>
+<h2><span class="header-section-number">1.2</span> Non-Relational Databases</h2>
 <p>Non-relational databases, sometimes called NoSQL (non SQL or not only SQL) databases, do not require the structure of rows and columns, but instead is optimized for the type of data it holds. They may contain JSON documents with key/value pairs, graph data with edges and vertices, time series data, etc.</p>
 <p>Some common non-relational databases include Apache Cassandra, MongoDB, and Oracle NoSQL.</p>
 </div>
 </div>
 <div id="connecting-to-databases-in-r" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Connecting to Databases in R</h1>
+<h1><span class="header-section-number">2</span> Connecting to Databases in R</h1>
 <p>We are able to connect directly to a database in R. This is one example of connecting to a database (I used this to connect to an Oracle database).</p>
 <p>After setting up the connection to a database (in Windows using ODBC Data Source Administrator), we can connect to the database and query from one (or more) of the tables. After storing the queried data in a dataframe, we can disconnect from the database.</p>
 <pre class="r"><code>library(DBI)
@@ -362,7 +357,7 @@ result.df = dbGetQuery(con, &quot;select * from &lt;Table Name&gt; &quot;)
 dbDisconnect(con)</code></pre>
 </div>
 <div id="common-sql-commands" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Common SQL Commands</h1>
+<h1><span class="header-section-number">3</span> Common SQL Commands</h1>
 <p>We explore some common SQL commands: <a href="https://www.w3schools.com/sql/default.asp">Link to more commands</a></p>
 <ul>
 <li><em>SELECT DISTINCT column_1 FROM table_name</em> - only returns distinct row values</li>
@@ -379,7 +374,7 @@ dbDisconnect(con)</code></pre>
 </ul></li>
 </ul>
 <div id="aggregate-functions" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Aggregate Functions</h2>
+<h2><span class="header-section-number">3.1</span> Aggregate Functions</h2>
 <ul>
 <li><em>SELECT &lt;&gt;(column_1) from table_name WHERE column_1</em> = ___
 <ul>
@@ -397,7 +392,7 @@ dbDisconnect(con)</code></pre>
 </ul>
 </div>
 <div id="joining-tables" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Joining Tables</h2>
+<h2><span class="header-section-number">3.2</span> Joining Tables</h2>
 <ul>
 <li><em>SELECT * FROM table_1 JOIN table_2 ON table_1.column = table_2.column</em>
 <ul>
@@ -426,7 +421,7 @@ ON t1.continent = t2.continent AND t1.country &lt;&gt; t2.country</em></li>
 </ul>
 </div>
 <div id="set-operations" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Set Operations</h2>
+<h2><span class="header-section-number">3.3</span> Set Operations</h2>
 <p>Set operations combine columns</p>
 <ul>
 <li><em>UNION</em>
@@ -443,10 +438,10 @@ SELECT column_name(s) FROM table2</em></li>
 </ul>
 </div>
 <div id="subqueries" class="section level2" number="3.4">
-<h2 number="3.4"><span class="header-section-number">3.4</span> Subqueries</h2>
+<h2><span class="header-section-number">3.4</span> Subqueries</h2>
 <p>These examples were taken from the SQL courses on Codecademy</p>
 <div id="non-correlated-subqueries" class="section level3" number="3.4.1">
-<h3 number="3.4.1"><span class="header-section-number">3.4.1</span> Non-Correlated Subqueries</h3>
+<h3><span class="header-section-number">3.4.1</span> Non-Correlated Subqueries</h3>
 <p>Subquery can be run independently of outer query. Used to complete multi-step transformation.</p>
 <p><strong>Example using airports and flights tables:</strong></p>
 <ul>
@@ -473,7 +468,7 @@ JOIN table1 ON previous_results.id = table1.id</em>
 </ul>
 </div>
 <div id="correlated-subqueries" class="section level3" number="3.4.2">
-<h3 number="3.4.2"><span class="header-section-number">3.4.2</span> Correlated Subqueries</h3>
+<h3><span class="header-section-number">3.4.2</span> Correlated Subqueries</h3>
 <p>Subquery CANNOT be run independently of outer query</p>
 <ul>
 <li>Row is processed in outer query</li>
@@ -520,7 +515,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
